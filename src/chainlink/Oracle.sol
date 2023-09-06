@@ -13,8 +13,6 @@ contract Oracle is IOracle {
     AggregatorV3Interface public immutable BASE_FEED;
     /// @notice Quote feed.
     AggregatorV3Interface public immutable QUOTE_FEED;
-    /// @notice Maximum time since last update. The oracle will reverts when exceeded.
-    uint256 public immutable STALE_TIMEOUT;
     /// @notice Price scale factor. Automatically computer at contract creation.
     uint256 public immutable SCALE_FACTOR;
 
@@ -24,20 +22,17 @@ contract Oracle is IOracle {
     /// @param baseTokenDecimals Base token decimals. Pass 0 if the price is one.
     /// @param quoteFeed Quote feed. Pass address zero for price = 1.
     /// @param quoteTokenDecimals Quote token decimals. Pass 0 if the price is one.
-    /// @param staleTimeout Maximum time since last update. The oracle will reverts when exceeded.
     constructor(
         AggregatorV3Interface baseFeed,
         uint256 baseTokenDecimals,
         AggregatorV3Interface quoteFeed,
-        uint256 quoteTokenDecimals,
-        uint256 staleTimeout
+        uint256 quoteTokenDecimals
     ) {
         BASE_FEED = baseFeed;
         QUOTE_FEED = quoteFeed;
         // SCALE_FACTOR = 10 ** (36 + (baseTokenDecimals - baseFeedDecimals) - (quoteTokenDecimals - quoteFeedDecimals))
         SCALE_FACTOR =
             10 ** (36 + baseTokenDecimals + _feedDecimals(quoteFeed) - _feedDecimals(baseFeed) - quoteTokenDecimals);
-        STALE_TIMEOUT = staleTimeout;
     }
 
     /* PRICE */
@@ -51,9 +46,8 @@ contract Oracle is IOracle {
     /// @dev When feed = address(0), returns 1.
     function _feedPrice(AggregatorV3Interface feed) private view returns (uint256) {
         if (address(feed) == address(0)) return 1;
-        (, int256 answer,, uint256 updatedAt,) = feed.latestRoundData();
+        (, int256 answer,,,) = feed.latestRoundData();
         require(answer >= 0, ErrorsLib.NEGATIVE_ANSWER);
-        require(block.timestamp - updatedAt <= STALE_TIMEOUT, ErrorsLib.STALE_PRICE);
         return uint256(answer);
     }
 

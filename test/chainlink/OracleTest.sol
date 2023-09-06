@@ -18,34 +18,27 @@ contract OracleTest is Test {
     }
 
     function testOracleStEthUsdc() public {
-        Oracle oracle = new Oracle(stEthEthFeed, 18, usdcEthFeed, 6, type(uint256).max);
+        Oracle oracle = new Oracle(stEthEthFeed, 18, usdcEthFeed, 6);
         (, int256 baseAnswer,,,) = stEthEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
         assertEq(oracle.price(), uint256(baseAnswer) * 10 ** (36 + 18 + 18 - 18 - 6) / uint256(quoteAnswer));
     }
 
     function testOracleEthUsd() public {
-        Oracle oracle = new Oracle(ethUsdFeed, 18, AggregatorV3Interface(address(0)), 0, type(uint256).max);
+        Oracle oracle = new Oracle(ethUsdFeed, 18, AggregatorV3Interface(address(0)), 0);
         (, int256 expectedPrice,,,) = ethUsdFeed.latestRoundData();
         assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 8));
     }
 
     function testOracleStEthEth() public {
-        Oracle oracle = new Oracle(stEthEthFeed, 18, AggregatorV3Interface(address(0)), 0, type(uint256).max);
+        Oracle oracle = new Oracle(stEthEthFeed, 18, AggregatorV3Interface(address(0)), 0);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18));
     }
 
     function testOracleEthStEth() public {
-        Oracle oracle = new Oracle(AggregatorV3Interface(address(0)), 0, stEthEthFeed, 18, type(uint256).max);
+        Oracle oracle = new Oracle(AggregatorV3Interface(address(0)), 0, stEthEthFeed, 18);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), 10 ** (36 + 18 - 18) / uint256(expectedPrice));
-    }
-
-    function testStalePrice() public {
-        Oracle oracle = new Oracle(ethUsdFeed, 18, AggregatorV3Interface(address(0)), 0, 12 hours);
-        vm.warp(block.timestamp + 13 hours);
-        vm.expectRevert(bytes(ErrorsLib.STALE_PRICE));
-        oracle.price();
     }
 }
