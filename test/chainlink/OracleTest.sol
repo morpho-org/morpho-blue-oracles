@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import "src/chainlink/Oracle.sol";
+import "src/chainlink/libraries/ErrorsLib.sol";
 
 // 18 decimals of precision
 AggregatorV3Interface constant stEthEthFeed = AggregatorV3Interface(0x86392dC19c0b719886221c78AB11eb8Cf5c52812);
@@ -39,5 +40,12 @@ contract OracleTest is Test {
         Oracle oracle = new Oracle(AggregatorV3Interface(address(0)), 0, stEthEthFeed, 18, type(uint256).max);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), 10 ** (36 + 18 - 18) / uint256(expectedPrice));
+    }
+
+    function testStalePrice() public {
+        Oracle oracle = new Oracle(ethUsdFeed, 18, AggregatorV3Interface(address(0)), 0, 12 hours);
+        vm.warp(block.timestamp + 13 hours);
+        vm.expectRevert(bytes(ErrorsLib.STALE_PRICE));
+        oracle.price();
     }
 }
