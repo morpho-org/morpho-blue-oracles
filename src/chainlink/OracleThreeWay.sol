@@ -48,7 +48,7 @@ contract OracleThreeWay is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (_feedPrice(FIRST_BASE_FEED) * _feedPrice(FIRST_BASE_FEED) * SCALE_FACTOR) / _feedPrice(QUOTE_FEED);
+        return (_feedPrice(FIRST_BASE_FEED) * _feedPrice(SECOND_BASE_FEED) * SCALE_FACTOR) / _feedPrice(QUOTE_FEED);
     }
 
     /// @dev Performing some security checks and returns the latest price of a feed.
