@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
 
-import {AggregatorV3Interface} from "chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
 
-import {ErrorsLib} from "./libraries/ErrorsLib.sol";
+import {AggregatorV3Interface, DataFeedLib} from "./libraries/DataFeedLib.sol";
 
 contract Oracle is IOracle {
+    using DataFeedLib for AggregatorV3Interface;
+
     /* CONSTANT */
 
     /// @notice Base feed.
@@ -32,29 +33,13 @@ contract Oracle is IOracle {
         QUOTE_FEED = quoteFeed;
         // SCALE_FACTOR = 10 ** (36 + (baseTokenDecimals - baseFeedDecimals) - (quoteTokenDecimals - quoteFeedDecimals))
         SCALE_FACTOR =
-            10 ** (36 + baseTokenDecimals + _feedDecimals(quoteFeed) - _feedDecimals(baseFeed) - quoteTokenDecimals);
+            10 ** (36 + baseTokenDecimals + quoteFeed.wrapDecimals() - baseFeed.wrapDecimals() - quoteTokenDecimals);
     }
 
     /* PRICE */
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return _feedPrice(BASE_FEED) * SCALE_FACTOR / _feedPrice(QUOTE_FEED);
-    }
-
-    /// @dev Performing some security checks and returns the latest price of a feed.
-    /// @dev When feed is the address 0, returns 1.
-    function _feedPrice(AggregatorV3Interface feed) internal view returns (uint256) {
-        if (address(feed) == address(0)) return 1;
-        (, int256 answer,,,) = feed.latestRoundData();
-        require(answer >= 0, ErrorsLib.NEGATIVE_ANSWER);
-        return uint256(answer);
-    }
-
-    /// @dev Returns feed.decimals() if feed != address(0), else returns 0.
-
-    function _feedDecimals(AggregatorV3Interface feed) internal view returns (uint256) {
-        if (address(feed) == address(0)) return 0;
-        return feed.decimals();
+        return (BASE_FEED.wrapPrice() * SCALE_FACTOR) / QUOTE_FEED.wrapPrice();
     }
 }
