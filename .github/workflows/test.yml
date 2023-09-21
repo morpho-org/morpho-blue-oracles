@@ -38,3 +38,5 @@ jobs:
         run: |
           forge test -vvv
         id: test
+        env:
+          ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
