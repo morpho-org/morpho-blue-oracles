@@ -44,7 +44,7 @@ contract Oracle is IOracle {
 
     /// @dev Performing some security checks and returns the latest price of a feed.
     /// @dev When feed is the address 0, returns 1.
-    function _feedPrice(AggregatorV3Interface feed) private view returns (uint256) {
+    function _feedPrice(AggregatorV3Interface feed) internal view returns (uint256) {
         if (address(feed) == address(0)) return 1;
         (, int256 answer,,,) = feed.latestRoundData();
         require(answer >= 0, ErrorsLib.NEGATIVE_ANSWER);
@@ -53,7 +53,7 @@ contract Oracle is IOracle {
 
     /// @dev Returns feed.decimals() if feed != address(0), else returns 0.
 
-    function _feedDecimals(AggregatorV3Interface feed) private view returns (uint256) {
+    function _feedDecimals(AggregatorV3Interface feed) internal view returns (uint256) {
         if (address(feed) == address(0)) return 0;
         return feed.decimals();
     }
