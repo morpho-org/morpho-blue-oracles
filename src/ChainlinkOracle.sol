@@ -4,16 +4,22 @@ pragma solidity 0.8.19;
 import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
+import {ERC4626, VaultDataFeedLib} from "./libraries/VaultDataFeedLib.sol";
 
 /// @title ChainlinkOracle
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
 contract ChainlinkOracle is IOracle {
+    using VaultDataFeedLib for ERC4626;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     /* IMMUTABLES */
 
+    /// @notice Vault.
+    ERC4626 public immutable VAULT;
+    /// @notice Vault decimals.
+    uint256 public immutable VAULT_DECIMALS;
     /// @notice First base feed.
     AggregatorV3Interface public immutable BASE_FEED_1;
     /// @notice Second base feed.
@@ -27,6 +33,7 @@ contract ChainlinkOracle is IOracle {
 
     /* CONSTRUCTOR */
 
+    /// @param vault Vault. Pass address zero to omit this parameter.
     /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
@@ -34,6 +41,7 @@ contract ChainlinkOracle is IOracle {
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
+        ERC4626 vault,
         AggregatorV3Interface baseFeed1,
         AggregatorV3Interface baseFeed2,
         AggregatorV3Interface quoteFeed1,
@@ -41,6 +49,13 @@ contract ChainlinkOracle is IOracle {
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
+        VAULT = vault;
+        // TODO: adapt this
+        // This scale factor is defined similarly to the scale factor of the ChainlinkOracle, except:
+        // - the oracle only has one base feed and one quote feed
+        // - it is used to price a full unit of the vault shares, so it requires dividing by that number, hence the
+        // `VAULT_DECIMALS` subtraction
+        VAULT_DECIMALS = VAULT.getDecimals();
         BASE_FEED_1 = baseFeed1;
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
@@ -62,7 +77,7 @@ contract ChainlinkOracle is IOracle {
         SCALE_FACTOR = 10
             ** (
                 36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseFeed1.getDecimals()
-                    - baseFeed2.getDecimals() - baseTokenDecimals
+                    - baseFeed2.getDecimals() - baseTokenDecimals - VAULT_DECIMALS
             );
     }
 
@@ -70,7 +85,7 @@ contract ChainlinkOracle is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR)
+        return (VAULT.getAssets(10 ** VAULT_DECIMALS) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR)
             / (QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice());
     }
 }
