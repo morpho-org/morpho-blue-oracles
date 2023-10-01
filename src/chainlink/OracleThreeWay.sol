@@ -10,9 +10,9 @@ contract OracleThreeWay is IOracle {
 
     /* CONSTANT */
 
-    /// @notice First Base feed.
+    /// @notice First base feed.
     AggregatorV3Interface public immutable FIRST_BASE_FEED;
-    /// @notice Second Base feed.
+    /// @notice Second base feed.
     AggregatorV3Interface public immutable SECOND_BASE_FEED;
     /// @notice Quote feed.
     AggregatorV3Interface public immutable QUOTE_FEED;
@@ -21,8 +21,8 @@ contract OracleThreeWay is IOracle {
 
     /* CONSTRUCTOR */
 
-    /// @param firstBaseFeed First Base feed.
-    /// @param secondBaseFeed Second Base feed.
+    /// @param firstBaseFeed First base feed.
+    /// @param secondBaseFeed Second base feed.
     /// @param quoteFeed Quote feed. Pass address zero if the price = 1.
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals. Pass 0 if the price = 1.
