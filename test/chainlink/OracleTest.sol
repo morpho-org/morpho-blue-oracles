@@ -12,6 +12,22 @@ AggregatorV3Interface constant usdcEthFeed = AggregatorV3Interface(0x986b5E1e175
 // 8 decimals of precision
 AggregatorV3Interface constant ethUsdFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
 
+contract FakeAggregator {
+    int256 public answer;
+
+    function setAnwser(int256 newAnswer) external {
+        answer = newAnswer;
+    }
+
+    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
+        return (0, answer, 0, 0, 0);
+    }
+
+    function decimals() external pure returns (uint256) {
+        return 8;
+    }
+}
+
 contract OracleTest is Test {
     function setUp() public {
         vm.selectFork(vm.createFork(vm.envString("ETH_RPC_URL")));
@@ -40,5 +56,13 @@ contract OracleTest is Test {
         Oracle oracle = new Oracle(AggregatorV3Interface(address(0)), 0, stEthEthFeed, 18);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), 10 ** (36 + 18 - 18) / uint256(expectedPrice));
+    }
+
+    function testNegativeAnswer() public {
+        FakeAggregator aggregator = new FakeAggregator();
+        Oracle oracle = new Oracle(AggregatorV3Interface(address(aggregator)), 18, AggregatorV3Interface(address(0)), 0);
+        aggregator.setAnwser(-1);
+        vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
+        oracle.price();
     }
 }

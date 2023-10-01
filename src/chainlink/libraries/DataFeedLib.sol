@@ -7,7 +7,7 @@ import {AggregatorV3Interface} from "chainlink/contracts/src/v0.8/interfaces/Agg
 library DataFeedLib {
     /// @dev Performing some security checks and returns the lateste price of a feed.
     /// @dev When feed = address(0), returns 1.
-    function wrapPrice(AggregatorV3Interface feed) internal view returns (uint256) {
+    function getPrice(AggregatorV3Interface feed) internal view returns (uint256) {
         if (address(feed) == address(0)) return 1;
         (, int256 answer,,,) = feed.latestRoundData();
         require(answer >= 0, ErrorsLib.NEGATIVE_ANSWER);
@@ -15,7 +15,7 @@ library DataFeedLib {
     }
 
     /// @dev Returns feed.decimals() if feed != address(0), else returns 0.
-    function wrapDecimals(AggregatorV3Interface feed) internal view returns (uint256) {
+    function getDecimals(AggregatorV3Interface feed) internal view returns (uint256) {
         if (address(feed) == address(0)) return 0;
         return feed.decimals();
     }

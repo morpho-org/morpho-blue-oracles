@@ -14,7 +14,7 @@ contract Oracle is IOracle {
     AggregatorV3Interface public immutable BASE_FEED;
     /// @notice Quote feed.
     AggregatorV3Interface public immutable QUOTE_FEED;
-    /// @notice Price scale factor. Automatically computer at contract creation.
+    /// @notice Price scale factor. Automatically computed at contract creation.
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */
@@ -33,13 +33,13 @@ contract Oracle is IOracle {
         QUOTE_FEED = quoteFeed;
         // SCALE_FACTOR = 10 ** (36 + (baseTokenDecimals - baseFeedDecimals) - (quoteTokenDecimals - quoteFeedDecimals))
         SCALE_FACTOR =
-            10 ** (36 + baseTokenDecimals + quoteFeed.wrapDecimals() - baseFeed.wrapDecimals() - quoteTokenDecimals);
+            10 ** (36 + baseTokenDecimals + quoteFeed.getDecimals() - baseFeed.getDecimals() - quoteTokenDecimals);
     }
 
     /* PRICE */
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (BASE_FEED.wrapPrice() * SCALE_FACTOR) / QUOTE_FEED.wrapPrice();
+        return (BASE_FEED.getPrice() * SCALE_FACTOR) / QUOTE_FEED.getPrice();
     }
 }
