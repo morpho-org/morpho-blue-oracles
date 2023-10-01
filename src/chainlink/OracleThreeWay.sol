@@ -40,8 +40,8 @@ contract OracleThreeWay is IOracle {
         // secondBaseFeedDecimals - baseTokenDecimals))
         SCALE_FACTOR = 10
             ** (
-                36 + baseTokenDecimals + quoteFeed.wrapDecimals() - firstBaseFeed.wrapDecimals()
-                    - secondBaseFeed.wrapDecimals() - quoteTokenDecimals
+                36 + baseTokenDecimals + quoteFeed.getDecimals() - firstBaseFeed.getDecimals()
+                    - secondBaseFeed.getDecimals() - quoteTokenDecimals
             );
     }
 
@@ -49,6 +49,6 @@ contract OracleThreeWay is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (FIRST_BASE_FEED.wrapPrice() * SECOND_BASE_FEED.wrapPrice() * SCALE_FACTOR) / QUOTE_FEED.wrapPrice();
+        return (FIRST_BASE_FEED.getPrice() * SECOND_BASE_FEED.getPrice() * SCALE_FACTOR) / QUOTE_FEED.getPrice();
     }
 }
