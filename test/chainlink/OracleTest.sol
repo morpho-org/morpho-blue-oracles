@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "src/chainlink/Oracle.sol";
+import "src/chainlink/Oracle2.sol";
 import "src/chainlink/libraries/ErrorsLib.sol";
 
 // 18 decimals of precision
@@ -34,33 +34,33 @@ contract OracleTest is Test {
     }
 
     function testOracleStEthUsdc() public {
-        Oracle oracle = new Oracle(stEthEthFeed, 18, usdcEthFeed, 6);
+        Oracle2 oracle = new Oracle2(stEthEthFeed, 18, usdcEthFeed, 6);
         (, int256 baseAnswer,,,) = stEthEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
         assertEq(oracle.price(), uint256(baseAnswer) * 10 ** (36 + 18 + 18 - 18 - 6) / uint256(quoteAnswer));
     }
 
     function testOracleEthUsd() public {
-        Oracle oracle = new Oracle(ethUsdFeed, 18, AggregatorV3Interface(address(0)), 0);
+        Oracle2 oracle = new Oracle2(ethUsdFeed, 18, AggregatorV3Interface(address(0)), 0);
         (, int256 expectedPrice,,,) = ethUsdFeed.latestRoundData();
         assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 8));
     }
 
     function testOracleStEthEth() public {
-        Oracle oracle = new Oracle(stEthEthFeed, 18, AggregatorV3Interface(address(0)), 0);
+        Oracle2 oracle = new Oracle2(stEthEthFeed, 18, AggregatorV3Interface(address(0)), 0);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18));
     }
 
     function testOracleEthStEth() public {
-        Oracle oracle = new Oracle(AggregatorV3Interface(address(0)), 0, stEthEthFeed, 18);
+        Oracle2 oracle = new Oracle2(AggregatorV3Interface(address(0)), 0, stEthEthFeed, 18);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), 10 ** (36 + 18 - 18) / uint256(expectedPrice));
     }
 
     function testNegativeAnswer() public {
         FakeAggregator aggregator = new FakeAggregator();
-        Oracle oracle = new Oracle(AggregatorV3Interface(address(aggregator)), 18, AggregatorV3Interface(address(0)), 0);
+        Oracle2 oracle = new Oracle2(AggregatorV3Interface(address(aggregator)), 18, AggregatorV3Interface(address(0)), 0);
         aggregator.setAnwser(-1);
         vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
         oracle.price();
