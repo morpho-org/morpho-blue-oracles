@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "src/chainlink/OracleThreeWay.sol";
+import "src/chainlink/Oracle4.sol";
 import "src/chainlink/libraries/ErrorsLib.sol";
 
 // 8 decimals of precision
@@ -20,7 +20,7 @@ contract OracleTest is Test {
     }
 
     function testOracleWbtcUsdc() public {
-        OracleThreeWay oracle = new OracleThreeWay(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, 8, 6);
+        Oracle4 oracle = new Oracle4(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, AggregatorV3Interface(address(0)), 8, 6);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcUsdFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcUsdFeed.latestRoundData();
@@ -31,8 +31,21 @@ contract OracleTest is Test {
         );
     }
 
+    function testOracleUsdcWbtc() public {
+        Oracle4 oracle = new Oracle4(usdcUsdFeed, AggregatorV3Interface(address(0)), wBtcBtcFeed, btcUsdFeed, 6, 8);
+        (, int256 baseAnswer,,,) = usdcUsdFeed.latestRoundData();
+        (, int256 firstQuoteAnswer,,,) = wBtcBtcFeed.latestRoundData();
+        (, int256 secondQuoteAnswer,,,) = btcUsdFeed.latestRoundData();
+        assertEq(
+            oracle.price(),
+            (uint256(baseAnswer) * 10 ** (36 + 8 + 8 + 6 - 8 - 8))
+                / (uint256(firstQuoteAnswer) * uint256(secondQuoteAnswer))
+        );
+    }
+
     function testOracleWbtcEth() public {
-        OracleThreeWay oracle = new OracleThreeWay(wBtcBtcFeed, btcEthFeed, AggregatorV3Interface(address(0)), 8, 0);
+        Oracle4 oracle =
+        new Oracle4(wBtcBtcFeed, btcEthFeed, AggregatorV3Interface(address(0)), AggregatorV3Interface(address(0)), 8, 0);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcEthFeed.latestRoundData();
         assertEq(oracle.price(), (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 8 - 8 - 18)));
