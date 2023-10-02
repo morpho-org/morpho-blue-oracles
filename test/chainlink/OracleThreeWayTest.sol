@@ -20,7 +20,8 @@ contract OracleTest is Test {
     }
 
     function testOracleWbtcUsdc() public {
-        OracleThreeWay oracle = new OracleThreeWay(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, 8, 6);
+        OracleThreeWay oracle =
+            new OracleThreeWay(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, AggregatorV3Interface(address(0)), 8, 6);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcUsdFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcUsdFeed.latestRoundData();
@@ -32,7 +33,8 @@ contract OracleTest is Test {
     }
 
     function testOracleWbtcEth() public {
-        OracleThreeWay oracle = new OracleThreeWay(wBtcBtcFeed, btcEthFeed, AggregatorV3Interface(address(0)), 8, 0);
+        OracleThreeWay oracle =
+        new OracleThreeWay(wBtcBtcFeed, btcEthFeed, AggregatorV3Interface(address(0)), AggregatorV3Interface(address(0)), 8, 0);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcEthFeed.latestRoundData();
         assertEq(oracle.price(), (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 8 - 8 - 18)));
