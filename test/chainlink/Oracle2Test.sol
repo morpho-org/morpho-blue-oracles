@@ -60,7 +60,8 @@ contract OracleTest is Test {
 
     function testNegativeAnswer() public {
         FakeAggregator aggregator = new FakeAggregator();
-        Oracle2 oracle = new Oracle2(AggregatorV3Interface(address(aggregator)), 18, AggregatorV3Interface(address(0)), 0);
+        Oracle2 oracle =
+            new Oracle2(AggregatorV3Interface(address(aggregator)), 18, AggregatorV3Interface(address(0)), 0);
         aggregator.setAnwser(-1);
         vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
         oracle.price();

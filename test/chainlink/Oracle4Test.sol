@@ -20,8 +20,7 @@ contract OracleTest is Test {
     }
 
     function testOracleWbtcUsdc() public {
-        Oracle4 oracle =
-            new Oracle4(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, AggregatorV3Interface(address(0)), 8, 6);
+        Oracle4 oracle = new Oracle4(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, AggregatorV3Interface(address(0)), 8, 6);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcUsdFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcUsdFeed.latestRoundData();
@@ -29,6 +28,18 @@ contract OracleTest is Test {
             oracle.price(),
             (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 8 + 8 - 6 - 8 - 8))
                 / uint256(quoteAnswer)
+        );
+    }
+
+    function testOracleUsdcWbtc() public {
+        Oracle4 oracle = new Oracle4(usdcUsdFeed, AggregatorV3Interface(address(0)), wBtcBtcFeed, btcUsdFeed, 6, 8);
+        (, int256 baseAnswer,,,) = usdcUsdFeed.latestRoundData();
+        (, int256 firstQuoteAnswer,,,) = wBtcBtcFeed.latestRoundData();
+        (, int256 secondQuoteAnswer,,,) = btcUsdFeed.latestRoundData();
+        assertEq(
+            oracle.price(),
+            (uint256(baseAnswer) * 10 ** (36 + 8 + 8 + 6 - 8 - 8))
+                / (uint256(firstQuoteAnswer) * uint256(secondQuoteAnswer))
         );
     }
 
