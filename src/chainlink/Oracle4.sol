@@ -18,7 +18,7 @@ contract Oracle4 is IOracle {
     AggregatorV3Interface public immutable FIRST_QUOTE_FEED;
     /// @notice Second quote feed.
     AggregatorV3Interface public immutable SECOND_QUOTE_FEED;
-    /// @notice Price scale factor. Automatically computed at contract creation.
+    /// @notice Price scale factor, computed at contract creation.
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */
@@ -27,7 +27,7 @@ contract Oracle4 is IOracle {
     /// @param secondBaseFeed Second base feed. Pass address zero if the price = 1.
     /// @param firstQuoteFeed Quote feed. Pass address zero if the price = 1.
     /// @param secondQuoteFeed Quote feed. Pass address zero if the price = 1.
-    /// @param baseTokenDecimals Base token decimals.
+    /// @param baseTokenDecimals Base token decimals. Pass 0 if the price = 1.
     /// @param quoteTokenDecimals Quote token decimals. Pass 0 if the price = 1.
     constructor(
         AggregatorV3Interface firstBaseFeed,

@@ -14,7 +14,7 @@ contract Oracle2 is IOracle {
     AggregatorV3Interface public immutable BASE_FEED;
     /// @notice Quote feed.
     AggregatorV3Interface public immutable QUOTE_FEED;
-    /// @notice Price scale factor. Automatically computed at contract creation.
+    /// @notice Price scale factor, computed at contract creation.
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */
@@ -25,8 +25,8 @@ contract Oracle2 is IOracle {
     /// @param quoteTokenDecimals Quote token decimals. Pass 0 if the price = 1.
     constructor(
         AggregatorV3Interface baseFeed,
-        uint256 baseTokenDecimals,
         AggregatorV3Interface quoteFeed,
+        uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
         BASE_FEED = baseFeed;
