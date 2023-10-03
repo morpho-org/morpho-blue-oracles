@@ -11,6 +11,8 @@ AggregatorV3Interface constant stEthEthFeed = AggregatorV3Interface(0x86392dC19c
 AggregatorV3Interface constant usdcEthFeed = AggregatorV3Interface(0x986b5E1e1755e3C2440e960477f25201B0a8bbD4);
 // 8 decimals of precision
 AggregatorV3Interface constant ethUsdFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
+// 8 decimals of precision
+AggregatorV3Interface constant usdcUsd = AggregatorV3Interface(0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6);
 
 contract FakeAggregator {
     int256 public answer;
@@ -37,25 +39,32 @@ contract OracleTest is Test {
         Oracle2 oracle = new Oracle2(stEthEthFeed, usdcEthFeed, 18, 6);
         (, int256 baseAnswer,,,) = stEthEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
-        assertEq(oracle.price(), uint256(baseAnswer) * 10 ** (36 + 18 + 18 - 18 - 6) / uint256(quoteAnswer));
+        assertEq(oracle.price(), uint256(baseAnswer) * 10 ** (36 + 18 + 6 - 18 - 18) / uint256(quoteAnswer));
     }
 
     function testOracleEthUsd() public {
         Oracle2 oracle = new Oracle2(ethUsdFeed, AggregatorV3Interface(address(0)), 18, 0);
         (, int256 expectedPrice,,,) = ethUsdFeed.latestRoundData();
-        assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 8));
+        assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 - 18 - 8));
     }
 
     function testOracleStEthEth() public {
-        Oracle2 oracle = new Oracle2(stEthEthFeed, AggregatorV3Interface(address(0)), 18, 0);
+        Oracle2 oracle = new Oracle2(stEthEthFeed, AggregatorV3Interface(address(0)), 18, 18);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
-        assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18));
+        assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18 - 18));
+        assertApproxEqRel(oracle.price(), 1e36, 0.01 ether);
     }
 
     function testOracleEthStEth() public {
-        Oracle2 oracle = new Oracle2(AggregatorV3Interface(address(0)), stEthEthFeed, 0, 18);
+        Oracle2 oracle = new Oracle2(AggregatorV3Interface(address(0)), stEthEthFeed, 18, 18);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
-        assertEq(oracle.price(), 10 ** (36 + 18 - 18) / uint256(expectedPrice));
+        assertEq(oracle.price(), 10 ** (36 + 18 + 18 - 18) / uint256(expectedPrice));
+        assertApproxEqRel(oracle.price(), 1e36, 0.01 ether);
+    }
+
+    function testOracleUsdcUsd() public {
+        Oracle2 oracle = new Oracle2(usdcUsd, AggregatorV3Interface(address(0)), 6, 0);
+        assertApproxEqRel(oracle.price(), 1e36 / 1e6, 0.01 ether);
     }
 
     function testNegativeAnswer() public {

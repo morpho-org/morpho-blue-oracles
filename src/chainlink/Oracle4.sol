@@ -41,12 +41,10 @@ contract Oracle4 is IOracle {
         SECOND_BASE_FEED = secondBaseFeed;
         FIRST_QUOTE_FEED = firstQuoteFeed;
         SECOND_QUOTE_FEED = secondQuoteFeed;
-        // SCALE_FACTOR = 10 ** (36 + (firstQuoteFeedDecimals + secondQuoteFeedDecimals - quoteTokenDecimals) -
-        // (firstBaseFeedDecimals + secondBaseFeedDecimals - baseTokenDecimals))
         SCALE_FACTOR = 10
             ** (
-                36 + baseTokenDecimals + firstQuoteFeed.getDecimals() + secondQuoteFeed.getDecimals()
-                    - firstBaseFeed.getDecimals() - secondBaseFeed.getDecimals() - quoteTokenDecimals
+                36 + quoteTokenDecimals + firstQuoteFeed.getDecimals() + secondQuoteFeed.getDecimals()
+                    - firstBaseFeed.getDecimals() - secondBaseFeed.getDecimals() - baseTokenDecimals
             );
     }
 
