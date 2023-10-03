@@ -20,9 +20,9 @@ contract Oracle2 is IOracle {
     /* CONSTRUCTOR */
 
     /// @param baseFeed Base feed. Pass address zero if the price = 1.
-    /// @param baseTokenDecimals Base token decimals. Pass 0 if the price = 1.
     /// @param quoteFeed Quote feed. Pass address zero if the price = 1.
-    /// @param quoteTokenDecimals Quote token decimals. Pass 0 if the price = 1.
+    /// @param baseTokenDecimals Base token decimals.
+    /// @param quoteTokenDecimals Quote token decimals.
     constructor(
         AggregatorV3Interface baseFeed,
         AggregatorV3Interface quoteFeed,

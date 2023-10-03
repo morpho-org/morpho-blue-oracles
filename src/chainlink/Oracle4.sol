@@ -27,8 +27,8 @@ contract Oracle4 is IOracle {
     /// @param secondBaseFeed Second base feed. Pass address zero if the price = 1.
     /// @param firstQuoteFeed Quote feed. Pass address zero if the price = 1.
     /// @param secondQuoteFeed Quote feed. Pass address zero if the price = 1.
-    /// @param baseTokenDecimals Base token decimals. Pass 0 if the price = 1.
-    /// @param quoteTokenDecimals Quote token decimals. Pass 0 if the price = 1.
+    /// @param baseTokenDecimals Base token decimals.
+    /// @param quoteTokenDecimals Quote token decimals.
     constructor(
         AggregatorV3Interface firstBaseFeed,
         AggregatorV3Interface secondBaseFeed,
