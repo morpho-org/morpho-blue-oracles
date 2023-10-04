@@ -10,8 +10,7 @@ import {ErrorsLib} from "./ErrorsLib.sol";
 /// @custom:contact security@morpho.org
 /// @notice Library exposing functions to interact with a Chainlink-compliant feed.
 library ChainlinkDataFeedLib {
-    /// @dev Returns the latest price of a `feed`.
-    /// @dev Performs some safety checks and returns the latest price of a feed.
+    /// @dev Performs safety checks and returns the latest price of a `feed`.
     /// @dev When `feed` is the address zero, returns 1.
     function getPrice(AggregatorV3Interface feed) internal view returns (uint256) {
         if (address(feed) == address(0)) return 1;
