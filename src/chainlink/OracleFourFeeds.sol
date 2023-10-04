@@ -8,8 +8,7 @@ import {AggregatorV3Interface, DataFeedLib} from "./libraries/DataFeedLib.sol";
 /// @title OracleFourFeeds
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
-/// @notice Oracle using 4 Chainlink-compliant feeds to compute the price of a collateral token quoted in a borrowable
-/// token within a Morpho Blue market.
+/// @notice Morpho Blue oracle using 4 Chainlink-compliant feeds.
 contract OracleFourFeeds is IOracle {
     using DataFeedLib for AggregatorV3Interface;
 
@@ -28,7 +27,6 @@ contract OracleFourFeeds is IOracle {
 
     /* CONSTRUCTOR */
 
-    /// @dev Initializes the contract.
     /// @param firstBaseFeed First base feed. Pass address zero if the price = 1.
     /// @param secondBaseFeed Second base feed. Pass address zero if the price = 1.
     /// @param firstQuoteFeed Quote feed. Pass address zero if the price = 1.
