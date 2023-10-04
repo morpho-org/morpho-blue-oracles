@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {ErrorsLib} from "./ErrorsLib.sol";
 import {AggregatorV3Interface} from "chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
+import {ErrorsLib} from "./ErrorsLib.sol";
+
 library DataFeedLib {
+    /// @dev Returns the latest price of a `feed`.
     /// @dev Performing some security checks and returns the latest price of a feed.
     /// @dev When `feed` is the address zero, returns 1.
     function getPrice(AggregatorV3Interface feed) internal view returns (uint256) {

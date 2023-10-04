@@ -8,7 +8,7 @@ import {AggregatorV3Interface, DataFeedLib} from "./libraries/DataFeedLib.sol";
 contract Oracle4 is IOracle {
     using DataFeedLib for AggregatorV3Interface;
 
-    /* CONSTANT */
+    /* IMMUTABLES */
 
     /// @notice First base feed.
     AggregatorV3Interface public immutable FIRST_BASE_FEED;
@@ -18,11 +18,12 @@ contract Oracle4 is IOracle {
     AggregatorV3Interface public immutable FIRST_QUOTE_FEED;
     /// @notice Second quote feed.
     AggregatorV3Interface public immutable SECOND_QUOTE_FEED;
-    /// @notice Price scale factor, computed at contract creation.
+    /// @notice Price scale factor.
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */
 
+    /// @dev Initializes the contract.
     /// @param firstBaseFeed First base feed. Pass address zero if the price = 1.
     /// @param secondBaseFeed Second base feed. Pass address zero if the price = 1.
     /// @param firstQuoteFeed Quote feed. Pass address zero if the price = 1.
