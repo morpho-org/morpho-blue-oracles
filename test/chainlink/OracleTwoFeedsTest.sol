@@ -67,7 +67,7 @@ contract OracleTwoFeedsTest is Test {
         assertApproxEqRel(oracle.price(), 1e36 / 1e6, 0.01 ether);
     }
 
-    function testNegativeAnswer(int price) public {
+    function testNegativeAnswer(int256 price) public {
         vm.assume(price < 0);
         FakeAggregator aggregator = new FakeAggregator();
         OracleTwoFeeds oracle =

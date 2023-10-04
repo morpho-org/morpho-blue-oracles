@@ -43,8 +43,8 @@ contract OracleFourFeeds is IOracle {
         QUOTE_FEED_2 = quoteFeed2;
         SCALE_FACTOR = 10
             ** (
-                36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals()
-                    - baseFeed1.getDecimals() - baseFeed2.getDecimals() - baseTokenDecimals
+                36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseFeed1.getDecimals()
+                    - baseFeed2.getDecimals() - baseTokenDecimals
             );
     }
 
