@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "src/chainlink/Oracle4.sol";
+import "src/chainlink/OracleFourFeeds.sol";
 import "src/chainlink/libraries/ErrorsLib.sol";
 
 // 8 decimals of precision
@@ -14,13 +14,13 @@ AggregatorV3Interface constant btcEthFeed = AggregatorV3Interface(0xdeb288F73706
 // 8 decimals of precision
 AggregatorV3Interface constant wBtcBtcFeed = AggregatorV3Interface(0xfdFD9C85aD200c506Cf9e21F1FD8dd01932FBB23);
 
-contract OracleTest is Test {
+contract OracleFourFeedsTest is Test {
     function setUp() public {
         vm.selectFork(vm.createFork(vm.envString("ETH_RPC_URL")));
     }
 
     function testOracleWbtcUsdc() public {
-        Oracle4 oracle = new Oracle4(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, AggregatorV3Interface(address(0)), 8, 6);
+        OracleFourFeeds oracle = new OracleFourFeeds(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, AggregatorV3Interface(address(0)), 8, 6);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcUsdFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcUsdFeed.latestRoundData();
@@ -32,7 +32,7 @@ contract OracleTest is Test {
     }
 
     function testOracleUsdcWbtc() public {
-        Oracle4 oracle = new Oracle4(usdcUsdFeed, AggregatorV3Interface(address(0)), wBtcBtcFeed, btcUsdFeed, 6, 8);
+        OracleFourFeeds oracle = new OracleFourFeeds(usdcUsdFeed, AggregatorV3Interface(address(0)), wBtcBtcFeed, btcUsdFeed, 6, 8);
         (, int256 baseAnswer,,,) = usdcUsdFeed.latestRoundData();
         (, int256 firstQuoteAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondQuoteAnswer,,,) = btcUsdFeed.latestRoundData();
@@ -44,8 +44,8 @@ contract OracleTest is Test {
     }
 
     function testOracleWbtcEth() public {
-        Oracle4 oracle =
-        new Oracle4(wBtcBtcFeed, btcEthFeed, AggregatorV3Interface(address(0)), AggregatorV3Interface(address(0)), 8, 18);
+        OracleFourFeeds oracle =
+        new OracleFourFeeds(wBtcBtcFeed, btcEthFeed, AggregatorV3Interface(address(0)), AggregatorV3Interface(address(0)), 8, 18);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcEthFeed.latestRoundData();
         assertEq(oracle.price(), (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 18 - 8 - 8 - 18)));
