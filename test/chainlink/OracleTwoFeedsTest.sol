@@ -68,7 +68,7 @@ contract OracleTwoFeedsTest is Test {
     }
 
     function testNegativeAnswer(int256 price) public {
-        vm.assume(price < 0);
+        price = bound(price, type(int256).min, -1);
         FakeAggregator aggregator = new FakeAggregator();
         OracleTwoFeeds oracle =
             new OracleTwoFeeds(AggregatorV3Interface(address(aggregator)), AggregatorV3Interface(address(0)), 18, 0);

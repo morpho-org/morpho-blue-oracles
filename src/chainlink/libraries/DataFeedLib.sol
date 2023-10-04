@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {ErrorsLib} from "./ErrorsLib.sol";
-import {AggregatorV3Interface} from "chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
 
 library DataFeedLib {
     /// @dev Performing some security checks and returns the latest price of a feed.
