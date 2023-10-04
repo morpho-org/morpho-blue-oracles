@@ -26,7 +26,8 @@ contract OracleTest is Test {
         (, int256 quoteAnswer,,,) = usdcUsdFeed.latestRoundData();
         assertEq(
             oracle.price(),
-            (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 8 + 6 - 8 - 8 - 8)) / uint256(quoteAnswer)
+            (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 8 + 6 - 8 - 8 - 8))
+                / uint256(quoteAnswer)
         );
     }
 
@@ -37,7 +38,8 @@ contract OracleTest is Test {
         (, int256 secondQuoteAnswer,,,) = btcUsdFeed.latestRoundData();
         assertEq(
             oracle.price(),
-            (uint256(baseAnswer) * 10 ** (36 + 8 + 8 + 8 - 6 - 8)) / (uint256(firstQuoteAnswer) * uint256(secondQuoteAnswer))
+            (uint256(baseAnswer) * 10 ** (36 + 8 + 8 + 8 - 6 - 8))
+                / (uint256(firstQuoteAnswer) * uint256(secondQuoteAnswer))
         );
     }
 

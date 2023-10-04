@@ -5,6 +5,10 @@ import {AggregatorV3Interface} from "chainlink/contracts/src/v0.8/interfaces/Agg
 
 import {ErrorsLib} from "./ErrorsLib.sol";
 
+/// @title DataFeedLib
+/// @author Morpho Labs
+/// @custom:contact security@morpho.org
+/// @notice Library exposing functions to interact with a Chainlink-compliant feed.
 library DataFeedLib {
     /// @dev Returns the latest price of a `feed`.
     /// @dev Performing some security checks and returns the latest price of a feed.

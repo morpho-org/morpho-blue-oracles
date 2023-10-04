@@ -5,6 +5,11 @@ import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, DataFeedLib} from "./libraries/DataFeedLib.sol";
 
+/// @title Oracle4
+/// @author Morpho Labs
+/// @custom:contact security@morpho.org
+/// @notice Oracle using 4 Chainlink-compliant feeds to compute the price of a collateral token quoted in a borrowable
+/// token within a Morpho Blue market.
 contract Oracle4 is IOracle {
     using DataFeedLib for AggregatorV3Interface;
 
