@@ -14,8 +14,10 @@ library ChainlinkDataFeedLib {
     /// @dev When `feed` is the address zero, returns 1.
     function getPrice(AggregatorV3Interface feed) internal view returns (uint256) {
         if (address(feed) == address(0)) return 1;
+
         (, int256 answer,,,) = feed.latestRoundData();
         require(answer >= 0, ErrorsLib.NEGATIVE_ANSWER);
+
         return uint256(answer);
     }
 
@@ -23,6 +25,7 @@ library ChainlinkDataFeedLib {
     /// @dev When `feed` is the address zero, returns 0.
     function getDecimals(AggregatorV3Interface feed) internal view returns (uint256) {
         if (address(feed) == address(0)) return 0;
+
         return feed.decimals();
     }
 }
