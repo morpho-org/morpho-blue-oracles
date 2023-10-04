@@ -5,7 +5,7 @@ import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, DataFeedLib} from "./libraries/DataFeedLib.sol";
 
-contract OracleFourFeeds is IOracle {
+contract ChainlinkOracle is IOracle {
     using DataFeedLib for AggregatorV3Interface;
 
     /* CONSTANT */
