@@ -32,7 +32,7 @@ contract FakeAggregator {
 
 contract OracleTwoFeedsTest is Test {
     function setUp() public {
-        vm.selectFork(vm.createFork(vm.envString("ETH_RPC_URL")));
+        vm.createSelectFork(vm.envString("ETH_RPC_URL"));
     }
 
     function testOracleStEthUsdc() public {

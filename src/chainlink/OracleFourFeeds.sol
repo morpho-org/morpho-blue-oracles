@@ -11,40 +11,40 @@ contract OracleFourFeeds is IOracle {
     /* CONSTANT */
 
     /// @notice First base feed.
-    AggregatorV3Interface public immutable FIRST_BASE_FEED;
+    AggregatorV3Interface public immutable BASE_FEED_1;
     /// @notice Second base feed.
-    AggregatorV3Interface public immutable SECOND_BASE_FEED;
+    AggregatorV3Interface public immutable BASE_FEED_2;
     /// @notice First quote feed.
-    AggregatorV3Interface public immutable FIRST_QUOTE_FEED;
+    AggregatorV3Interface public immutable QUOTE_FEED_1;
     /// @notice Second quote feed.
-    AggregatorV3Interface public immutable SECOND_QUOTE_FEED;
+    AggregatorV3Interface public immutable QUOTE_FEED_2;
     /// @notice Price scale factor, computed at contract creation.
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */
 
-    /// @param firstBaseFeed First base feed. Pass address zero if the price = 1.
-    /// @param secondBaseFeed Second base feed. Pass address zero if the price = 1.
-    /// @param firstQuoteFeed Quote feed. Pass address zero if the price = 1.
-    /// @param secondQuoteFeed Quote feed. Pass address zero if the price = 1.
+    /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
+    /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
+    /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
+    /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
-        AggregatorV3Interface firstBaseFeed,
-        AggregatorV3Interface secondBaseFeed,
-        AggregatorV3Interface firstQuoteFeed,
-        AggregatorV3Interface secondQuoteFeed,
+        AggregatorV3Interface baseFeed1,
+        AggregatorV3Interface baseFeed2,
+        AggregatorV3Interface quoteFeed1,
+        AggregatorV3Interface quoteFeed2,
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
-        FIRST_BASE_FEED = firstBaseFeed;
-        SECOND_BASE_FEED = secondBaseFeed;
-        FIRST_QUOTE_FEED = firstQuoteFeed;
-        SECOND_QUOTE_FEED = secondQuoteFeed;
+        BASE_FEED_1 = baseFeed1;
+        BASE_FEED_2 = baseFeed2;
+        QUOTE_FEED_1 = quoteFeed1;
+        QUOTE_FEED_2 = quoteFeed2;
         SCALE_FACTOR = 10
             ** (
-                36 + quoteTokenDecimals + firstQuoteFeed.getDecimals() + secondQuoteFeed.getDecimals()
-                    - firstBaseFeed.getDecimals() - secondBaseFeed.getDecimals() - baseTokenDecimals
+                36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals()
+                    - baseFeed1.getDecimals() - baseFeed2.getDecimals() - baseTokenDecimals
             );
     }
 
@@ -52,7 +52,7 @@ contract OracleFourFeeds is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (FIRST_BASE_FEED.getPrice() * SECOND_BASE_FEED.getPrice() * SCALE_FACTOR)
-            / (FIRST_QUOTE_FEED.getPrice() * SECOND_QUOTE_FEED.getPrice());
+        return (BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR)
+            / (QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice());
     }
 }

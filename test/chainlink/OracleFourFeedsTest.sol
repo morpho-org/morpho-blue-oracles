@@ -16,7 +16,7 @@ AggregatorV3Interface constant wBtcBtcFeed = AggregatorV3Interface(0xfdFD9C85aD2
 
 contract OracleFourFeedsTest is Test {
     function setUp() public {
-        vm.selectFork(vm.createFork(vm.envString("ETH_RPC_URL")));
+        vm.createSelectFork(vm.envString("ETH_RPC_URL"));
     }
 
     function testOracleWbtcUsdc() public {
