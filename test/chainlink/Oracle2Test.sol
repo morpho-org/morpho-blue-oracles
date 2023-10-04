@@ -67,11 +67,12 @@ contract OracleTest is Test {
         assertApproxEqRel(oracle.price(), 1e36 / 1e6, 0.01 ether);
     }
 
-    function testNegativeAnswer() public {
+    function testNegativeAnswer(int price) public {
+        vm.assume(price < 0);
         FakeAggregator aggregator = new FakeAggregator();
         Oracle2 oracle =
             new Oracle2(AggregatorV3Interface(address(aggregator)), AggregatorV3Interface(address(0)), 18, 0);
-        aggregator.setAnwser(-1);
+        aggregator.setAnwser(price);
         vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
         oracle.price();
     }
