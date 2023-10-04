@@ -3,10 +3,10 @@ pragma solidity 0.8.19;
 
 import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
 
-import {AggregatorV3Interface, DataFeedLib} from "./libraries/DataFeedLib.sol";
+import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 
 contract ChainlinkOracle is IOracle {
-    using DataFeedLib for AggregatorV3Interface;
+    using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     /* CONSTANT */
 

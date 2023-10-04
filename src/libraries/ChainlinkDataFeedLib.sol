@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {ErrorsLib} from "./ErrorsLib.sol";
 import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
 
-library DataFeedLib {
+library ChainlinkDataFeedLib {
     /// @dev Performs some safety checks and returns the latest price of a feed.
     /// @dev When `feed` is the address zero, returns 1.
     function getPrice(AggregatorV3Interface feed) internal view returns (uint256) {

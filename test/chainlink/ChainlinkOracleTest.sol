@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "src/chainlink/ChainlinkOracle.sol";
-import "src/chainlink/libraries/ErrorsLib.sol";
+import "src/ChainlinkOracle.sol";
+import "src/libraries/ErrorsLib.sol";
 
 AggregatorV3Interface constant feedZero = AggregatorV3Interface(address(0));
 // 8 decimals of precision
@@ -43,8 +43,7 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testOracleWbtcUsdc() public {
-        ChainlinkOracle oracle =
-            new ChainlinkOracle(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, feedZero, 8, 6);
+        ChainlinkOracle oracle = new ChainlinkOracle(wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, feedZero, 8, 6);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcUsdFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcUsdFeed.latestRoundData();
@@ -56,8 +55,7 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testOracleUsdcWbtc() public {
-        ChainlinkOracle oracle =
-            new ChainlinkOracle(usdcUsdFeed, feedZero, wBtcBtcFeed, btcUsdFeed, 6, 8);
+        ChainlinkOracle oracle = new ChainlinkOracle(usdcUsdFeed, feedZero, wBtcBtcFeed, btcUsdFeed, 6, 8);
         (, int256 baseAnswer,,,) = usdcUsdFeed.latestRoundData();
         (, int256 firstQuoteAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondQuoteAnswer,,,) = btcUsdFeed.latestRoundData();
@@ -69,8 +67,7 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testOracleWbtcEth() public {
-        ChainlinkOracle oracle =
-        new ChainlinkOracle(wBtcBtcFeed, btcEthFeed, feedZero, feedZero, 8, 18);
+        ChainlinkOracle oracle = new ChainlinkOracle(wBtcBtcFeed, btcEthFeed, feedZero, feedZero, 8, 18);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcEthFeed.latestRoundData();
         assertEq(oracle.price(), (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 18 - 8 - 8 - 18)));
