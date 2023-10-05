@@ -21,7 +21,7 @@ library ChainlinkDataFeedLib {
         return uint256(answer);
     }
 
-    /// @dev Returns the number of decimals of a feed.
+    /// @dev Returns the number of decimals of a `feed`.
     /// @dev When `feed` is the address zero, returns 0.
     function getDecimals(AggregatorV3Interface feed) internal view returns (uint256) {
         if (address(feed) == address(0)) return 0;
