@@ -5,10 +5,14 @@ import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 
+/// @title ChainlinkOracle
+/// @author Morpho Labs
+/// @custom:contact security@morpho.org
+/// @notice Morpho Blue oracle using Chainlink-compliant feeds.
 contract ChainlinkOracle is IOracle {
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
-    /* CONSTANT */
+    /* IMMUTABLES */
 
     /// @notice First base feed.
     AggregatorV3Interface public immutable BASE_FEED_1;
