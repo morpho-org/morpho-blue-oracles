@@ -19,7 +19,7 @@ contract Chainlink4626OracleTest is Test {
     }
 
     function testSdaiEthOracle() public {
-        Chainlink4626Oracle oracle = new Chainlink4626Oracle(sDaiVault, daiEthFeed, feedZero, 18, 18, 18);
+        Chainlink4626Oracle oracle = new Chainlink4626Oracle(sDaiVault, daiEthFeed, feedZero, 18, 18);
         (, int256 expectedPrice,,,) = daiEthFeed.latestRoundData();
         assertEq(
             oracle.price(),
@@ -28,7 +28,7 @@ contract Chainlink4626OracleTest is Test {
     }
 
     function testSdaiUsdcOracle() public {
-        Chainlink4626Oracle oracle = new Chainlink4626Oracle(sDaiVault, daiEthFeed, usdcEthFeed, 18, 18, 6);
+        Chainlink4626Oracle oracle = new Chainlink4626Oracle(sDaiVault, daiEthFeed, usdcEthFeed, 18, 6);
         (, int256 baseAnswer,,,) = daiEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
         assertEq(
