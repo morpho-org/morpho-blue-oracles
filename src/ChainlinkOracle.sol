@@ -41,6 +41,20 @@ contract ChainlinkOracle is IOracle {
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
         QUOTE_FEED_2 = quoteFeed2;
+        // Let pB1 and pB2 be the base prices, and pQ1 and pQ2 the quote prices (price of 1e(decimals) asset), in a
+        // common quote currency.
+        // Chainlink feeds return pB1*b1FeedPrecision, pB2*b2FeedPrecision, pQ1*q1FeedPrecision and pQ2*q2FeedPrecision.
+        // `price()` should return 1e36 * (pB1/1e(b1Decimals) * pB2/1e(b2Decimals)) / (pQ1/1e(q1Decimals) *
+        // pQ2/1e(q2Decimals)).
+        // Yet `price()` returns (pB1*1e(b1FeedPrecision) * pB2*1e(b2FeedPrecision) * SCALE_FACTOR) /
+        // (pQ1*1e(q1FeedPrecision) * pQ2*1e(q2FeedPrecision))
+        // So 1e36 * (pB1/1e(b1Decimals) * pB2/1e(b2Decimals)) / (pQ1/1e(q1Decimals) * pQ2/1e(q2Decimals)) =
+        // (pB1*1e(b1FeedPrecision) * pB2*1e(b2FeedPrecision) * SCALE_FACTOR) / (pQ1*1e(q1FeedPrecision) *
+        // pQ2*1e(q2FeedPrecision))
+        // So SCALE_FACTOR = 1e36 / 1e(b1Decimals) / 1e(b2Decimals) * 1e(q1Decimals) * 1e(q2Decimals) *
+        // 1e(q1FeedPrecision) * 1e(q2FeedPrecision) / 1e(b1FeedPrecision) / 1e(b2FeedPrecision)
+        //                 = 1e(36 + q1Decimals + q2Decimals + q1FeedPrecision + q2FeedPrecision - b1Decimals -
+        // b2Decimals - b1FeedPrecision - b2FeedPrecision)
         SCALE_FACTOR = 10
             ** (
                 36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseFeed1.getDecimals()
