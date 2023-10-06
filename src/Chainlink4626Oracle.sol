@@ -9,7 +9,7 @@ interface ERC4626 {
     function convertToAssets(uint256) external view returns (uint256);
 }
 
-contract OracleNonRebasing is IOracle {
+contract Chainlink4626Oracle is IOracle {
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     /* CONSTANT */
@@ -37,13 +37,18 @@ contract OracleNonRebasing is IOracle {
         AggregatorV3Interface baseFeed,
         AggregatorV3Interface quoteFeed,
         uint256 vaultDecimals,
+        uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
         VAULT = vault;
         BASE_FEED = baseFeed;
         QUOTE_FEED = quoteFeed;
         VAULT_DECIMALS = vaultDecimals;
-        SCALE_FACTOR = 10 ** (36 + quoteFeed.getDecimals() - baseFeed.getDecimals() - quoteTokenDecimals);
+        SCALE_FACTOR = 10
+            ** (
+                36 + quoteTokenDecimals + quoteFeed.getDecimals() - baseFeed.getDecimals() - baseTokenDecimals
+                    - vaultDecimals
+            );
     }
 
     /* PRICE */
