@@ -22,7 +22,7 @@ contract OracleNonRebasing is IOracle {
     AggregatorV3Interface public immutable BASE_FEED;
     /// @notice Quote feed.
     AggregatorV3Interface public immutable QUOTE_FEED;
-    /// @notice Price scale factor. Automatically computed at contract creation.
+    /// @notice Price scale factor.
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */
@@ -31,7 +31,7 @@ contract OracleNonRebasing is IOracle {
     /// @param baseFeed Base feed.
     /// @param quoteFeed Quote feed. Pass address zero if the price = 1.
     /// @param vaultDecimals Vault decimals.
-    /// @param quoteTokenDecimals Quote token decimals. Pass 0 if the price = 1.
+    /// @param quoteTokenDecimals Quote token decimals.
     constructor(
         ERC4626 vault,
         AggregatorV3Interface baseFeed,
