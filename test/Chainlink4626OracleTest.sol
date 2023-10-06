@@ -26,4 +26,20 @@ contract Chainlink4626OracleTest is Test {
             sDaiVault.convertToAssets(1e18) * uint256(expectedPrice) * 10 ** (36 + 18 + 0 - 18 - 18 - 18)
         );
     }
+
+    function testSdaiUsdcOracle() public {
+        Chainlink4626Oracle oracle = new Chainlink4626Oracle(sDaiVault, daiEthFeed, usdcEthFeed, 18, 18, 6);
+        (, int256 baseAnswer,,,) = daiEthFeed.latestRoundData();
+        (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
+        assertEq(
+            oracle.price(),
+            sDaiVault.convertToAssets(1e18) * uint256(baseAnswer) * 10 ** (36 + 6 + 18 - 18 - 18 - 18)
+                / uint256(quoteAnswer)
+        );
+        // DAI has 12 more decimals than USDC.
+        uint256 expectedPrice = 10 ** (36 - 12);
+        // Admit a 50% interest gain before breaking this test.
+        uint256 deviation = 0.5 ether;
+        assertApproxEqRel(oracle.price(), expectedPrice, deviation);
+    }
 }
