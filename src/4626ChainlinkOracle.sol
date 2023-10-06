@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
 
-import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
+import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
 
-import {AggregatorV3Interface, DataFeedLib} from "./libraries/DataFeedLib.sol";
+import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 
 interface ERC4626 {
     function convertToAssets(uint256) external view returns (uint256);
 }
 
 contract OracleNonRebasing is IOracle {
-    using DataFeedLib for AggregatorV3Interface;
+    using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     /* CONSTANT */
 
@@ -43,14 +43,14 @@ contract OracleNonRebasing is IOracle {
         BASE_FEED = baseFeed;
         QUOTE_FEED = quoteFeed;
         VAULT_DECIMALS = vaultDecimals;
-        SCALE_FACTOR = 10 ** (36 + quoteFeed.wrapDecimals() - baseFeed.wrapDecimals() - quoteTokenDecimals);
+        SCALE_FACTOR = 10 ** (36 + quoteFeed.getDecimals() - baseFeed.getDecimals() - quoteTokenDecimals);
     }
 
     /* PRICE */
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (VAULT.convertToAssets(10 ** VAULT_DECIMALS) * BASE_FEED.wrapPrice() * SCALE_FACTOR)
-            / QUOTE_FEED.wrapPrice();
+        return
+            (VAULT.convertToAssets(10 ** VAULT_DECIMALS) * BASE_FEED.getPrice() * SCALE_FACTOR) / QUOTE_FEED.getPrice();
     }
 }
