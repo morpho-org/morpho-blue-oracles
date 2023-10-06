@@ -46,7 +46,7 @@ contract Chainlink4626Oracle is IOracle {
         // This scale factor is defined similarly to the scale factor of the ChainlinkOracle, except:
         // - the oracle only has one base feed and one quote feed
         // - it is used to price a full unit of the vault shares, so it requires dividing by that number, hence the
-        // `vaultDecimals` subtraction
+        // `VAULT_DECIMALS` subtraction
         SCALE_FACTOR = 10
             ** (
                 36 + quoteTokenDecimals + quoteFeed.getDecimals() - baseFeed.getDecimals() - baseTokenDecimals
