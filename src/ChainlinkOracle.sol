@@ -4,20 +4,20 @@ pragma solidity 0.8.19;
 import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
-import {ERC4626, VaultDataFeedLib} from "./libraries/VaultDataFeedLib.sol";
+import {ERC4626Interface, VaultLib} from "./libraries/VaultLib.sol";
 
 /// @title ChainlinkOracle
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
 contract ChainlinkOracle is IOracle {
-    using VaultDataFeedLib for ERC4626;
+    using VaultLib for ERC4626Interface;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     /* IMMUTABLES */
 
     /// @notice Vault.
-    ERC4626 public immutable VAULT;
+    ERC4626Interface public immutable VAULT;
     /// @notice Vault decimals.
     uint256 public immutable VAULT_DECIMALS;
     /// @notice First base feed.
@@ -41,7 +41,7 @@ contract ChainlinkOracle is IOracle {
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
-        ERC4626 vault,
+        ERC4626Interface vault,
         AggregatorV3Interface baseFeed1,
         AggregatorV3Interface baseFeed2,
         AggregatorV3Interface quoteFeed1,
