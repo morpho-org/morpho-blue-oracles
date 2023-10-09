@@ -4,11 +4,7 @@ pragma solidity 0.8.19;
 import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
-
-interface ERC4626 {
-    function convertToAssets(uint256) external view returns (uint256);
-    function decimals() external view returns (uint256);
-}
+import {ERC4626Interface} from "./interfaces/ERC4626Interface.sol";
 
 contract Chainlink4626Oracle is IOracle {
     using ChainlinkDataFeedLib for AggregatorV3Interface;
@@ -16,7 +12,7 @@ contract Chainlink4626Oracle is IOracle {
     /* CONSTANT */
 
     /// @notice Vault.
-    ERC4626 public immutable VAULT;
+    ERC4626Interface public immutable VAULT;
     /// @notice Vault decimals.
     uint256 public immutable VAULT_DECIMALS;
     /// @notice Base feed.
@@ -33,7 +29,7 @@ contract Chainlink4626Oracle is IOracle {
     /// @param quoteFeed Quote feed. Pass address zero if the price = 1.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
-        ERC4626 vault,
+        ERC4626Interface vault,
         AggregatorV3Interface baseFeed,
         AggregatorV3Interface quoteFeed,
         uint256 baseTokenDecimals,
