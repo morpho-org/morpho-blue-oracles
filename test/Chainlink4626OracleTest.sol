@@ -18,7 +18,7 @@ contract Chainlink4626OracleTest is Test {
         vm.selectFork(vm.createFork(vm.envString("ETH_RPC_URL")));
     }
 
-    function testSdaiEthOracle() public {
+    function testSDaiEthOracle() public {
         Chainlink4626Oracle oracle = new Chainlink4626Oracle(sDaiVault, daiEthFeed, feedZero, 18, 18);
         (, int256 expectedPrice,,,) = daiEthFeed.latestRoundData();
         assertEq(
@@ -27,7 +27,7 @@ contract Chainlink4626OracleTest is Test {
         );
     }
 
-    function testSdaiUsdcOracle() public {
+    function testSDaiUsdcOracle() public {
         Chainlink4626Oracle oracle = new Chainlink4626Oracle(sDaiVault, daiEthFeed, usdcEthFeed, 18, 6);
         (, int256 baseAnswer,,,) = daiEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
