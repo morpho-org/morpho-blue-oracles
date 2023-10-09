@@ -6,7 +6,7 @@ import {ERC4626Interface} from "../interfaces/ERC4626Interface.sol";
 /// @title ChainlinkDataFeedLib
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
-/// @notice Library exposing functions to interact with a Chainlink-compliant feed.
+/// @notice Library exposing functions to price shares of an ERC4626 vault.
 library VaultLib {
     /// @dev Converts `shares` into the corresponding assets on the `vault`.
     /// @dev When `vault` is the address zero, returns 1.

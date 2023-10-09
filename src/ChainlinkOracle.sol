@@ -49,12 +49,10 @@ contract ChainlinkOracle is IOracle {
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
+        // The vault parameter is used for ERC4626 tokens, to price its shares.
+        // It is used to price a full unit of the vault shares, so it requires dividing by that number, hence the
+        // `VAULT_DECIMALS` subtraction in the following `SCALE_FACTOR` definition.
         VAULT = vault;
-        // TODO: adapt this
-        // This scale factor is defined similarly to the scale factor of the ChainlinkOracle, except:
-        // - the oracle only has one base feed and one quote feed
-        // - it is used to price a full unit of the vault shares, so it requires dividing by that number, hence the
-        // `VAULT_DECIMALS` subtraction
         VAULT_DECIMALS = VAULT.getDecimals();
         BASE_FEED_1 = baseFeed1;
         BASE_FEED_2 = baseFeed2;
