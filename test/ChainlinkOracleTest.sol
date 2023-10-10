@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import "src/ChainlinkOracle.sol";
 import "src/libraries/ErrorsLib.sol";
-import "./mock/ChainlinkAggregatorMock.sol";
+import "./mocks/ChainlinkAggregatorMock.sol";
 
 AggregatorV3Interface constant feedZero = AggregatorV3Interface(address(0));
 // 8 decimals of precision
