@@ -58,7 +58,7 @@ contract ChainlinkOracle is IOracle {
         // Yet `price()` returns (pB1*1e(fpB1) * pB2*1e(fpB2) * SCALE_FACTOR) / (pQ1*1e(fpQ1) * pQ2*1e(fpQ2))
         // So 1e36 * pB1 * pB2 * 1e(-dB1) / (pQ1 * pQ2 * 1e(-dQ1)) =
         // (pB1*1e(fpB1) * pB2*1e(fpB2) * SCALE_FACTOR) / (pQ1*1e(fpQ1) * pQ2*1e(fpQ2))
-        // So SCALE_FACTOR = 1e36 / 1e(dB1) * 1e(dQ1) / 1e(fpB1) / 1e(fpB2) * 1e(fpQ1) * 1e(fpQ2)
+        // So SCALE_FACTOR = 1e36 * 1e(-dB1) * 1e(dQ1) * 1e(-fpB1) * 1e(-fpB2) * 1e(fpQ1) * 1e(fpQ2)
         //                 = 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2)
         SCALE_FACTOR = 10
             ** (
