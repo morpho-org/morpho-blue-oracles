@@ -23,8 +23,8 @@ AggregatorV3Interface constant ethUsdFeed = AggregatorV3Interface(0x5f4eC3Df9cbd
 // 18 decimals of precision
 AggregatorV3Interface constant daiEthFeed = AggregatorV3Interface(0x773616E4d11A78F511299002da57A0a94577F1f4);
 
-ERC4626Interface constant vaultZero = ERC4626Interface(address(0));
-ERC4626Interface constant sDaiVault = ERC4626Interface(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
+IERC4626 constant vaultZero = IERC4626(address(0));
+IERC4626 constant sDaiVault = IERC4626(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
 
 contract FakeAggregator {
     int256 public answer;
