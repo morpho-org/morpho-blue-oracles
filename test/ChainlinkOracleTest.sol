@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import "src/ChainlinkOracle.sol";
 import "src/libraries/ErrorsLib.sol";
+import "./mock/ChainlinkAggregatorMock.sol";
 
 AggregatorV3Interface constant feedZero = AggregatorV3Interface(address(0));
 // 8 decimals of precision
@@ -20,22 +21,6 @@ AggregatorV3Interface constant stEthEthFeed = AggregatorV3Interface(0x86392dC19c
 AggregatorV3Interface constant usdcEthFeed = AggregatorV3Interface(0x986b5E1e1755e3C2440e960477f25201B0a8bbD4);
 // 8 decimals of precision
 AggregatorV3Interface constant ethUsdFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
-
-contract FakeAggregator {
-    int256 public answer;
-
-    function setAnwser(int256 newAnswer) external {
-        answer = newAnswer;
-    }
-
-    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
-        return (0, answer, 0, 0, 0);
-    }
-
-    function decimals() external pure returns (uint256) {
-        return 8;
-    }
-}
 
 contract ChainlinkOracleTest is Test {
     function setUp() public {
@@ -107,7 +92,7 @@ contract ChainlinkOracleTest is Test {
 
     function testNegativeAnswer(int256 price) public {
         price = bound(price, type(int256).min, -1);
-        FakeAggregator aggregator = new FakeAggregator();
+        ChainlinkAggregatorMock aggregator = new ChainlinkAggregatorMock();
         ChainlinkOracle oracle =
             new ChainlinkOracle(AggregatorV3Interface(address(aggregator)), feedZero, feedZero, feedZero, 18, 0);
         aggregator.setAnwser(price);
