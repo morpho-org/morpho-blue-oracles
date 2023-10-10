@@ -62,7 +62,7 @@ contract ChainlinkOracle is IOracle {
         // common quote currency.
         // Chainlink feeds return pB1*b1FeedPrecision, pB2*b2FeedPrecision, pQ1*q1FeedPrecision and pQ2*q2FeedPrecision.
         // `price()` should return 1e36 * (pB1/1e(b1Decimals) * pB2/1e(b2Decimals)) / (pQ1/1e(q1Decimals) *
-        // pQ2/1e(q2Decimals)).
+        // pQ2/1e(q2Decimals))
         // Yet `price()` returns (pB1*1e(b1FeedPrecision) * pB2*1e(b2FeedPrecision) * SCALE_FACTOR) /
         // (pQ1*1e(q1FeedPrecision) * pQ2*1e(q2FeedPrecision))
         // So 1e36 * (pB1/1e(b1Decimals) * pB2/1e(b2Decimals)) / (pQ1/1e(q1Decimals) * pQ2/1e(q2Decimals)) =
@@ -74,8 +74,8 @@ contract ChainlinkOracle is IOracle {
         // b2Decimals - b1FeedPrecision - b2FeedPrecision)
         SCALE_FACTOR = 10
             ** (
-                36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseFeed1.getDecimals()
-                    - baseFeed2.getDecimals() - baseTokenDecimals - VAULT_DECIMALS
+                36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseTokenDecimals
+                    - baseFeed1.getDecimals() - baseFeed2.getDecimals() - VAULT_DECIMALS
             );
     }
 

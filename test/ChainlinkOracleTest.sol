@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import "src/ChainlinkOracle.sol";
 import "src/libraries/ErrorsLib.sol";
+import "./mocks/ChainlinkAggregatorMock.sol";
 
 AggregatorV3Interface constant feedZero = AggregatorV3Interface(address(0));
 // 8 decimals of precision
@@ -25,22 +26,6 @@ AggregatorV3Interface constant daiEthFeed = AggregatorV3Interface(0x773616E4d11A
 
 IERC4626 constant vaultZero = IERC4626(address(0));
 IERC4626 constant sDaiVault = IERC4626(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
-
-contract FakeAggregator {
-    int256 public answer;
-
-    function setAnwser(int256 newAnswer) external {
-        answer = newAnswer;
-    }
-
-    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
-        return (0, answer, 0, 0, 0);
-    }
-
-    function decimals() external pure returns (uint256) {
-        return 8;
-    }
-}
 
 contract ChainlinkOracleTest is Test {
     function setUp() public {
@@ -112,7 +97,7 @@ contract ChainlinkOracleTest is Test {
 
     function testNegativeAnswer(int256 price) public {
         price = bound(price, type(int256).min, -1);
-        FakeAggregator aggregator = new FakeAggregator();
+        ChainlinkAggregatorMock aggregator = new ChainlinkAggregatorMock();
         ChainlinkOracle oracle =
         new ChainlinkOracle(vaultZero, AggregatorV3Interface(address(aggregator)), feedZero, feedZero, feedZero, 18, 0);
         aggregator.setAnwser(price);
