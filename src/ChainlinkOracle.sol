@@ -38,6 +38,8 @@ contract ChainlinkOracle is IOracle {
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
+    /// @param vaultDecimals Vault decimals, where the vault is an ERC4626 seen as an ERC20. Pass 0 if the oracle does
+    /// not use a vault.
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
@@ -46,6 +48,7 @@ contract ChainlinkOracle is IOracle {
         AggregatorV3Interface baseFeed2,
         AggregatorV3Interface quoteFeed1,
         AggregatorV3Interface quoteFeed2,
+        uint256 vaultDecimals,
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
@@ -53,7 +56,7 @@ contract ChainlinkOracle is IOracle {
         // It is used to price a full unit of the vault shares, so it requires dividing by that number, hence the
         // `VAULT_DECIMALS` subtraction in the following `SCALE_FACTOR` definition.
         VAULT = vault;
-        VAULT_DECIMALS = VAULT.getDecimals();
+        VAULT_DECIMALS = vaultDecimals;
         BASE_FEED_1 = baseFeed1;
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
@@ -75,7 +78,7 @@ contract ChainlinkOracle is IOracle {
         SCALE_FACTOR = 10
             ** (
                 36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseTokenDecimals
-                    - baseFeed1.getDecimals() - baseFeed2.getDecimals() - VAULT_DECIMALS
+                    - baseFeed1.getDecimals() - baseFeed2.getDecimals() - vaultDecimals
             );
     }
 
