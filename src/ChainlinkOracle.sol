@@ -47,6 +47,8 @@ contract ChainlinkOracle is IOracle {
         QUOTE_FEED_2 = quoteFeed2;
         // Let pB1 and pB2 be the base prices, and pQ1 and pQ2 the quote prices (price taking into account the
         // decimals of both tokens), in a common currency.
+        // We tackle the most general case in the remainder of this comment, where we assume that no feed is the address
+        // zero. Similar explanations would hold in the case where some of the feeds are the address zero.
         // Let dB1, dB2, dB3, and dQ1, dQ2, dQ3 be the decimals of the tokens involved.
         // For example, pB1 is the number of 1e(dB2) of the second base asset that can be obtained from 1e(dB1) of
         // the first base asset.
