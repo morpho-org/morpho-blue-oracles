@@ -18,8 +18,9 @@ contract ChainlinkOracle is IOracle {
 
     /// @notice Vault.
     IERC4626 public immutable VAULT;
-    /// @notice Vault decimals.
-    uint256 public immutable VAULT_DECIMALS;
+    /// @notice Vault precision. The number of decimals used to price shares of the vault.
+    /// @notice Should be chosen such that converting `10 ** VAULT_PRECISION` to assets has enough precision.
+    uint256 public immutable VAULT_PRECISION;
     /// @notice First base feed.
     AggregatorV3Interface public immutable BASE_FEED_1;
     /// @notice Second base feed.
@@ -38,8 +39,7 @@ contract ChainlinkOracle is IOracle {
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
-    /// @param vaultDecimals Vault decimals, where the vault is an ERC4626 seen as an ERC20. Pass 0 if the oracle does
-    /// not use a vault.
+    /// @param vaultPrecision Vault precision. Pass 0 if the oracle does not use a vault.
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
@@ -48,15 +48,15 @@ contract ChainlinkOracle is IOracle {
         AggregatorV3Interface baseFeed2,
         AggregatorV3Interface quoteFeed1,
         AggregatorV3Interface quoteFeed2,
-        uint256 vaultDecimals,
+        uint256 vaultPrecision,
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
         // The vault parameter is used for ERC4626 tokens, to price its shares.
-        // It is used to price a full unit of the vault shares, so it requires dividing by that number, hence the
-        // `VAULT_DECIMALS` subtraction in the following `SCALE_FACTOR` definition.
+        // It is used to price `10 ** VAULT_PRECISION` of the vault shares, so it requires dividing by that number,
+        // hence the `VAULT_PRECISION` subtraction in the `SCALE_FACTOR` definition.
         VAULT = vault;
-        VAULT_DECIMALS = vaultDecimals;
+        VAULT_PRECISION = vaultPrecision;
         BASE_FEED_1 = baseFeed1;
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
@@ -78,7 +78,7 @@ contract ChainlinkOracle is IOracle {
         SCALE_FACTOR = 10
             ** (
                 36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseTokenDecimals
-                    - baseFeed1.getDecimals() - baseFeed2.getDecimals() - vaultDecimals
+                    - baseFeed1.getDecimals() - baseFeed2.getDecimals() - vaultPrecision
             );
     }
 
@@ -86,7 +86,7 @@ contract ChainlinkOracle is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (VAULT.getAssets(10 ** VAULT_DECIMALS) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR)
+        return (VAULT.getAssets(10 ** VAULT_PRECISION) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR)
             / (QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice());
     }
 }
