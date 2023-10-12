@@ -1,6 +1,10 @@
-name: Test
+name: Foundry
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 env:
   FOUNDRY_PROFILE: ci
