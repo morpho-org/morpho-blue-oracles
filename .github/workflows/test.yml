@@ -7,7 +7,7 @@ env:
 
 jobs:
   check:
-    name: Foundry project
+    name: forge-test
     runs-on: ubuntu-latest
     steps:
       - name: Generate a token
