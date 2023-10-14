@@ -21,6 +21,8 @@ contract ChainlinkOracle is IOracle {
     /// @notice Conversion sample decimals. The decimals of the shares sample used to convert to the underlying asset.
     /// @notice Should be chosen such that converting `10 ** CONVERSION_SAMPLE_DECIMALS` to assets has enough precision.
     uint256 public immutable CONVERSION_SAMPLE_DECIMALS;
+    /// @notice Conversion sample, equals to 10 ** CONVERSION_SAMPLE_DECIMALS.
+    uint256 public immutable CONVERSION_SAMPLE;
     /// @notice First base feed.
     AggregatorV3Interface public immutable BASE_FEED_1;
     /// @notice Second base feed.
@@ -57,6 +59,7 @@ contract ChainlinkOracle is IOracle {
         // by that number, hence the `CONVERSION_SAMPLE_DECIMALS` subtraction in the `SCALE_FACTOR` definition.
         VAULT = vault;
         CONVERSION_SAMPLE_DECIMALS = conversionSampleDecimals;
+        CONVERSION_SAMPLE = 10 ** CONVERSION_SAMPLE_DECIMALS;
         BASE_FEED_1 = baseFeed1;
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
@@ -86,8 +89,7 @@ contract ChainlinkOracle is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        uint256 sample = 10 ** CONVERSION_SAMPLE_DECIMALS;
-        return (VAULT.getAssets(sample) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR)
+        return (VAULT.getAssets(CONVERSION_SAMPLE) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR)
             / (QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice());
     }
 }
