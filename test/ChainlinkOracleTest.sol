@@ -33,7 +33,7 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testOracleWbtcUsdc() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, feedZero, 0, 8, 6);
+        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, feedZero, 1, 8, 6);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcUsdFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcUsdFeed.latestRoundData();
@@ -45,7 +45,7 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testOracleUsdcWbtc() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, usdcUsdFeed, feedZero, wBtcBtcFeed, btcUsdFeed, 0, 6, 8);
+        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, usdcUsdFeed, feedZero, wBtcBtcFeed, btcUsdFeed, 1, 6, 8);
         (, int256 baseAnswer,,,) = usdcUsdFeed.latestRoundData();
         (, int256 firstQuoteAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondQuoteAnswer,,,) = btcUsdFeed.latestRoundData();
@@ -57,41 +57,41 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testOracleWbtcEth() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero,wBtcBtcFeed, btcEthFeed, feedZero, feedZero, 0, 8, 18);
+        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero,wBtcBtcFeed, btcEthFeed, feedZero, feedZero, 1, 8, 18);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcEthFeed.latestRoundData();
         assertEq(oracle.price(), (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 18 - 8 - 8 - 18)));
     }
 
     function testOracleStEthUsdc() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, stEthEthFeed, feedZero, usdcEthFeed, feedZero,0,  18, 6);
+        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, stEthEthFeed, feedZero, usdcEthFeed, feedZero, 1, 18, 6);
         (, int256 baseAnswer,,,) = stEthEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
         assertEq(oracle.price(), uint256(baseAnswer) * 10 ** (36 + 18 + 6 - 18 - 18) / uint256(quoteAnswer));
     }
 
     function testOracleEthUsd() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, ethUsdFeed, feedZero, feedZero, feedZero, 0, 18, 0);
+        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, ethUsdFeed, feedZero, feedZero, feedZero, 1, 18, 0);
         (, int256 expectedPrice,,,) = ethUsdFeed.latestRoundData();
         assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 - 18 - 8));
     }
 
     function testOracleStEthEth() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, stEthEthFeed, feedZero, feedZero, feedZero, 0, 18, 18);
+        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, stEthEthFeed, feedZero, feedZero, feedZero, 1, 18, 18);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18 - 18));
         assertApproxEqRel(oracle.price(), 1e36, 0.01 ether);
     }
 
     function testOracleEthStEth() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, feedZero, feedZero, stEthEthFeed, feedZero, 0, 18, 18);
+        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, feedZero, feedZero, stEthEthFeed, feedZero, 1, 18, 18);
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), 10 ** (36 + 18 + 18 - 18) / uint256(expectedPrice));
         assertApproxEqRel(oracle.price(), 1e36, 0.01 ether);
     }
 
     function testOracleUsdcUsd() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, usdcUsdFeed, feedZero, feedZero, feedZero, 0, 6, 0);
+        ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, usdcUsdFeed, feedZero, feedZero, feedZero, 1, 6, 0);
         assertApproxEqRel(oracle.price(), 1e36 / 1e6, 0.01 ether);
     }
 
@@ -99,14 +99,15 @@ contract ChainlinkOracleTest is Test {
         price = bound(price, type(int256).min, -1);
         ChainlinkAggregatorMock aggregator = new ChainlinkAggregatorMock();
         ChainlinkOracle oracle =
-        new ChainlinkOracle(vaultZero, AggregatorV3Interface(address(aggregator)), feedZero, feedZero, feedZero, 0, 18, 0);
+        new ChainlinkOracle(vaultZero, AggregatorV3Interface(address(aggregator)), feedZero, feedZero, feedZero, 1, 18, 0);
         aggregator.setAnwser(price);
         vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
         oracle.price();
     }
 
     function testSDaiEthOracle() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(sDaiVault, daiEthFeed, feedZero, feedZero, feedZero, 18, 18, 18);
+        ChainlinkOracle oracle =
+            new ChainlinkOracle(sDaiVault, daiEthFeed, feedZero, feedZero, feedZero, 10 ** 18, 18, 18);
         (, int256 expectedPrice,,,) = daiEthFeed.latestRoundData();
         assertEq(
             oracle.price(),
@@ -115,7 +116,8 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testSDaiUsdcOracle() public {
-        ChainlinkOracle oracle = new ChainlinkOracle(sDaiVault, daiEthFeed, feedZero, usdcEthFeed, feedZero, 18, 18, 6);
+        ChainlinkOracle oracle =
+            new ChainlinkOracle(sDaiVault, daiEthFeed, feedZero, usdcEthFeed, feedZero, 10 ** 18, 18, 6);
         (, int256 baseAnswer,,,) = daiEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
         assertEq(
