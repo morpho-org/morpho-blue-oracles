@@ -18,9 +18,9 @@ contract ChainlinkOracle is IOracle {
 
     /// @notice Vault.
     IERC4626 public immutable VAULT;
-    /// @notice Conversion sample decimals. The decimals of the shares sample used to convert to the underlying asset.
-    /// @notice Should be chosen such that converting `10 ** CONVERSION_SAMPLE_DECIMALS` to assets has enough precision.
-    uint256 public immutable CONVERSION_SAMPLE_DECIMALS;
+    /// @notice Vault conversion sample. The sample amount of shares used to convert to the underlying asset.
+    /// @notice Should be chosen such that converting `VAULT_CONVERSION_SAMPLE` to assets has enough precision.
+    uint256 public immutable VAULT_CONVERSION_SAMPLE;
     /// @notice First base feed.
     AggregatorV3Interface public immutable BASE_FEED_1;
     /// @notice Second base feed.
@@ -39,7 +39,7 @@ contract ChainlinkOracle is IOracle {
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
-    /// @param conversionSampleDecimals Conversion sample decimals. Pass 0 if the oracle does not use a vault.
+    /// @param vaultConversionSample Vault conversion sample. Pass 1 if the oracle does not use a vault.
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
@@ -48,15 +48,15 @@ contract ChainlinkOracle is IOracle {
         AggregatorV3Interface baseFeed2,
         AggregatorV3Interface quoteFeed1,
         AggregatorV3Interface quoteFeed2,
-        uint256 conversionSampleDecimals,
+        uint256 vaultConversionSample,
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
         // The vault parameter is used for ERC4626 tokens, to price its shares.
-        // It is used to price `10 ** CONVERSION_SAMPLE_DECIMALS` of the vault shares, so it requires dividing
-        // by that number, hence the `CONVERSION_SAMPLE_DECIMALS` subtraction in the `SCALE_FACTOR` definition.
+        // It is used to price `VAULT_CONVERSION_SAMPLE` of the vault shares, so it requires dividing by that number,
+        // hence the division by `VAULT_CONVERSION_SAMPLE` in the `SCALE_FACTOR` definition.
         VAULT = vault;
-        CONVERSION_SAMPLE_DECIMALS = conversionSampleDecimals;
+        VAULT_CONVERSION_SAMPLE = vaultConversionSample;
         BASE_FEED_1 = baseFeed1;
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
@@ -78,16 +78,16 @@ contract ChainlinkOracle is IOracle {
         SCALE_FACTOR = 10
             ** (
                 36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseTokenDecimals
-                    - baseFeed1.getDecimals() - baseFeed2.getDecimals() - CONVERSION_SAMPLE_DECIMALS
-            );
+                    - baseFeed1.getDecimals() - baseFeed2.getDecimals()
+            ) / VAULT_CONVERSION_SAMPLE;
     }
 
     /* PRICE */
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        uint256 sample = 10 ** CONVERSION_SAMPLE_DECIMALS;
-        return (VAULT.getAssets(sample) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR)
-            / (QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice());
+        return (
+            VAULT.getAssets(VAULT_CONVERSION_SAMPLE) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR
+        ) / (QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice());
     }
 }
