@@ -15,12 +15,4 @@ library VaultLib {
 
         return vault.convertToAssets(shares);
     }
-
-    /// @dev Returns the number of decimals of a `vault`, seen as an ERC20.
-    /// @dev When `vault` is the address zero, returns 0.
-    function getDecimals(IERC4626 vault) internal view returns (uint256) {
-        if (address(vault) == address(0)) return 0;
-
-        return vault.decimals();
-    }
 }
