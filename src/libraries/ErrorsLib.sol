@@ -9,6 +9,6 @@ library ErrorsLib {
     /// @notice Thrown when the answer returned by a Chainlink feed is negative.
     string constant NEGATIVE_ANSWER = "negative answer";
 
-    /// @notice Thrown when the vault conversion sample is not 1 while vault = 0.
+    /// @notice Thrown when the vault conversion sample is not 1 while vault = address(0).
     string constant VAULT_CONVERSION_SAMPLE_IS_NOT_ONE = "vault conversion sample is not one";
 }
