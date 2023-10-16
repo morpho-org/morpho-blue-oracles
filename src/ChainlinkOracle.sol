@@ -5,6 +5,7 @@ import {IOracle} from "morpho-blue/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
+import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 
 /// @title ChainlinkOracle
 /// @author Morpho Labs
@@ -52,11 +53,11 @@ contract ChainlinkOracle is IOracle {
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
+        // Verify that vault = 0 => vaultConversionSample = 1.
+        require(address(vault) != address(0) || vaultConversionSample == 1, ErrorsLib.INCONSISTENT_SAMPLE_AMOUNT);
         // The vault parameter is used for ERC4626 tokens, to price its shares.
         // It is used to price `VAULT_CONVERSION_SAMPLE` of the vault shares, so it requires dividing by that number,
         // hence the division by `VAULT_CONVERSION_SAMPLE` in the `SCALE_FACTOR` definition.
-        // Verify that vault = 0 => vaultConversionSample = 1.
-        require(address(vault) != address(0) || vaultConversionSample == 1);
         VAULT = vault;
         VAULT_CONVERSION_SAMPLE = vaultConversionSample;
         BASE_FEED_1 = baseFeed1;
