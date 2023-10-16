@@ -57,7 +57,9 @@ contract ChainlinkOracle is IOracle {
         // It is used to price `VAULT_CONVERSION_SAMPLE` of the vault shares, so it requires dividing by that number,
         // hence the division by `VAULT_CONVERSION_SAMPLE` in the `SCALE_FACTOR` definition.
         // Verify that vault = 0 => vaultConversionSample = 1.
-        require(address(vault) != address(0) || vaultConversionSample == 1, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE);
+        require(
+            address(vault) != address(0) || vaultConversionSample == 1, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
+        );
         VAULT = vault;
         VAULT_CONVERSION_SAMPLE = vaultConversionSample;
         BASE_FEED_1 = baseFeed1;
