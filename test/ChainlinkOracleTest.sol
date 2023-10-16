@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import "forge-std/Test.sol";
-import "src/ChainlinkOracle.sol";
-import "src/libraries/ErrorsLib.sol";
+import "../lib/forge-std/src/Test.sol";
+import "../src/ChainlinkOracle.sol";
+import "../src/libraries/ErrorsLib.sol";
 import "./mocks/ChainlinkAggregatorMock.sol";
 
 AggregatorV3Interface constant feedZero = AggregatorV3Interface(address(0));
