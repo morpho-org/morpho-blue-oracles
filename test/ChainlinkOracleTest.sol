@@ -134,7 +134,7 @@ contract ChainlinkOracleTest is Test {
 
     function testConstructorVaultZeroNonOneSample(uint256 vaultConversionSample) public {
         vm.assume(vaultConversionSample != 1);
-        vm.expectRevert();
+        vm.expectRevert(bytes(ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE));
         new ChainlinkOracle(vaultZero, daiEthFeed, feedZero, usdcEthFeed, feedZero, vaultConversionSample, 18, 6);
     }
 }
