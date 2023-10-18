@@ -23,6 +23,8 @@ This Oracle handles the following cases among others (let's say that our pair is
 
 Install dependencies: `forge install`
 
+In a `.env` file, set `ETH_RPC_URL` to the URL of an Ethereum provider.
+
 Run test: `forge test`
 
 ## License
