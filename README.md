@@ -3,7 +3,7 @@
 [Morpho Blue](https://github.com/morpho-org/morpho-blue) is a trustless lending primitive that offers unparalleled efficiency and flexibility.
 
 Morpho Blue Oracles are contracts that can be used as oracles for markets on Morpho Blue.
-The oracles must implement the `IOracle` interface defined in [`IOracle.sol`](https://github.com/morpho-org/morpho-blue/blob/main/src/interfaces/IOracle.sol#L9).
+The oracles must implement the `IOracle` interface defined in [`IOracle.sol`](https://github.com/morpho-org/morpho-blue/blob/main/src/interfaces/IOracle.sol#L9): it is supposed to return the price of 1 asset of collateral token quoted in 1 asset of loan token.
 
 ## ChainlinkOracle
 
@@ -11,7 +11,7 @@ The `ChainlinkOracle` is an oracle that uses Chainlink-compliant feeds to provid
 
 This Oracle handles the following cases among others (let's say that our pair is A/B):
 - A/B is a feed (typically, stETH/ETH).
-- B/A is a feed (typically, USDC/ETH).
+- B/A is a feed (typically, ETH/USDC).
 - A/C and B/C are feeds (typically, stETH/ETH and USDC/ETH).
 - A/C, C/D and B/D are feeds (typically, WBTC/BTC, BTC/USD, USDC/USD).
 - A/D, and B/C, C/D are feeds (typically, USDC/USD, WBTC/BTC, BTC/USD).
