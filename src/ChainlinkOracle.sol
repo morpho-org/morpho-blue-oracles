@@ -59,7 +59,7 @@ contract ChainlinkOracle is IOracle {
         require(
             address(vault) != address(0) || vaultConversionSample == 1, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
         );
-        require(vaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_IS_ZERO);
+        require(vaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO);
 
         VAULT = vault;
         VAULT_CONVERSION_SAMPLE = vaultConversionSample;
@@ -97,7 +97,7 @@ contract ChainlinkOracle is IOracle {
             ** (
                 36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseTokenDecimals
                     - baseFeed1.getDecimals() - baseFeed2.getDecimals()
-            ) / VAULT_CONVERSION_SAMPLE;
+            ) / vaultConversionSample;
     }
 
     /* PRICE */
