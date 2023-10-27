@@ -6,12 +6,14 @@ import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
+import {FullMath} from "./libraries/FullMath.sol";
 
 /// @title ChainlinkOracle
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
 contract ChainlinkOracle is IOracle {
+    using FullMath for uint256;
     using VaultLib for IERC4626;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
@@ -94,8 +96,8 @@ contract ChainlinkOracle is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (
-            VAULT.getAssets(VAULT_CONVERSION_SAMPLE) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR
-        ) / (QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice());
+        return (VAULT.getAssets(VAULT_CONVERSION_SAMPLE) * SCALE_FACTOR).mulDiv(
+            BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice(), QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice()
+        );
     }
 }
