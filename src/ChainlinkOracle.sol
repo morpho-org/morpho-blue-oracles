@@ -59,6 +59,7 @@ contract ChainlinkOracle is IOracle {
         require(
             address(vault) != address(0) || vaultConversionSample == 1, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
         );
+        require(vaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_IS_ZERO);
 
         VAULT = vault;
         VAULT_CONVERSION_SAMPLE = vaultConversionSample;
