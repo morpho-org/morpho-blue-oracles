@@ -67,27 +67,27 @@ contract ChainlinkOracle is IOracle {
         QUOTE_FEED_1 = quoteFeed1;
         QUOTE_FEED_2 = quoteFeed2;
 
-        // In the following comment, we explain in the general case (where we assume that no feed is the address
-        // zero) how to scale the output price as Morpho Blue expects, given the input feed prices.
+        // In the following comment, we explain the general case (where we assume that no feed is the address zero)
+        // how to scale the output price as Morpho Blue expects, given the input feed prices.
         // Similar explanations would hold in the case where some of the feeds are the address zero.
 
         // Let B1, B2, Q1, Q2, C be 5 assets, each respectively having dB1, dB2, dQ1, dQ2, dC decimals.
         // Let pB1 and pB2 be the base prices, and pQ1 and pQ2 the quote prices, so that:
-        // - pB1 is the quantity of assets B2 that can be exchanged for 1e(dB1) assets B1, with dB2 decimals.
-        // - pB2 is the quantity of assets C that can be exchanged for 1e(dB2) assets B2, with dC decimals.
-        // - pQ1 is the quantity of assets Q2 that can be exchanged for 1e(dQ1) assets Q1, with dQ2 decimals.
-        // - pQ2 is the quantity of assets C that can be exchanged for 1e(dQ2) assets B2, with dC decimals.
+        // - pB1 is the quantity of 1e(dB2) assets B2 that can be exchanged for 1e(dB1) assets B1.
+        // - pB2 is the quantity of 1e(dC) assets C that can be exchanged for 1e(dB2) assets B2.
+        // - pQ1 is the quantity of 1e(dQ2) assets Q2 that can be exchanged for 1e(dQ1) assets Q1.
+        // - pQ2 is the quantity of 1e(dC) assets C that can be exchanged for 1e(dQ2) assets B2.
 
-        // Morpho Blue's market oracle expects to price 1 asset B1 quoted in 1 asset of Q2, so `price()` should return:
-        // 1e36 * (pB1 * 1e(dB2 - dB1)) * (pB2 * 1e(dC - dB2)) / (pQ1 * 1e(dQ2 - dQ1)) * (pQ2 * 1e(dC - dQ2))
-        // = 1e36 * (pB1 * 1e(-dB1) * pB2) / (pQ1 * 1e(-dQ1) * pQ2)
+        // Morpho Blue expects `price()` to be the quantity of 1 asset B1 that can be exchanged for 1 asset Q2:
+        // 1e36 * (pB1 * 1e(dB2 - dB1)) * (pB2 * 1e(dC - dB2)) / ((pQ1 * 1e(dQ2 - dQ1)) * (pQ2 * 1e(dC - dQ2)))
+        // = `1e36 * (pB1 * 1e(-dB1) * pB2) / (pQ1 * 1e(-dQ1) * pQ2)`
 
         // Let fpB1, fpB2, fpQ1, fpQ2 be the feed precision of the respective prices pB1, pB2, pQ1, pQ2.
         // Chainlink feeds return pB1 * 1e(fpB1), pB2 * 1e(fpB2), pQ1 * 1e(fpQ1) and pQ2 * 1e(fpQ2).
 
         // Based on the implementation of `price()` below, the value of `SCALE_FACTOR` should thus satisfy:
         // (pB1 * 1e(fpB1)) * (pB2 * 1e(fpB2)) * SCALE_FACTOR / ((pQ1 * 1e(fpQ1)) * (pQ2 * 1e(fpQ2)))
-        //                                         = 1e36 * pB1 * pB2 * 1e(-dB1) / (pQ1 * pQ2 * 1e(-dQ1))
+        // = `1e36 * (pB1 * 1e(-dB1) * pB2) / (pQ1 * 1e(-dQ1) * pQ2)`
 
         // So SCALE_FACTOR = 1e36 * 1e(-dB1) * 1e(dQ1) * 1e(-fpB1) * 1e(-fpB2) * 1e(fpQ1) * 1e(fpQ2)
         //                 = 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2)
