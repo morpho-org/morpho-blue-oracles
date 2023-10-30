@@ -71,15 +71,15 @@ contract ChainlinkOracle is IOracle {
         // zero) how to scale the output price as Morpho Blue expects, given the input feed prices.
         // Similar explanations would hold in the case where some of the feeds are the address zero.
 
-        // Let A, B1, B2, Q1, Q2 be 5 assets, each respectively having dA, dB1, dB2, dQ1, dQ2 decimals.
+        // Let B1, B2, Q1, Q2, C be 5 assets, each respectively having dB1, dB2, dQ1, dQ2, dC decimals.
         // Let pB1 and pB2 be the base prices, and pQ1 and pQ2 the quote prices, so that:
         // - pB1 is the quantity of assets B2 that can be exchanged for 1e(dB1) assets B1, with dB2 decimals.
-        // - pB2 is the quantity of assets A that can be exchanged for 1e(dB2) assets B2, with dA decimals.
+        // - pB2 is the quantity of assets C that can be exchanged for 1e(dB2) assets B2, with dC decimals.
         // - pQ1 is the quantity of assets Q2 that can be exchanged for 1e(dQ1) assets Q1, with dQ2 decimals.
-        // - pQ2 is the quantity of assets A that can be exchanged for 1e(dQ2) assets B2, with dA decimals.
+        // - pQ2 is the quantity of assets C that can be exchanged for 1e(dQ2) assets B2, with dC decimals.
 
-        // Because Blue's oracle does not take into account decimals, this oracle's `price()` should return:
-        // 1e36 * (pB1 * 1e(dB2 - dB1)) * (pB2 * 1e(dA - dB2)) / (pQ1 * 1e(dQ2 - dQ1)) * (pQ2 * 1e(dA - dQ2))
+        // Morpho Blue's market oracle expects to price 1 asset B1 quoted in 1 asset of Q2, so `price()` should return:
+        // 1e36 * (pB1 * 1e(dB2 - dB1)) * (pB2 * 1e(dC - dB2)) / (pQ1 * 1e(dQ2 - dQ1)) * (pQ2 * 1e(dC - dQ2))
         // = 1e36 * (pB1 * 1e(-dB1) * pB2) / (pQ1 * 1e(-dQ1) * pQ2)
 
         // Let fpB1, fpB2, fpQ1, fpQ2 be the feed precision of the respective prices pB1, pB2, pQ1, pQ2.
