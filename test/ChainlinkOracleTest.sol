@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "../lib/forge-std/src/Test.sol";
 import "../src/ChainlinkOracle.sol";
+import "../src/ChainlinkOracleAlt.sol";
 import "../src/libraries/ErrorsLib.sol";
 import "./mocks/ChainlinkAggregatorMock.sol";
 
@@ -32,6 +33,8 @@ contract ChainlinkOracleTest is Test {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
     }
 
+    uint256 private constant altOraclePrecision = 0.001 ether;
+
     function testOracleWbtcUsdc() public {
         ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, wBtcBtcFeed, btcUsdFeed, usdcUsdFeed, feedZero, 1, 8, 6);
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
@@ -42,6 +45,9 @@ contract ChainlinkOracleTest is Test {
             (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 8 + 6 - 8 - 8 - 8))
                 / uint256(quoteAnswer)
         );
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(vaultZero, wBtcBtcFeed, 8, btcUsdFeed, 8, usdcUsdFeed, 6, feedZero, 0, 0);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testOracleUsdcWbtc() public {
@@ -54,6 +60,9 @@ contract ChainlinkOracleTest is Test {
             (uint256(baseAnswer) * 10 ** (36 + 8 + 8 + 8 - 6 - 8))
                 / (uint256(firstQuoteAnswer) * uint256(secondQuoteAnswer))
         );
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(vaultZero, usdcUsdFeed, 6, feedZero, 0, wBtcBtcFeed, 8, btcUsdFeed, 8, 0);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testOracleWbtcEth() public {
@@ -61,6 +70,9 @@ contract ChainlinkOracleTest is Test {
         (, int256 firstBaseAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondBaseAnswer,,,) = btcEthFeed.latestRoundData();
         assertEq(oracle.price(), (uint256(firstBaseAnswer) * uint256(secondBaseAnswer) * 10 ** (36 + 18 - 8 - 8 - 18)));
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(vaultZero, wBtcBtcFeed, 8, btcEthFeed, 8, feedZero, 0, feedZero, 0, 18);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testOracleStEthUsdc() public {
@@ -68,12 +80,18 @@ contract ChainlinkOracleTest is Test {
         (, int256 baseAnswer,,,) = stEthEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();
         assertEq(oracle.price(), uint256(baseAnswer) * 10 ** (36 + 18 + 6 - 18 - 18) / uint256(quoteAnswer));
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(vaultZero, stEthEthFeed, 18, feedZero, 0, usdcEthFeed, 6, feedZero, 0, 18);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testOracleEthUsd() public {
         ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, ethUsdFeed, feedZero, feedZero, feedZero, 1, 18, 0);
         (, int256 expectedPrice,,,) = ethUsdFeed.latestRoundData();
         assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 - 18 - 8));
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(vaultZero, ethUsdFeed, 18, feedZero, 0, feedZero, 0, feedZero, 0, 0);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testOracleStEthEth() public {
@@ -81,6 +99,9 @@ contract ChainlinkOracleTest is Test {
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18 - 18));
         assertApproxEqRel(oracle.price(), 1e36, 0.01 ether);
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(vaultZero, stEthEthFeed, 18, feedZero, 0, feedZero, 0, feedZero, 0, 18);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testOracleEthStEth() public {
@@ -88,11 +109,17 @@ contract ChainlinkOracleTest is Test {
         (, int256 expectedPrice,,,) = stEthEthFeed.latestRoundData();
         assertEq(oracle.price(), 10 ** (36 + 18 + 18 - 18) / uint256(expectedPrice));
         assertApproxEqRel(oracle.price(), 1e36, 0.01 ether);
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(vaultZero, feedZero, 0, feedZero, 0, stEthEthFeed, 18, feedZero, 0, 18);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testOracleUsdcUsd() public {
         ChainlinkOracle oracle = new ChainlinkOracle(vaultZero, usdcUsdFeed, feedZero, feedZero, feedZero, 1, 6, 0);
         assertApproxEqRel(oracle.price(), 1e36 / 1e6, 0.01 ether);
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(vaultZero, usdcUsdFeed, 6, feedZero, 0, feedZero, 0, feedZero, 0, 0);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testNegativeAnswer(int256 price) public {
@@ -113,6 +140,9 @@ contract ChainlinkOracleTest is Test {
             oracle.price(),
             sDaiVault.convertToAssets(1e18) * uint256(expectedPrice) * 10 ** (36 + 18 + 0 - 18 - 18 - 18)
         );
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(sDaiVault, daiEthFeed, 18, feedZero, 0, feedZero, 0, feedZero, 0, 18);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testSDaiUsdcOracle() public {
@@ -130,6 +160,9 @@ contract ChainlinkOracleTest is Test {
         // Admit a 50% interest gain before breaking this test.
         uint256 deviation = 0.5 ether;
         assertApproxEqRel(oracle.price(), expectedPrice, deviation);
+        ChainlinkOracleAlt oracleAlt =
+            new ChainlinkOracleAlt(sDaiVault, daiEthFeed, 18, feedZero, 0, usdcEthFeed, 6, feedZero, 0, 18);
+        assertApproxEqRel(oracle.price(), oracleAlt.price(), altOraclePrecision);
     }
 
     function testConstructorVaultZeroNonOneSample(uint256 vaultConversionSample) public {
