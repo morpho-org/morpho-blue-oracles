@@ -6,7 +6,7 @@ import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
-import {FullMath} from "./libraries/FullMath.sol";
+import {FullMath} from "../lib/v3-core/contracts/libraries/FullMath.sol";
 
 /// @title ChainlinkOracle
 /// @author Morpho Labs
