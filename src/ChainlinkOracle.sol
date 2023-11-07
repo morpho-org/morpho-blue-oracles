@@ -96,8 +96,9 @@ contract ChainlinkOracle is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (VAULT.getAssets(VAULT_CONVERSION_SAMPLE) * SCALE_FACTOR).mulDiv(
-            BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice(), QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice()
+        return SCALE_FACTOR.mulDiv(
+            VAULT.getAssets(VAULT_CONVERSION_SAMPLE) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice(),
+            QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice()
         );
     }
 }
