@@ -132,8 +132,14 @@ contract ChainlinkOracleTest is Test {
         assertApproxEqRel(oracle.price(), expectedPrice, deviation);
     }
 
+    function testConstructorZeroVaultConversionSample() public {
+        vm.expectRevert(bytes(ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO));
+        new ChainlinkOracle(sDaiVault, daiEthFeed, feedZero, usdcEthFeed, feedZero, 0, 18, 6);
+    }
+
     function testConstructorVaultZeroNonOneSample(uint256 vaultConversionSample) public {
-        vm.assume(vaultConversionSample != 1);
+        vaultConversionSample = bound(vaultConversionSample, 2, type(uint256).max);
+
         vm.expectRevert(bytes(ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE));
         new ChainlinkOracle(vaultZero, daiEthFeed, feedZero, usdcEthFeed, feedZero, vaultConversionSample, 18, 6);
     }
