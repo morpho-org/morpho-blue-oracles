@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.19;
+pragma solidity 0.8.20;
 
 import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
-import {FullMath} from "../lib/v3-core/contracts/libraries/FullMath.sol";
+import {Math} from "../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
 
 /// @title ChainlinkOracle
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
 contract ChainlinkOracle is IOracle {
-    using FullMath for uint256;
+    using Math for uint256;
     using VaultLib for IERC4626;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
