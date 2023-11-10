@@ -13,6 +13,7 @@ library ChainlinkDataFeedLib {
     /// @dev Performs safety checks and returns the latest price of a `feed`.
     /// @dev When `feed` is the address zero, returns 1.
     /// @dev Notes on safety checks:
+    /// - L2s are not supported.
     /// - Staleness is not checked because it's assumed that the Chainlink feed keeps its promises on this.
     /// - The price is not checked to be in the min/max bounds because it's assumed that the Chainlink feed keeps its
     /// promises on this.
