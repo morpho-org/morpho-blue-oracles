@@ -37,6 +37,7 @@ contract ChainlinkOracle is IOracle {
 
     /// @dev Here is the list of assumptions on the inputs that guarantees the oracle behaves as expected:
     /// - Feeds are Chainlink-compliant or the address zero.
+    /// - Feeds have the same behavioral assumptions as Chainlink's.
     /// - Feeds are set in the correct order.
     /// - Decimals passed as argument are correct.
     /// - The vault conversion sample is low enough to avoid overflows.
