@@ -53,9 +53,8 @@ contract ChainlinkOracle is IOracle {
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
-        // The vault parameter is used for ERC4626 tokens, to price its shares.
-        // It is used to price `VAULT_CONVERSION_SAMPLE` of the vault shares, so it requires dividing by that number,
-        // hence the division by `VAULT_CONVERSION_SAMPLE` in the `SCALE_FACTOR` definition.
+        // The ERC4626 vault parameter is used to price `VAULT_CONVERSION_SAMPLE` of its shares, so it requires dividing
+        // by that number, hence the division by `VAULT_CONVERSION_SAMPLE` in the `SCALE_FACTOR` definition.
         // Verify that vault = address(0) => vaultConversionSample = 1.
         require(
             address(vault) != address(0) || vaultConversionSample == 1, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
@@ -68,21 +67,30 @@ contract ChainlinkOracle is IOracle {
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
         QUOTE_FEED_2 = quoteFeed2;
-        // Let pB1 and pB2 be the base prices, and pQ1 and pQ2 the quote prices (price taking into account the
-        // decimals of both tokens), in a common currency.
-        // We tackle the most general case in the remainder of this comment, where we assume that no feed is the address
-        // zero. Similar explanations would hold in the case where some of the feeds are the address zero.
-        // Let dB1, dB2, dB3, and dQ1, dQ2, dQ3 be the decimals of the tokens involved.
-        // For example, pB1 is the number of 1e(dB2) of the second base asset that can be obtained from 1e(dB1) of
-        // the first base asset.
-        // We notably have dB3 = dQ3, because those two quantities are the decimals of the same common currency.
-        // Let fpB1, fpB2, fpQ1 and fpQ2 be the feed precision of the corresponding prices.
-        // Chainlink feeds return pB1*1e(fpB1), pB2*1e(fpB2), pQ1*1e(fpQ1) and pQ2*1e(fpQ2).
-        // Because the Blue oracle does not take into account decimals, `price()` should return
-        // 1e36 * (pB1*1e(dB2-dB1) * pB2*1e(dB3-dB2)) / (pQ1*1e(dQ2-dQ1) * pQ2*1e(dQ3-dQ2))
-        // Yet `price()` returns (pB1*1e(fpB1) * pB2*1e(fpB2) * SCALE_FACTOR) / (pQ1*1e(fpQ1) * pQ2*1e(fpQ2))
-        // So 1e36 * pB1 * pB2 * 1e(-dB1) / (pQ1 * pQ2 * 1e(-dQ1)) =
-        // (pB1*1e(fpB1) * pB2*1e(fpB2) * SCALE_FACTOR) / (pQ1*1e(fpQ1) * pQ2*1e(fpQ2))
+
+        // In the following comment, we explain the general case (where we assume that no feed is the address zero)
+        // how to scale the output price as Morpho Blue expects, given the input feed prices.
+        // Similar explanations would hold in the case where some of the feeds are the address zero.
+
+        // Let B1, B2, Q1, Q2, C be 5 assets, each respectively having dB1, dB2, dQ1, dQ2, dC decimals.
+        // Let pB1 and pB2 be the base prices, and pQ1 and pQ2 the quote prices, so that:
+        // - pB1 is the quantity of 1e(dB2) assets B2 that can be exchanged for 1e(dB1) assets B1.
+        // - pB2 is the quantity of 1e(dC) assets C that can be exchanged for 1e(dB2) assets B2.
+        // - pQ1 is the quantity of 1e(dQ2) assets Q2 that can be exchanged for 1e(dQ1) assets Q1.
+        // - pQ2 is the quantity of 1e(dC) assets C that can be exchanged for 1e(dQ2) assets B2.
+
+        // Morpho Blue expects `price()` to be the quantity of 1 asset Q1 that can be exchanged for 1 asset B1,
+        // scaled by 1e36:
+        // 1e36 * (pB1 * 1e(dB2 - dB1)) * (pB2 * 1e(dC - dB2)) / ((pQ1 * 1e(dQ2 - dQ1)) * (pQ2 * 1e(dC - dQ2)))
+        // = 1e36 * (pB1 * 1e(-dB1) * pB2) / (pQ1 * 1e(-dQ1) * pQ2)
+
+        // Let fpB1, fpB2, fpQ1, fpQ2 be the feed precision of the respective prices pB1, pB2, pQ1, pQ2.
+        // Chainlink feeds return pB1 * 1e(fpB1), pB2 * 1e(fpB2), pQ1 * 1e(fpQ1) and pQ2 * 1e(fpQ2).
+
+        // Based on the implementation of `price()` below, the value of `SCALE_FACTOR` should thus satisfy:
+        // (pB1 * 1e(fpB1)) * (pB2 * 1e(fpB2)) * SCALE_FACTOR / ((pQ1 * 1e(fpQ1)) * (pQ2 * 1e(fpQ2)))
+        // = 1e36 * (pB1 * 1e(-dB1) * pB2) / (pQ1 * 1e(-dQ1) * pQ2)
+
         // So SCALE_FACTOR = 1e36 * 1e(-dB1) * 1e(dQ1) * 1e(-fpB1) * 1e(-fpB2) * 1e(fpQ1) * 1e(fpQ2)
         //                 = 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2)
         SCALE_FACTOR = 10
