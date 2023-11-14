@@ -35,6 +35,13 @@ contract ChainlinkOracle is IOracle {
 
     /* CONSTRUCTOR */
 
+    /// @dev Here is the list of assumptions on the inputs that guarantees the oracle behaves as expected:
+    /// - Feeds are either Chainlink-compliant or the address zero.
+    /// - Feeds have the same behavioral assumptions as Chainlink's.
+    /// - Feeds are set in the correct order.
+    /// - Decimals passed as argument are correct.
+    /// - The vault conversion sample is low enough to avoid overflows.
+    /// - The vault, if set, is ERC4626-compliant.
     /// @param vault Vault. Pass address zero to omit this parameter.
     /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
