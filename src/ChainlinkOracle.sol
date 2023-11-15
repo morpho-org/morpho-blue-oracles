@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
+import {Math} from "../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
 
 /// @title ChainlinkOracle
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
 contract ChainlinkOracle is IOracle {
+    using Math for uint256;
     using VaultLib for IERC4626;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
@@ -35,12 +37,13 @@ contract ChainlinkOracle is IOracle {
 
     /* CONSTRUCTOR */
 
-    /// @dev Here is the list of assumptions on the inputs that guarantees the oracle behaves as expected:
+    /// @dev Here is the list of assumptions that guarantees the oracle behaves as expected:
     /// - Feeds are either Chainlink-compliant or the address zero.
     /// - Feeds have the same behavioral assumptions as Chainlink's.
     /// - Feeds are set in the correct order.
     /// - Decimals passed as argument are correct.
-    /// - The vault conversion sample is low enough to avoid overflows.
+    /// - The vault's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
+    /// - The quote feed prices don't overflow when multiplied.
     /// - The vault, if set, is ERC4626-compliant.
     /// @param vault Vault. Pass address zero to omit this parameter.
     /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
@@ -111,8 +114,9 @@ contract ChainlinkOracle is IOracle {
 
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
-        return (
-            VAULT.getAssets(VAULT_CONVERSION_SAMPLE) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice() * SCALE_FACTOR
-        ) / (QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice());
+        return SCALE_FACTOR.mulDiv(
+            VAULT.getAssets(VAULT_CONVERSION_SAMPLE) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice(),
+            QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice()
+        );
     }
 }
