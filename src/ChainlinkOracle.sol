@@ -42,7 +42,7 @@ contract ChainlinkOracle is IOracle {
     /// - Feeds have the same behavioral assumptions as Chainlink's.
     /// - Feeds are set in the correct order.
     /// - Decimals passed as argument are correct.
-    /// - The vault's sample assets and the base feed prices don't overflow when multiplied.
+    /// - The vault's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
     /// - The quote feed prices don't overflow when multiplied.
     /// - The vault, if set, is ERC4626-compliant.
     /// @param vault Vault. Pass address zero to omit this parameter.
