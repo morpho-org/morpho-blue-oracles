@@ -5,6 +5,10 @@ import {IERC4626} from "./IERC4626.sol";
 import {AggregatorV3Interface} from "./AggregatorV3Interface.sol";
 import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
 
+/// @title IChainlinkOracle
+/// @author Morpho Labs
+/// @custom:contact security@morpho.org
+/// @notice Interface exposed by the ChainlinkOracle.
 interface IChainlinkOracle is IOracle {
     /// @notice Returns the address of the ERC4626 vault.
     function VAULT() external view returns (IERC4626);
