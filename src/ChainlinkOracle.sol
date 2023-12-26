@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.21;
 
+import {IChainlinkOracle} from "./interfaces/IChainlinkOracle.sol";
 import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
@@ -12,27 +13,32 @@ import {Math} from "../lib/openzeppelin-contracts/contracts/utils/math/Math.sol"
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
-contract ChainlinkOracle is IOracle {
+contract ChainlinkOracle is IChainlinkOracle {
     using Math for uint256;
     using VaultLib for IERC4626;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     /* IMMUTABLES */
 
-    /// @notice Vault.
+    /// @inheritdoc IChainlinkOracle
     IERC4626 public immutable VAULT;
-    /// @notice Vault conversion sample. The sample amount of shares used to convert to the underlying asset.
-    /// @notice Should be chosen such that converting `VAULT_CONVERSION_SAMPLE` to assets has enough precision.
+
+    /// @inheritdoc IChainlinkOracle
     uint256 public immutable VAULT_CONVERSION_SAMPLE;
-    /// @notice First base feed.
+
+    /// @inheritdoc IChainlinkOracle
     AggregatorV3Interface public immutable BASE_FEED_1;
-    /// @notice Second base feed.
+
+    /// @inheritdoc IChainlinkOracle
     AggregatorV3Interface public immutable BASE_FEED_2;
-    /// @notice First quote feed.
+
+    /// @inheritdoc IChainlinkOracle
     AggregatorV3Interface public immutable QUOTE_FEED_1;
-    /// @notice Second quote feed.
+
+    /// @inheritdoc IChainlinkOracle
     AggregatorV3Interface public immutable QUOTE_FEED_2;
-    /// @notice Price scale factor, computed at contract creation.
+
+    /// @inheritdoc IChainlinkOracle
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */
@@ -50,7 +56,9 @@ contract ChainlinkOracle is IOracle {
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
-    /// @param vaultConversionSample Vault conversion sample. Pass 1 if the oracle does not use a vault.
+    /// @param vaultConversionSample The sample amount of vault shares used to convert to the underlying asset.
+    /// Pass 1 if the oracle does not use a vault. Should be chosen such that converting `vaultConversionSample` to
+    /// assets has enough precision.
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
