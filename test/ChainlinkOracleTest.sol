@@ -28,7 +28,7 @@ IERC4626 constant vaultZero = IERC4626(address(0));
 IERC4626 constant sDaiVault = IERC4626(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
 
 contract ChainlinkOracleTest is Test {
-    function setUp() public {
+    function setUp() public virtual {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
     }
 
