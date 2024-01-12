@@ -15,28 +15,30 @@ import {ChainlinkOracle} from "./ChainlinkOracle.sol";
 contract ChainlinkOracleFactory is IChainlinkOracleFactory {
     /// @notice Emitted when a new Chainlink oracle is created.
     /// @param oracle The address of the Chainlink oracle.
-    /// @param vault Vault.
     /// @param caller The caller of the function.
+    /// @param vault Vault.
+    /// @param vaultConversionSample The sample amount of vault shares used to convert to the underlying asset.
+    /// @param salt The salt used for the MetaMorpho vault's CREATE2 address.
+    event CreateChainlinkOracle(
+        address oracle, address caller, address vault, uint256 vaultConversionSample, bytes32 salt
+    );
+
+    /// @notice Emitted when a new Chainlink oracle is created.
+    /// @param oracle The address of the Chainlink oracle.
     /// @param baseFeed1 First base feed.
     /// @param baseFeed2 Second base feed.
     /// @param quoteFeed1 First quote feed.
     /// @param quoteFeed2 Second quote feed.
-    /// @param vaultConversionSample The sample amount of vault shares used to convert to the underlying asset.
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
-    /// @param salt The salt used for the MetaMorpho vault's CREATE2 address.
-    event CreateChainlinkOracle(
+    event CreateChainlinkOracleFeeds(
         address oracle,
-        address caller,
-        IERC4626 indexed vault,
-        AggregatorV3Interface indexed baseFeed1,
-        AggregatorV3Interface baseFeed2,
-        AggregatorV3Interface indexed quoteFeed1,
-        AggregatorV3Interface quoteFeed2,
-        uint256 vaultConversionSample,
+        address baseFeed1,
+        address baseFeed2,
+        address quoteFeed1,
+        address quoteFeed2,
         uint256 baseTokenDecimals,
-        uint256 quoteTokenDecimals,
-        bytes32 salt
+        uint256 quoteTokenDecimals
     );
 
     /* STORAGE */
@@ -75,18 +77,15 @@ contract ChainlinkOracleFactory is IChainlinkOracleFactory {
 
         isChainlinkOracle[address(oracle)] = true;
 
-        emit CreateChainlinkOracle(
+        emit CreateChainlinkOracle(address(oracle), msg.sender, address(vault), vaultConversionSample, salt);
+        emit CreateChainlinkOracleFeeds(
             address(oracle),
-            msg.sender,
-            vault,
-            baseFeed1,
-            baseFeed2,
-            quoteFeed1,
-            quoteFeed2,
-            vaultConversionSample,
+            address(baseFeed1),
+            address(baseFeed2),
+            address(quoteFeed1),
+            address(quoteFeed2),
             baseTokenDecimals,
-            quoteTokenDecimals,
-            salt
+            quoteTokenDecimals
         );
     }
 }
