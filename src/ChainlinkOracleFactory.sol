@@ -8,7 +8,7 @@ import {IERC4626} from "./libraries/VaultLib.sol";
 
 import {ChainlinkOracle} from "./ChainlinkOracle.sol";
 
-/// @title ChainlinkOracle
+/// @title ChainlinkOracleFactory
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice This contract allows to create Chainlink oracles, and to index them easily.
