@@ -26,6 +26,14 @@ In a `.env` file, set `ETH_RPC_URL` to the URL of an Ethereum provider.
 
 Run test: `forge test`
 
+## Deploy an Oracle
+
+For example, to deploy a `ChainlinkOracle` on the Ethereum mainnet, for the sDAI/USDC market:
+
+```bash
+forge create src/ChainlinkOracle.sol:ChainlinkOracle --constructor-args "0x83F20F44975D03b1b09e64809B757c47f942BEeA" "0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9" "0x0000000000000000000000000000000000000000" "0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6" "0x0000000000000000000000000000000000000000" "1000000000000000000" "18" "6" --rpc-url https://eth-mainnet.g.alchemy.com/v2/<alchemy-key> --from <deployer-address> --ledger
+``````
+
 ## Audits
 
 All audits are stored in the [audits](./audits/)' folder.
