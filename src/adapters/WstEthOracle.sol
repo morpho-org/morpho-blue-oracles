@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.21;
 
-import {IStETH} from "../interfaces/IStETH.sol";
+import {IStEth} from "../interfaces/IStEth.sol";
 import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
 
 /// @title WstEthOracle
@@ -14,11 +14,11 @@ contract WstEthOracle is AggregatorV3Interface {
     string public constant description = "wstETH/ETH exchange rate price";
     uint256 public constant version = 1;
 
-    IStETH public immutable ST_ETH;
+    IStEth public immutable ST_ETH;
 
     constructor(address stEth) {
         require(stEth != address(0), "WstEthOracle: ZERO_ADDRESS");
-        ST_ETH = IStETH(stEth);
+        ST_ETH = IStEth(stEth);
     }
 
     function getRoundData(uint80) external view returns (uint80, int256, uint256, uint256, uint80) {
@@ -26,7 +26,7 @@ contract WstEthOracle is AggregatorV3Interface {
     }
 
     function latestRoundData() public view returns (uint80, int256, uint256, uint256, uint80) {
-        uint256 ethByShares = ST_ETH.getPooledEthByShares(10 ** decimals());
+        uint256 ethByShares = ST_ETH.getPooledEthByShares(10 ** decimals);
         require(ethByShares < type(uint256).max, "WstEthOracle: OVERFLOW");
         return (0, int256(ethByShares), 0, 0, 0);
     }

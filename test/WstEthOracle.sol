@@ -5,7 +5,7 @@ import "../lib/forge-std/src/Test.sol";
 import "../src/adapters/WstEthOracle.sol";
 
 contract ChainlinkOracleTest is Test {
-    IStETH internal constant ST_ETH = IStETH(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
+    IStEth internal constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
     WstEthOracle internal oracle;
 
