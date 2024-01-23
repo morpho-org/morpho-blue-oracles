@@ -8,10 +8,11 @@ import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice wstETH/ETH exchange rate price feed.
+/// @dev This contract should only be used as price feed for `ChainlinkOracle`.
 contract WstEthOracle is AggregatorV3Interface {
-    uint256 public constant version = 1;
-    uint8 public constant DECIMALS = uint8(18);
+    uint8 public constant decimals = uint8(18);
     string public constant description = "wstETH/ETH exchange rate price";
+    uint256 public constant version = 1;
 
     IStETH public immutable ST_ETH;
 
@@ -20,18 +21,13 @@ contract WstEthOracle is AggregatorV3Interface {
         ST_ETH = IStETH(stEth);
     }
 
-    function decimals() external pure returns (uint8) {
-        return DECIMALS;
-    }
-
     function getRoundData(uint80) external view returns (uint80, int256, uint256, uint256, uint80) {
         return latestRoundData();
     }
 
     function latestRoundData() public view returns (uint80, int256, uint256, uint256, uint80) {
-        uint256 ethByShares = ST_ETH.getPooledEthByShares(10 ** DECIMALS);
+        uint256 ethByShares = ST_ETH.getPooledEthByShares(10 ** decimals());
         require(ethByShares < type(uint256).max, "WstEthOracle: OVERFLOW");
-        int256 answer = int256(ethByShares);
-        return (0, answer, 0, 0, 0);
+        return (0, int256(ethByShares), 0, 0, 0);
     }
 }
