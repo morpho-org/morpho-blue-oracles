@@ -49,20 +49,28 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testLastRoundData() public {
-        (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) = oracle.latestRoundData();
+        (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
+            oracle.latestRoundData();
         assertEq(roundId, 0);
-        assertEq(answer,int256(ST_ETH.getPooledEthByShares(10 ** 18)));
+        assertEq(uint256(answer), ST_ETH.getPooledEthByShares(10 ** 18));
         assertEq(startedAt, 0);
         assertEq(updatedAt, 0);
         assertEq(answeredInRound, 0);
     }
 
     function testGetLastRoundData() public {
-        (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) = oracle.getRoundData(1);
+        (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
+            oracle.getRoundData(1);
         assertEq(roundId, 0);
-        assertEq(answer, int256(ST_ETH.getPooledEthByShares(10 ** 18)));
+        assertEq(uint256(answer), ST_ETH.getPooledEthByShares(10 ** 18));
         assertEq(startedAt, 0);
         assertEq(updatedAt, 0);
         assertEq(answeredInRound, 0);
+    }
+
+    function testLastRoundDataBounds() public {
+        (, int256 answer,,,) = oracle.latestRoundData();
+        assertGe(uint256(answer), 1154690031824824994); // Exchange rate queried at block 19070943
+        assertLe(uint256(answer), 1.5e18); // Max bounds of the exchange rate. Should work for a long enough time.
     }
 }
