@@ -26,8 +26,8 @@ contract WstEthOracle is AggregatorV3Interface {
     }
 
     function latestRoundData() public view returns (uint80, int256, uint256, uint256, uint80) {
-        uint256 ethByShares = ST_ETH.getPooledEthByShares(10 ** decimals);
-        require(ethByShares < type(uint256).max, "WstEthOracle: OVERFLOW");
-        return (0, int256(ethByShares), 0, 0, 0);
+        uint256 answer = ST_ETH.getPooledEthByShares(10 ** decimals);
+        require(answer < type(uint256).max, "WstEthOracle: OVERFLOW");
+        return (0, int256(answer), 0, 0, 0);
     }
 }
