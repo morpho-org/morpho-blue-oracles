@@ -4,6 +4,8 @@ pragma solidity 0.8.21;
 import {IStEth} from "../interfaces/IStEth.sol";
 import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
 
+import {ErrorsLib} from "../libraries/ErrorsLib.sol";
+
 /// @title WstEthOracle
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
@@ -17,7 +19,7 @@ contract WstEthOracle is AggregatorV3Interface {
     IStEth public immutable ST_ETH;
 
     constructor(address stEth) {
-        require(stEth != address(0), "WstEthOracle: ZERO_ADDRESS");
+        require(stEth != address(0), ErrorsLib.ZERO_ADDRESS);
         ST_ETH = IStEth(stEth);
     }
 
@@ -27,7 +29,7 @@ contract WstEthOracle is AggregatorV3Interface {
 
     function latestRoundData() public view returns (uint80, int256, uint256, uint256, uint80) {
         uint256 answer = ST_ETH.getPooledEthByShares(10 ** decimals);
-        require(answer < type(uint256).max, "WstEthOracle: OVERFLOW");
+        require(answer < type(uint256).max, ErrorsLib.OVERFLOW);
         return (0, int256(answer), 0, 0, 0);
     }
 }

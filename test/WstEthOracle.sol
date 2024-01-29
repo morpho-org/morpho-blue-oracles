@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
+import "../src/libraries/ErrorsLib.sol";
+
 import "../lib/forge-std/src/Test.sol";
 import "../src/adapters/WstEthOracle.sol";
 
@@ -20,7 +22,7 @@ contract ChainlinkOracleTest is Test {
             abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
             abi.encode(type(uint256).max)
         );
-        vm.expectRevert("WstEthOracle: OVERFLOW");
+        vm.expectRevert(bytes(ErrorsLib.OVERFLOW));
         oracle.latestRoundData();
     }
 
@@ -30,7 +32,7 @@ contract ChainlinkOracleTest is Test {
             abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
             abi.encode(type(uint256).max)
         );
-        vm.expectRevert("WstEthOracle: OVERFLOW");
+        vm.expectRevert(bytes(ErrorsLib.OVERFLOW));
         oracle.getRoundData(1);
     }
 
@@ -39,7 +41,7 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testDeployZeroAddress() public {
-        vm.expectRevert("WstEthOracle: ZERO_ADDRESS");
+        vm.expectRevert(bytes(ErrorsLib.ZERO_ADDRESS));
         new WstEthOracle(address(0));
     }
 
