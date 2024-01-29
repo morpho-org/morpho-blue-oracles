@@ -13,7 +13,7 @@ import {ErrorsLib} from "../libraries/ErrorsLib.sol";
 /// @dev This contract should only be used as price feed for `ChainlinkOracle`.
 contract WstEthChainlinkAdapter is AggregatorV3Interface {
     uint8 public constant decimals = uint8(18);
-    string public constant description = "wstETH/ETH exchange rate price";
+    string public constant description = "wstETH/ETH exchange rate";
     uint256 public constant version = 1;
 
     IStEth public immutable ST_ETH;

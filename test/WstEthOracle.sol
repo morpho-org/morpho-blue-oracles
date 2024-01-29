@@ -46,7 +46,7 @@ contract ChainlinkOracleTest is Test {
     }
 
     function testConfig() public {
-        assertEq(oracle.description(), "wstETH/ETH exchange rate price");
+        assertEq(oracle.description(), "wstETH/ETH exchange rate");
         assertEq(oracle.version(), 1);
     }
 
