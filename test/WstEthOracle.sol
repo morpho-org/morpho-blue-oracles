@@ -16,21 +16,25 @@ contract ChainlinkOracleTest is Test {
         oracle = new WstEthChainlinkAdapter(address(ST_ETH));
     }
 
-    function testLastRoundDataUintMax() public {
+    function testLatestRoundDataOverflow(uint256 ethByShares) public {
+        ethByShares = bound(ethByShares, uint256(type(int256).max) + 1, type(uint256).max);
+
         vm.mockCall(
             address(ST_ETH),
             abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
-            abi.encode(type(uint256).max)
+            abi.encode(ethByShares)
         );
         vm.expectRevert(bytes(ErrorsLib.OVERFLOW));
         oracle.latestRoundData();
     }
 
-    function testGetRoundDataUintMax() public {
+    function testGetRoundDataOverflow(uint256 ethByShares) public {
+        ethByShares = bound(ethByShares, uint256(type(int256).max) + 1, type(uint256).max);
+
         vm.mockCall(
             address(ST_ETH),
             abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
-            abi.encode(type(uint256).max)
+            abi.encode(ethByShares)
         );
         vm.expectRevert(bytes(ErrorsLib.OVERFLOW));
         oracle.getRoundData(1);
@@ -50,7 +54,7 @@ contract ChainlinkOracleTest is Test {
         assertEq(oracle.version(), 1);
     }
 
-    function testLastRoundData() public {
+    function testLatestRoundData() public {
         (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
             oracle.latestRoundData();
         assertEq(roundId, 0);
@@ -60,7 +64,7 @@ contract ChainlinkOracleTest is Test {
         assertEq(answeredInRound, 0);
     }
 
-    function testGetLastRoundData() public {
+    function testGetRoundData() public {
         (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
             oracle.getRoundData(1);
         assertEq(roundId, 0);
@@ -70,7 +74,33 @@ contract ChainlinkOracleTest is Test {
         assertEq(answeredInRound, 0);
     }
 
-    function testLastRoundDataBounds() public {
+    function testLatestRoundDataNoOverflow(uint256 ethByShares) public {
+        ethByShares = bound(ethByShares, 0, uint256(type(int256).max));
+
+        vm.mockCall(
+            address(ST_ETH),
+            abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
+            abi.encode(ethByShares)
+        );
+
+        (, int256 answer,,,) = oracle.latestRoundData();
+        assertEq(uint256(answer), ethByShares);
+    }
+
+    function testGetRoundDataNoOverflow(uint256 ethByShares) public {
+        ethByShares = bound(ethByShares, 0, uint256(type(int256).max));
+
+        vm.mockCall(
+            address(ST_ETH),
+            abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
+            abi.encode(ethByShares)
+        );
+
+        (, int256 answer,,,) = oracle.getRoundData(1);
+        assertEq(uint256(answer), ethByShares);
+    }
+
+    function testLatestRoundDataBounds() public {
         (, int256 answer,,,) = oracle.latestRoundData();
         assertGe(uint256(answer), 1154690031824824994); // Exchange rate queried at block 19070943
         assertLe(uint256(answer), 1.5e18); // Max bounds of the exchange rate. Should work for a long enough time.
