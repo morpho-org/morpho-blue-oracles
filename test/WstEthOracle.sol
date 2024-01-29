@@ -4,16 +4,16 @@ pragma solidity ^0.8.0;
 import "../src/libraries/ErrorsLib.sol";
 
 import "../lib/forge-std/src/Test.sol";
-import "../src/adapters/WstEthOracle.sol";
+import "../src/adapters/WstEthChainlinkAdapter.sol";
 
 contract ChainlinkOracleTest is Test {
     IStEth internal constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
-    WstEthOracle internal oracle;
+    WstEthChainlinkAdapter internal oracle;
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
-        oracle = new WstEthOracle(address(ST_ETH));
+        oracle = new WstEthChainlinkAdapter(address(ST_ETH));
     }
 
     function testLastRoundDataUintMax() public {
@@ -42,7 +42,7 @@ contract ChainlinkOracleTest is Test {
 
     function testDeployZeroAddress() public {
         vm.expectRevert(bytes(ErrorsLib.ZERO_ADDRESS));
-        new WstEthOracle(address(0));
+        new WstEthChainlinkAdapter(address(0));
     }
 
     function testConfig() public {

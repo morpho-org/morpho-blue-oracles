@@ -6,12 +6,12 @@ import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
 
 import {ErrorsLib} from "../libraries/ErrorsLib.sol";
 
-/// @title WstEthOracle
+/// @title WstEthChainlinkAdapter
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice wstETH/ETH exchange rate price feed.
 /// @dev This contract should only be used as price feed for `ChainlinkOracle`.
-contract WstEthOracle is AggregatorV3Interface {
+contract WstEthChainlinkAdapter is AggregatorV3Interface {
     uint8 public constant decimals = uint8(18);
     string public constant description = "wstETH/ETH exchange rate price";
     uint256 public constant version = 1;
