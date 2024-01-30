@@ -14,7 +14,6 @@ import {ErrorsLib} from "../libraries/ErrorsLib.sol";
 contract WstEthChainlinkAdapter is AggregatorV3Interface {
     uint8 public constant decimals = uint8(18);
     string public constant description = "wstETH/ETH exchange rate";
-    uint256 public constant version = 1;
 
     IStEth public immutable ST_ETH;
 
@@ -23,8 +22,14 @@ contract WstEthChainlinkAdapter is AggregatorV3Interface {
         ST_ETH = IStEth(stEth);
     }
 
-    function getRoundData(uint80) external view returns (uint80, int256, uint256, uint256, uint80) {
-        return latestRoundData();
+    /// @notice Reverts as no Chainlink aggregator is used.
+    function version() external pure override returns (uint256) {
+        revert();
+    }
+
+    /// @notice Reverts as it's not necessary for the ChainlinkOracle contract.
+    function getRoundData(uint80) external pure returns (uint80, int256, uint256, uint256, uint80) {
+        revert();
     }
 
     function latestRoundData() public view returns (uint80, int256, uint256, uint256, uint80) {

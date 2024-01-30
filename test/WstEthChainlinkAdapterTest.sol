@@ -28,18 +28,6 @@ contract WstEthChainlinkAdapterTest is Test {
         oracle.latestRoundData();
     }
 
-    function testGetRoundDataOverflow(uint256 ethByShares) public {
-        ethByShares = bound(ethByShares, uint256(type(int256).max) + 1, type(uint256).max);
-
-        vm.mockCall(
-            address(ST_ETH),
-            abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
-            abi.encode(ethByShares)
-        );
-        vm.expectRevert(bytes(ErrorsLib.OVERFLOW));
-        oracle.getRoundData(1);
-    }
-
     function testDecimals() public {
         assertEq(oracle.decimals(), uint8(18));
     }
@@ -49,24 +37,20 @@ contract WstEthChainlinkAdapterTest is Test {
         new WstEthChainlinkAdapter(address(0));
     }
 
-    function testConfig() public {
+    function testDescription() public {
         assertEq(oracle.description(), "wstETH/ETH exchange rate");
-        assertEq(oracle.version(), 1);
+    }
+    function testReverts() public {
+        vm.expectRevert();
+        oracle.version();
+
+        vm.expectRevert();
+        oracle.getRoundData(0);
     }
 
     function testLatestRoundData() public {
         (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
             oracle.latestRoundData();
-        assertEq(roundId, 0);
-        assertEq(uint256(answer), ST_ETH.getPooledEthByShares(10 ** 18));
-        assertEq(startedAt, 0);
-        assertEq(updatedAt, 0);
-        assertEq(answeredInRound, 0);
-    }
-
-    function testGetRoundData() public {
-        (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
-            oracle.getRoundData(1);
         assertEq(roundId, 0);
         assertEq(uint256(answer), ST_ETH.getPooledEthByShares(10 ** 18));
         assertEq(startedAt, 0);
@@ -84,19 +68,6 @@ contract WstEthChainlinkAdapterTest is Test {
         );
 
         (, int256 answer,,,) = oracle.latestRoundData();
-        assertEq(uint256(answer), ethByShares);
-    }
-
-    function testGetRoundDataNoOverflow(uint256 ethByShares) public {
-        ethByShares = bound(ethByShares, 0, uint256(type(int256).max));
-
-        vm.mockCall(
-            address(ST_ETH),
-            abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
-            abi.encode(ethByShares)
-        );
-
-        (, int256 answer,,,) = oracle.getRoundData(1);
         assertEq(uint256(answer), ethByShares);
     }
 
