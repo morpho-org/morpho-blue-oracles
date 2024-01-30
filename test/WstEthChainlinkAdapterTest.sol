@@ -40,6 +40,7 @@ contract WstEthChainlinkAdapterTest is Test {
     function testDescription() public {
         assertEq(oracle.description(), "wstETH/ETH exchange rate");
     }
+
     function testReverts() public {
         vm.expectRevert();
         oracle.version();
