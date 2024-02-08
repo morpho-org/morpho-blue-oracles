@@ -5,15 +5,28 @@ import "../src/libraries/ErrorsLib.sol";
 
 import "../lib/forge-std/src/Test.sol";
 import "../src/adapters/WstEthEthExchangeRateChainlinkAdapter.sol";
+import "../src/ChainlinkOracle.sol";
+import "./helpers/Constants.sol";
 
 contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
     IStEth internal constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
     WstEthEthExchangeRateChainlinkAdapter internal oracle;
+    ChainlinkOracle internal chainlinkOracle;
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
         oracle = new WstEthEthExchangeRateChainlinkAdapter(address(ST_ETH));
+        chainlinkOracle = new ChainlinkOracle(
+            vaultZero,
+            oracle,
+            feedZero,
+            feedZero,
+            feedZero,
+            1,
+            18,
+            18
+        );
     }
 
     function testDecimals() public {
@@ -52,5 +65,10 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
         (, int256 answer,,,) = oracle.latestRoundData();
         assertGe(uint256(answer), 1154690031824824994); // Exchange rate queried at block 19070943
         assertLe(uint256(answer), 1.5e18); // Max bounds of the exchange rate. Should work for a long enough time.
+    }
+
+    function testOracleWstEthEthExchangeRate() public {
+        (, int256 expectedPrice,,,) = oracle.latestRoundData();
+        assertEq(chainlinkOracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18 - 18));
     }
 }
