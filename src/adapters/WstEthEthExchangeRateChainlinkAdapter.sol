@@ -23,7 +23,7 @@ contract WstEthEthExchangeRateChainlinkAdapter is AggregatorV3Interface {
     }
 
     /// @notice Reverts as no Chainlink aggregator is used.
-    function version() external pure override returns (uint256) {
+    function version() external pure returns (uint256) {
         revert();
     }
 
@@ -32,7 +32,7 @@ contract WstEthEthExchangeRateChainlinkAdapter is AggregatorV3Interface {
         revert();
     }
 
-    function latestRoundData() public view returns (uint80, int256, uint256, uint256, uint80) {
+    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
         uint256 answer = ST_ETH.getPooledEthByShares(10 ** decimals);
         return (0, int256(answer), 0, 0, 0);
     }
