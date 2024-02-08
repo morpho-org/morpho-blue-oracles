@@ -34,7 +34,6 @@ contract WstEthChainlinkAdapter is AggregatorV3Interface {
 
     function latestRoundData() public view returns (uint80, int256, uint256, uint256, uint80) {
         uint256 answer = ST_ETH.getPooledEthByShares(10 ** decimals);
-        require(answer <= uint256(type(int256).max), ErrorsLib.OVERFLOW);
         return (0, int256(answer), 0, 0, 0);
     }
 }

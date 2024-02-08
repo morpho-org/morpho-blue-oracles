@@ -17,7 +17,4 @@ library ErrorsLib {
 
     /// @notice Thrown when the zero address is passed as argument.
     string constant ZERO_ADDRESS = "zero address";
-
-    /// @notice Thrown when the computation will overflow.
-    string constant OVERFLOW = "overflow";
 }

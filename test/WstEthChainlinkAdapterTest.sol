@@ -16,29 +16,18 @@ contract WstEthChainlinkAdapterTest is Test {
         oracle = new WstEthChainlinkAdapter(address(ST_ETH));
     }
 
-    function testLatestRoundDataOverflow(uint256 ethByShares) public {
-        ethByShares = bound(ethByShares, uint256(type(int256).max) + 1, type(uint256).max);
-
-        vm.mockCall(
-            address(ST_ETH),
-            abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
-            abi.encode(ethByShares)
-        );
-        vm.expectRevert(bytes(ErrorsLib.OVERFLOW));
-        oracle.latestRoundData();
-    }
-
     function testDecimals() public {
         assertEq(oracle.decimals(), uint8(18));
     }
 
+    function testDescription() public {
+        assertEq(oracle.description(), "wstETH/ETH exchange rate");
+    }
+
+
     function testDeployZeroAddress() public {
         vm.expectRevert(bytes(ErrorsLib.ZERO_ADDRESS));
         new WstEthChainlinkAdapter(address(0));
-    }
-
-    function testDescription() public {
-        assertEq(oracle.description(), "wstETH/ETH exchange rate");
     }
 
     function testReverts() public {
@@ -57,19 +46,6 @@ contract WstEthChainlinkAdapterTest is Test {
         assertEq(startedAt, 0);
         assertEq(updatedAt, 0);
         assertEq(answeredInRound, 0);
-    }
-
-    function testLatestRoundDataNoOverflow(uint256 ethByShares) public {
-        ethByShares = bound(ethByShares, 0, uint256(type(int256).max));
-
-        vm.mockCall(
-            address(ST_ETH),
-            abi.encodeWithSelector(ST_ETH.getPooledEthByShares.selector, 10 ** 18),
-            abi.encode(ethByShares)
-        );
-
-        (, int256 answer,,,) = oracle.latestRoundData();
-        assertEq(uint256(answer), ethByShares);
     }
 
     function testLatestRoundDataBounds() public {
