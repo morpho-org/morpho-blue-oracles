@@ -4,16 +4,16 @@ pragma solidity ^0.8.0;
 import "../src/libraries/ErrorsLib.sol";
 
 import "../lib/forge-std/src/Test.sol";
-import "../src/adapters/WstEthChainlinkAdapter.sol";
+import "../src/adapters/WstEthEthExchangeRateChainlinkAdapter.sol";
 
-contract WstEthChainlinkAdapterTest is Test {
+contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
     IStEth internal constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
-    WstEthChainlinkAdapter internal oracle;
+    WstEthEthExchangeRateChainlinkAdapter internal oracle;
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
-        oracle = new WstEthChainlinkAdapter(address(ST_ETH));
+        oracle = new WstEthEthExchangeRateChainlinkAdapter(address(ST_ETH));
     }
 
     function testDecimals() public {
@@ -27,7 +27,7 @@ contract WstEthChainlinkAdapterTest is Test {
 
     function testDeployZeroAddress() public {
         vm.expectRevert(bytes(ErrorsLib.ZERO_ADDRESS));
-        new WstEthChainlinkAdapter(address(0));
+        new WstEthEthExchangeRateChainlinkAdapter(address(0));
     }
 
     function testReverts() public {
