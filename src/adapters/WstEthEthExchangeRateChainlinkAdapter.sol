@@ -2,7 +2,7 @@
 pragma solidity 0.8.21;
 
 import {IStEth} from "../interfaces/IStEth.sol";
-import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
+import {MinimalAggregatorV3Interface} from "../interfaces/MinimalAggregatorV3Interface.sol";
 
 import {ErrorsLib} from "../libraries/ErrorsLib.sol";
 
@@ -11,25 +11,14 @@ import {ErrorsLib} from "../libraries/ErrorsLib.sol";
 /// @custom:contact security@morpho.org
 /// @notice wstETH/ETH exchange rate price feed.
 /// @dev This contract should only be used as price feed for `ChainlinkOracle`.
-contract WstEthEthExchangeRateChainlinkAdapter is AggregatorV3Interface {
+contract WstEthEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
     uint8 public constant decimals = 18;
-    string public constant description = "wstETH/ETH exchange rate";
 
     IStEth public immutable ST_ETH;
 
     constructor(address stEth) {
         require(stEth != address(0), ErrorsLib.ZERO_ADDRESS);
         ST_ETH = IStEth(stEth);
-    }
-
-    /// @notice Reverts as no Chainlink aggregator is used.
-    function version() external pure returns (uint256) {
-        revert();
-    }
-
-    /// @notice Reverts as it's not necessary for the ChainlinkOracle contract.
-    function getRoundData(uint80) external pure returns (uint80, int256, uint256, uint256, uint80) {
-        revert();
     }
 
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {

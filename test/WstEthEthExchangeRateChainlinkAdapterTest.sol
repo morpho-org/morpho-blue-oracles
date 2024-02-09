@@ -24,21 +24,9 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
         assertEq(oracle.decimals(), uint8(18));
     }
 
-    function testDescription() public {
-        assertEq(oracle.description(), "wstETH/ETH exchange rate");
-    }
-
     function testDeployZeroAddress() public {
         vm.expectRevert(bytes(ErrorsLib.ZERO_ADDRESS));
         new WstEthEthExchangeRateChainlinkAdapter(address(0));
-    }
-
-    function testReverts() public {
-        vm.expectRevert();
-        oracle.version();
-
-        vm.expectRevert();
-        oracle.getRoundData(0);
     }
 
     function testLatestRoundData() public {

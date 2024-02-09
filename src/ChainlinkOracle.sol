@@ -4,7 +4,7 @@ pragma solidity 0.8.21;
 import {IChainlinkOracle} from "./interfaces/IChainlinkOracle.sol";
 import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
 
-import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
+import {MinimalAggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 import {Math} from "../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
@@ -16,7 +16,7 @@ import {Math} from "../lib/openzeppelin-contracts/contracts/utils/math/Math.sol"
 contract ChainlinkOracle is IChainlinkOracle {
     using Math for uint256;
     using VaultLib for IERC4626;
-    using ChainlinkDataFeedLib for AggregatorV3Interface;
+    using ChainlinkDataFeedLib for MinimalAggregatorV3Interface;
 
     /* IMMUTABLES */
 
@@ -27,16 +27,16 @@ contract ChainlinkOracle is IChainlinkOracle {
     uint256 public immutable VAULT_CONVERSION_SAMPLE;
 
     /// @inheritdoc IChainlinkOracle
-    AggregatorV3Interface public immutable BASE_FEED_1;
+    MinimalAggregatorV3Interface public immutable BASE_FEED_1;
 
     /// @inheritdoc IChainlinkOracle
-    AggregatorV3Interface public immutable BASE_FEED_2;
+    MinimalAggregatorV3Interface public immutable BASE_FEED_2;
 
     /// @inheritdoc IChainlinkOracle
-    AggregatorV3Interface public immutable QUOTE_FEED_1;
+    MinimalAggregatorV3Interface public immutable QUOTE_FEED_1;
 
     /// @inheritdoc IChainlinkOracle
-    AggregatorV3Interface public immutable QUOTE_FEED_2;
+    MinimalAggregatorV3Interface public immutable QUOTE_FEED_2;
 
     /// @inheritdoc IChainlinkOracle
     uint256 public immutable SCALE_FACTOR;
@@ -63,10 +63,10 @@ contract ChainlinkOracle is IChainlinkOracle {
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
         IERC4626 vault,
-        AggregatorV3Interface baseFeed1,
-        AggregatorV3Interface baseFeed2,
-        AggregatorV3Interface quoteFeed1,
-        AggregatorV3Interface quoteFeed2,
+        MinimalAggregatorV3Interface baseFeed1,
+        MinimalAggregatorV3Interface baseFeed2,
+        MinimalAggregatorV3Interface quoteFeed1,
+        MinimalAggregatorV3Interface quoteFeed2,
         uint256 vaultConversionSample,
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
