@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.21;
 
-import {IStEth} from "../interfaces/IStEth.sol";
+import {IWstEth} from "../interfaces/IWstEth.sol";
 import {MinimalAggregatorV3Interface} from "../interfaces/MinimalAggregatorV3Interface.sol";
 
 import {ErrorsLib} from "../libraries/ErrorsLib.sol";
@@ -14,15 +14,18 @@ import {ErrorsLib} from "../libraries/ErrorsLib.sol";
 contract WstEthEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
     uint8 public constant decimals = 18;
 
-    IStEth public immutable ST_ETH;
+    IWstEth public immutable WST_ETH;
+    uint256 public immutable WSTETH_DECIMALS;
 
-    constructor(address stEth) {
-        require(stEth != address(0), ErrorsLib.ZERO_ADDRESS);
-        ST_ETH = IStEth(stEth);
+    constructor(address wstEth) {
+        require(wstEth != address(0), ErrorsLib.ZERO_ADDRESS);
+
+        WST_ETH = IWstEth(wstEth);
+        WSTETH_DECIMALS = WST_ETH.decimals();
     }
 
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
-        uint256 answer = ST_ETH.getPooledEthByShares(10 ** decimals);
+        uint256 answer = WST_ETH.stEthPerToken() * 10 ** (WSTETH_DECIMALS - decimals);
         return (0, int256(answer), 0, 0, 0);
     }
 }
