@@ -15,17 +15,15 @@ contract WstEthEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
     uint8 public constant decimals = 18;
 
     IWstEth public immutable WST_ETH;
-    uint256 public immutable WSTETH_DECIMALS;
 
     constructor(address wstEth) {
         require(wstEth != address(0), ErrorsLib.ZERO_ADDRESS);
 
         WST_ETH = IWstEth(wstEth);
-        WSTETH_DECIMALS = WST_ETH.decimals();
     }
 
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
-        uint256 answer = WST_ETH.stEthPerToken() * 10 ** (WSTETH_DECIMALS - decimals);
-        return (0, int256(answer), 0, 0, 0);
+        // It is assumed that `stEthPerToken` returns a price with 18 decimals precision.
+        return (0, int256(WST_ETH.stEthPerToken()), 0, 0, 0);
     }
 }
