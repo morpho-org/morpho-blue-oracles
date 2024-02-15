@@ -59,7 +59,7 @@ contract ChainlinkOracle is IChainlinkOracle {
     /// - The vault, if set, is ERC4626-compliant.
     /// @param baseVault Base vault. Pass address zero to omit this parameter.
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to the underlying asset.
-    /// Pass 1 if the oracle does not use a vault. Should be chosen such that converting `vaultConversionSample` to
+    /// Pass 1 if the oracle does not use a base vault. Should be chosen such that converting `baseVaultConversionSample` to
     /// assets has enough precision.
     /// @param quoteVault Quote vault. Pass address zero to omit this parameter.
     /// @param quoteVaultConversionSample The sample amount of quote vault shares used to convert to the underlying
