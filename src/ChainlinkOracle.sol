@@ -84,8 +84,7 @@ contract ChainlinkOracle is IChainlinkOracle {
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
-        // The ERC4626 vault parameter is used to price `VAULT_CONVERSION_SAMPLE` of its shares, so it requires dividing
-        // by that number, hence the division by `VAULT_CONVERSION_SAMPLE` in the `SCALE_FACTOR` definition.
+        // The ERC4626 vaults parameter is used to price their respective conversion samples of their respective shares, so it requires multiplying by `QUOTE_VAULT_CONVERSION_SAMPLE` and dividing `BASE_VAULT_CONVERSION_SAMPLE` by the `SCALE_FACTOR` definition.
         // Verify that vault = address(0) => vaultConversionSample = 1 for each vault.
         require(
             address(baseVault) != address(0) || baseVaultConversionSample == 1,
