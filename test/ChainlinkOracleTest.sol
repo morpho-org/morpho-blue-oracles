@@ -28,6 +28,8 @@ IERC4626 constant vaultZero = IERC4626(address(0));
 IERC4626 constant sDaiVault = IERC4626(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
 
 contract ChainlinkOracleTest is Test {
+    using Math for uint256;
+
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
     }
@@ -138,6 +140,35 @@ contract ChainlinkOracleTest is Test {
         uint256 expectedPrice = 10 ** (36 - 12);
         // Admit a 50% interest gain before breaking this test.
         uint256 deviation = 0.5 ether;
+        assertApproxEqRel(oracle.price(), expectedPrice, deviation);
+    }
+
+    function testEthSDaiOracle() public {
+        ChainlinkOracle oracle =
+            new ChainlinkOracle(vaultZero, 1, sDaiVault, 1e18, feedZero, feedZero, daiEthFeed, feedZero, 18, 18);
+        (, int256 expectedPrice,,,) = daiEthFeed.latestRoundData();
+        assertEq(
+            oracle.price(),
+            // 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2) * qCS / bCS
+            10 ** (36 + 18 + 18 + 0 - 18 - 0 - 0) * 1e18 / (sDaiVault.convertToAssets(1e18) * uint256(expectedPrice))
+        );
+    }
+
+    function testUsdcSDaiOracle() public {
+        ChainlinkOracle oracle =
+            new ChainlinkOracle(vaultZero, 1, sDaiVault, 1e18, usdcEthFeed, feedZero, daiEthFeed, feedZero, 6, 18);
+        (, int256 baseAnswer,,,) = usdcEthFeed.latestRoundData();
+        (, int256 quoteAnswer,,,) = daiEthFeed.latestRoundData();
+        // 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2) * qCS / bCS
+        uint256 scaleFactor = 10 ** (36 + 18 + 18 + 0 - 6 - 18 - 0) * 1e18;
+        assertEq(
+            oracle.price(),
+            scaleFactor.mulDiv(uint256(baseAnswer), (sDaiVault.convertToAssets(1e18) * uint256(quoteAnswer)))
+        );
+        // DAI has 12 more decimals than USDC.
+        uint256 expectedPrice = 10 ** (36 + 12);
+        // Admit a 50% interest gain before breaking this test.
+        uint256 deviation = 0.66 ether;
         assertApproxEqRel(oracle.price(), expectedPrice, deviation);
     }
 
