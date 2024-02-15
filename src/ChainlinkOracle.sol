@@ -59,7 +59,8 @@ contract ChainlinkOracle is IChainlinkOracle {
     /// - The vault, if set, is ERC4626-compliant.
     /// @param baseVault Base vault. Pass address zero to omit this parameter.
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to the underlying asset.
-    /// Pass 1 if the oracle does not use a base vault. Should be chosen such that converting `baseVaultConversionSample` to
+    /// Pass 1 if the oracle does not use a base vault. Should be chosen such that converting
+    /// `baseVaultConversionSample` to
     /// assets has enough precision.
     /// @param quoteVault Quote vault. Pass address zero to omit this parameter.
     /// @param quoteVaultConversionSample The sample amount of quote vault shares used to convert to the underlying
@@ -84,7 +85,9 @@ contract ChainlinkOracle is IChainlinkOracle {
         uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
-        // The ERC4626 vaults parameter is used to price their respective conversion samples of their respective shares, so it requires multiplying by `QUOTE_VAULT_CONVERSION_SAMPLE` and dividing `BASE_VAULT_CONVERSION_SAMPLE` by the `SCALE_FACTOR` definition.
+        // The ERC4626 vaults parameter is used to price their respective conversion samples of their respective shares,
+        // so it requires multiplying by `QUOTE_VAULT_CONVERSION_SAMPLE` and dividing `BASE_VAULT_CONVERSION_SAMPLE` by
+        // the `SCALE_FACTOR` definition.
         // Verify that vault = address(0) => vaultConversionSample = 1 for each vault.
         require(
             address(baseVault) != address(0) || baseVaultConversionSample == 1,
