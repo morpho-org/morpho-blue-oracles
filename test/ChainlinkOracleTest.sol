@@ -146,11 +146,11 @@ contract ChainlinkOracleTest is Test {
     function testEthSDaiOracle() public {
         ChainlinkOracle oracle =
             new ChainlinkOracle(vaultZero, 1, sDaiVault, 1e18, feedZero, feedZero, daiEthFeed, feedZero, 18, 18);
-        (, int256 expectedPrice,,,) = daiEthFeed.latestRoundData();
+        (, int256 quoteAnswer,,,) = daiEthFeed.latestRoundData();
         assertEq(
             oracle.price(),
             // 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2) * qCS / bCS
-            10 ** (36 + 18 + 18 + 0 - 18 - 0 - 0) * 1e18 / (sDaiVault.convertToAssets(1e18) * uint256(expectedPrice))
+            10 ** (36 + 18 + 18 + 0 - 18 - 0 - 0) * 1e18 / (sDaiVault.convertToAssets(1e18) * uint256(quoteAnswer))
         );
     }
 
