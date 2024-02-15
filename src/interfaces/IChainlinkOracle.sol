@@ -13,13 +13,13 @@ interface IChainlinkOracle is IOracle {
     /// @notice Returns the address of the base ERC4626 vault.
     function BASE_VAULT() external view returns (IERC4626);
 
-    /// @notice Returns the vault conversion sample.
+    /// @notice Returns the base vault conversion sample.
     function BASE_VAULT_CONVERSION_SAMPLE() external view returns (uint256);
 
     /// @notice Returns the address of the quote ERC4626 vault.
     function QUOTE_VAULT() external view returns (IERC4626);
 
-    /// @notice Returns the vault conversion sample.
+    /// @notice Returns the quote vault conversion sample.
     function QUOTE_VAULT_CONVERSION_SAMPLE() external view returns (uint256);
 
     /// @notice Returns the address of the first Chainlink base feed.
