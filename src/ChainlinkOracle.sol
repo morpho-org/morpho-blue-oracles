@@ -59,10 +59,12 @@ contract ChainlinkOracle is IChainlinkOracle {
     /// - The vault, if set, is ERC4626-compliant.
     /// @param baseVault Base vault. Pass address zero to omit this parameter.
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to underlying.
-    /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to assets has enough precision.
+    /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to
+    /// assets has enough precision.
     /// @param quoteVault Quote vault. Pass address zero to omit this parameter.
     /// @param quoteVaultConversionSample The sample amount of quote vault shares used to convert to underlying.
-    /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `quoteVaultConversionSample` to assets has enough precision.
+    /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `quoteVaultConversionSample` to
+    /// assets has enough precision.
     /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
