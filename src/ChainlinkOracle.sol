@@ -62,26 +62,26 @@ contract ChainlinkOracle is IChainlinkOracle {
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to underlying.
     /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to
     /// assets has enough precision.
+    /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
+    /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
+    /// @param baseTokenDecimals Base token decimals.
     /// @param quoteVault Quote vault. Pass address zero to omit this parameter.
     /// @param quoteVaultConversionSample The sample amount of quote vault shares used to convert to underlying.
     /// Pass 1 if the quote asset is not a vault. Should be chosen such that converting `quoteVaultConversionSample` to
     /// assets has enough precision.
-    /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
-    /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
-    /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     constructor(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,
-        IERC4626 quoteVault,
-        uint256 quoteVaultConversionSample,
         AggregatorV3Interface baseFeed1,
         AggregatorV3Interface baseFeed2,
+        uint256 baseTokenDecimals,
+        IERC4626 quoteVault,
+        uint256 quoteVaultConversionSample,
         AggregatorV3Interface quoteFeed1,
         AggregatorV3Interface quoteFeed2,
-        uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
         // The ERC4626 vaults parameter is used to price their respective conversion samples of their respective shares,
