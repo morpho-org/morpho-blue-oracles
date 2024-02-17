@@ -49,7 +49,7 @@ contract ChainlinkOracleTest is Test {
 
     function testOracleUsdcWbtc() public {
         ChainlinkOracle oracle =
-            new ChainlinkOracle(vaultZero, 1, usdcUsdFeed, feedZero, 6,  vaultZero, 1, wBtcBtcFeed, btcUsdFeed, 8);
+            new ChainlinkOracle(vaultZero, 1, usdcUsdFeed, feedZero, 6, vaultZero, 1, wBtcBtcFeed, btcUsdFeed, 8);
         (, int256 baseAnswer,,,) = usdcUsdFeed.latestRoundData();
         (, int256 firstQuoteAnswer,,,) = wBtcBtcFeed.latestRoundData();
         (, int256 secondQuoteAnswer,,,) = btcUsdFeed.latestRoundData();
@@ -109,7 +109,8 @@ contract ChainlinkOracleTest is Test {
         price = bound(price, type(int256).min, -1);
         ChainlinkAggregatorMock aggregator = new ChainlinkAggregatorMock();
         ChainlinkOracle oracle = new ChainlinkOracle(
-            vaultZero, 1, AggregatorV3Interface(address(aggregator)), feedZero, 18, vaultZero, 1, feedZero, feedZero, 0);
+            vaultZero, 1, AggregatorV3Interface(address(aggregator)), feedZero, 18, vaultZero, 1, feedZero, feedZero, 0
+        );
         aggregator.setAnwser(price);
         vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
         oracle.price();
