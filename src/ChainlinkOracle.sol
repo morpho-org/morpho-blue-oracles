@@ -92,11 +92,11 @@ contract ChainlinkOracle is IChainlinkOracle {
             address(baseVault) != address(0) || baseVaultConversionSample == 1,
             ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
         );
-        require(baseVaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO);
         require(
             address(quoteVault) != address(0) || quoteVaultConversionSample == 1,
             ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
         );
+        require(baseVaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO);
         require(quoteVaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO);
 
         BASE_VAULT = baseVault;
