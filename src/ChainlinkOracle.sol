@@ -57,6 +57,7 @@ contract ChainlinkOracle is IChainlinkOracle {
     /// - The vault's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
     /// - The quote feed prices don't overflow when multiplied.
     /// - The vault, if set, is ERC4626-compliant.
+    /// @dev The base asset is the collateral token and the quote asset is the loan token.
     /// @param baseVault Base vault. Pass address zero to omit this parameter.
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to underlying.
     /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to assets has enough precision.
