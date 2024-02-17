@@ -167,7 +167,7 @@ contract ChainlinkOracleTest is Test {
         // DAI has 12 more decimals than USDC.
         uint256 expectedPrice = 10 ** (36 + 12);
         // Admit a 50% interest gain before breaking this test.
-        uint256 deviation = 0.66 ether;
+        uint256 deviation = 0.33 ether;
         assertApproxEqRel(oracle.price(), expectedPrice, deviation);
     }
 
