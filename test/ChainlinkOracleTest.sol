@@ -2,8 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "../lib/forge-std/src/Test.sol";
-import "../src/ChainlinkOracle.sol";
-import "../src/libraries/ErrorsLib.sol";
+import "../src/morpho-chainlink-v1/ChainlinkOracle.sol";
 import "./mocks/ChainlinkAggregatorMock.sol";
 import "./helpers/Constants.sol";
 
@@ -79,7 +78,7 @@ contract ChainlinkOracleTest is Test {
         price = bound(price, type(int256).min, -1);
         ChainlinkAggregatorMock aggregator = new ChainlinkAggregatorMock();
         ChainlinkOracle oracle = new ChainlinkOracle(
-            vaultZero, MinimalAggregatorV3Interface(address(aggregator)), feedZero, feedZero, feedZero, 1, 18, 0
+            vaultZero, AggregatorV3Interface(address(aggregator)), feedZero, feedZero, feedZero, 1, 18, 0
         );
         aggregator.setAnwser(price);
         vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
