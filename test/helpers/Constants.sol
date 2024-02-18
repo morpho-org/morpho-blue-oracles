@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {IERC4626, AggregatorV3Interface} from "../../src/ChainlinkOracle.sol";
+import {IERC4626, AggregatorV3Interface} from "../../src/morpho-chainlink-v1/ChainlinkOracle.sol";
 
 AggregatorV3Interface constant feedZero = AggregatorV3Interface(address(0));
 // 8 decimals of precision
