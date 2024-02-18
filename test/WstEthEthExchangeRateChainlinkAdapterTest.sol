@@ -15,7 +15,9 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
         oracle = new WstEthEthExchangeRateChainlinkAdapter(address(WST_ETH));
-        chainlinkOracle = new ChainlinkOracle(vaultZero, AggregatorV3Interface(address(oracle)), feedZero, feedZero, feedZero, 1, 18, 18);
+        chainlinkOracle = new ChainlinkOracle(
+            vaultZero, AggregatorV3Interface(address(oracle)), feedZero, feedZero, feedZero, 1, 18, 18
+        );
     }
 
     function testDecimals() public {
