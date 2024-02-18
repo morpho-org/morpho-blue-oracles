@@ -1,50 +1,50 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.21;
 
-import {IChainlinkOracle} from "./interfaces/IChainlinkOracle.sol";
 import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
+import {IMorphoChainlinkOracleV2} from "./interfaces/IMorphoChainlinkOracleV2.sol";
 
-import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
-import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
+import {IERC4626, VaultLib} from "../morpho-chainlink-v1/libraries/VaultLib.sol";
 import {Math} from "../../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
+import {AggregatorV3Interface, ChainlinkDataFeedLib} from "../morpho-chainlink-v1/libraries/ChainlinkDataFeedLib.sol";
 
-/// @title ChainlinkOracle
+/// @title MorphoChainlinkOracleV2
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
-contract ChainlinkOracle is IChainlinkOracle {
+contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     using Math for uint256;
     using VaultLib for IERC4626;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     /* IMMUTABLES */
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     IERC4626 public immutable BASE_VAULT;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     uint256 public immutable BASE_VAULT_CONVERSION_SAMPLE;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     IERC4626 public immutable QUOTE_VAULT;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     uint256 public immutable QUOTE_VAULT_CONVERSION_SAMPLE;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     AggregatorV3Interface public immutable BASE_FEED_1;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     AggregatorV3Interface public immutable BASE_FEED_2;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     AggregatorV3Interface public immutable QUOTE_FEED_1;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     AggregatorV3Interface public immutable QUOTE_FEED_2;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */

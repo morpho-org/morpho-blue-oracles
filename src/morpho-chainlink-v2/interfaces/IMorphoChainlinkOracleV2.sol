@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
-import {IERC4626} from "./IERC4626.sol";
-import {AggregatorV3Interface} from "./AggregatorV3Interface.sol";
+import {IERC4626} from "../../morpho-chainlink-v1/interfaces/IERC4626.sol";
 import {IOracle} from "../../../lib/morpho-blue/src/interfaces/IOracle.sol";
+import {AggregatorV3Interface} from "../../morpho-chainlink-v1/interfaces/AggregatorV3Interface.sol";
 
-/// @title IChainlinkOracle
+/// @title IMorphoChainlinkOracleV2
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
-/// @notice Interface of ChainlinkOracle.
-interface IChainlinkOracle is IOracle {
+/// @notice Interface of MorphoChainlinkOracleV2.
+interface IMorphoChainlinkOracleV2 is IOracle {
     /// @notice Returns the address of the base ERC4626 vault.
     function BASE_VAULT() external view returns (IERC4626);
 
