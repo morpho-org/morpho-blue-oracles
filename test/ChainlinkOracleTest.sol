@@ -79,7 +79,7 @@ contract ChainlinkOracleTest is Test {
         price = bound(price, type(int256).min, -1);
         ChainlinkAggregatorMock aggregator = new ChainlinkAggregatorMock();
         ChainlinkOracle oracle = new ChainlinkOracle(
-            vaultZero, MinimalAggregatorV3Interface(address(aggregator)), feedZero, feedZero, feedZero, 1, 18, 0
+            vaultZero, AggregatorV3Interface(address(aggregator)), feedZero, feedZero, feedZero, 1, 18, 0
         );
         aggregator.setAnwser(price);
         vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
