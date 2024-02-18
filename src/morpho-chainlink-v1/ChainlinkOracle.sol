@@ -2,12 +2,12 @@
 pragma solidity 0.8.21;
 
 import {IChainlinkOracle} from "./interfaces/IChainlinkOracle.sol";
-import {IOracle} from "../lib/morpho-blue/src/interfaces/IOracle.sol";
+import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
 
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
-import {Math} from "../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
+import {Math} from "../../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
 
 /// @title ChainlinkOracle
 /// @author Morpho Labs
