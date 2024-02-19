@@ -13,10 +13,10 @@ interface IMorphoChainlinkOracleV2Factory {
     /// @notice Emitted when a new Chainlink oracle is created.
     /// @param oracle The address of the Chainlink oracle.
     /// @param caller The caller of the function.
-    event CreateChainlinkOracle(address caller, address oracle);
+    event CreateMorphoChainlinkOracleV2(address caller, address oracle);
 
     /// @notice Whether a Chainlink oracle vault was created with the factory.
-    function isChainlinkOracle(address target) external view returns (bool);
+    function isMorphoChainlinkOracleV2(address target) external view returns (bool);
 
     /// @dev Here is the list of assumptions that guarantees the oracle behaves as expected:
     /// - Feeds are either Chainlink-compliant or the address zero.
@@ -41,7 +41,7 @@ interface IMorphoChainlinkOracleV2Factory {
     /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
     /// @param salt The salt to use for the MetaMorpho vault's CREATE2 address.
-    function createChainlinkOracle(
+    function createMorphoChainlinkOracleV2(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,
         AggregatorV3Interface baseFeed1,

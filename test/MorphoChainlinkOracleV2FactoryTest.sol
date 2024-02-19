@@ -23,17 +23,17 @@ contract ChainlinkOracleFactoryTest is Test {
         );
         address expectedAddress = computeCreate2Address(salt, initCodeHash, address(factory));
 
-        assertFalse(factory.isChainlinkOracle(expectedAddress), "isChainlinkOracle");
+        assertFalse(factory.isMorphoChainlinkOracleV2(expectedAddress), "isChainlinkOracle");
 
         // vm.expectEmit(address(factory));
-        // emit IMorphoChainlinkOracleV2Factory.CreateChainlinkOracle(address(this), expectedAddress);
-        IMorphoChainlinkOracleV2 oracle = factory.createChainlinkOracle(
+        // emit IMorphoChainlinkOracleV2Factory.CreateMorphoChainlinkOracleV2(address(this), expectedAddress);
+        IMorphoChainlinkOracleV2 oracle = factory.createMorphoChainlinkOracleV2(
             sDaiVault, 1e18, daiEthFeed, feedZero, 18, vaultZero, 1, usdcEthFeed, feedZero, 6, salt
         );
 
         assertEq(expectedAddress, address(oracle), "computeCreate2Address");
 
-        assertTrue(factory.isChainlinkOracle(address(oracle)), "isChainlinkOracle");
+        assertTrue(factory.isMorphoChainlinkOracleV2(address(oracle)), "isChainlinkOracle");
 
         uint256 scaleFactor = 10 ** (36 + 6 + 18 - 18 - 18 - 18);
 
@@ -55,17 +55,17 @@ contract ChainlinkOracleFactoryTest is Test {
         );
         address expectedAddress = computeCreate2Address(salt, initCodeHash, address(factory));
 
-        assertFalse(factory.isChainlinkOracle(expectedAddress), "isChainlinkOracle");
+        assertFalse(factory.isMorphoChainlinkOracleV2(expectedAddress), "isChainlinkOracle");
 
         // vm.expectEmit(address(factory));
-        // emit IMorphoChainlinkOracleV2Factory.CreateChainlinkOracle(address(this), expectedAddress);
-        IMorphoChainlinkOracleV2 oracle = factory.createChainlinkOracle(
+        // emit IMorphoChainlinkOracleV2Factory.CreateMorphoChainlinkOracleV2(address(this), expectedAddress);
+        IMorphoChainlinkOracleV2 oracle = factory.createMorphoChainlinkOracleV2(
             vaultZero, 1, usdcEthFeed, feedZero, 6, sDaiVault, 1e18, daiEthFeed, feedZero, 18, salt
         );
 
         assertEq(expectedAddress, address(oracle), "computeCreate2Address");
 
-        assertTrue(factory.isChainlinkOracle(address(oracle)), "isChainlinkOracle");
+        assertTrue(factory.isMorphoChainlinkOracleV2(address(oracle)), "isChainlinkOracle");
 
         uint256 scaleFactor = 10 ** (36 + 18 + 18 + 0 - 6 - 18 - 0) * 1e18;
 

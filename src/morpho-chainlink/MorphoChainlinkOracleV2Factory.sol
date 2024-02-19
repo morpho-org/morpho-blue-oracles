@@ -16,12 +16,12 @@ contract MorphoChainlinkOracleV2Factory is IMorphoChainlinkOracleV2Factory {
     /* STORAGE */
 
     /// @inheritdoc IMorphoChainlinkOracleV2Factory
-    mapping(address => bool) public isChainlinkOracle;
+    mapping(address => bool) public isMorphoChainlinkOracleV2;
 
     /* EXTERNAL */
 
     /// @inheritdoc IMorphoChainlinkOracleV2Factory
-    function createChainlinkOracle(
+    function createMorphoChainlinkOracleV2(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,
         AggregatorV3Interface baseFeed1,
@@ -47,8 +47,8 @@ contract MorphoChainlinkOracleV2Factory is IMorphoChainlinkOracleV2Factory {
             quoteTokenDecimals
         );
 
-        isChainlinkOracle[address(oracle)] = true;
+        isMorphoChainlinkOracleV2[address(oracle)] = true;
 
-        emit CreateChainlinkOracle(msg.sender, address(oracle));
+        emit CreateMorphoChainlinkOracleV2(msg.sender, address(oracle));
     }
 }
