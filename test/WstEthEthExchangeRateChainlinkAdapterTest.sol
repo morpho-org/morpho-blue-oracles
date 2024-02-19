@@ -9,23 +9,23 @@ import "../src/wsteth-exchange-rate-adapter/WstEthEthExchangeRateChainlinkAdapte
 contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
     IWstEth internal constant WST_ETH = IWstEth(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
 
-    WstEthEthExchangeRateChainlinkAdapter internal oracle;
-    MorphoChainlinkOracleV2 internal chainlinkOracle;
+    WstEthEthExchangeRateChainlinkAdapter internal adapter;
+    MorphoChainlinkOracleV2 internal morphoOracle;
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
-        oracle = new WstEthEthExchangeRateChainlinkAdapter(address(WST_ETH));
-        chainlinkOracle = new MorphoChainlinkOracleV2(
-            vaultZero, 1, AggregatorV3Interface(address(oracle)), feedZero, 18, vaultZero, 1, feedZero, feedZero, 18
+        adapter = new WstEthEthExchangeRateChainlinkAdapter(address(WST_ETH));
+        morphoOracle = new MorphoChainlinkOracleV2(
+            vaultZero, 1, AggregatorV3Interface(address(adapter)), feedZero, 18, vaultZero, 1, feedZero, feedZero, 18
         );
     }
 
     function testDecimals() public {
-        assertEq(oracle.decimals(), uint8(18));
+        assertEq(adapter.decimals(), uint8(18));
     }
 
     function testDescription() public {
-        assertEq(oracle.description(), "wstETH/ETH exchange rate");
+        assertEq(adapter.description(), "wstETH/ETH exchange rate");
     }
 
     function testDeployZeroAddress() public {
@@ -35,7 +35,7 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
 
     function testLatestRoundData() public {
         (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
-            oracle.latestRoundData();
+            adapter.latestRoundData();
         assertEq(roundId, 0);
         assertEq(uint256(answer), WST_ETH.stEthPerToken());
         assertEq(startedAt, 0);
@@ -44,13 +44,13 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
     }
 
     function testLatestRoundDataBounds() public {
-        (, int256 answer,,,) = oracle.latestRoundData();
+        (, int256 answer,,,) = adapter.latestRoundData();
         assertGe(uint256(answer), 1154690031824824994); // Exchange rate queried at block 19070943
         assertLe(uint256(answer), 1.5e18); // Max bounds of the exchange rate. Should work for a long enough time.
     }
 
     function testOracleWstEthEthExchangeRate() public {
-        (, int256 expectedPrice,,,) = oracle.latestRoundData();
-        assertEq(chainlinkOracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18 - 18));
+        (, int256 expectedPrice,,,) = adapter.latestRoundData();
+        assertEq(morphoOracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18 - 18));
     }
 }
