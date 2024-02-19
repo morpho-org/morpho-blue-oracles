@@ -32,7 +32,7 @@ interface IMorphoChainlinkOracleV2Factory {
     /// assets has enough precision.
     /// @param quoteVault Quote vault. Pass address zero to omit this parameter.
     /// @param quoteVaultConversionSample The sample amount of quote vault shares used to convert to underlying.
-    /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `quoteVaultConversionSample` to
+    /// Pass 1 if the quote asset is not a vault. Should be chosen such that converting `quoteVaultConversionSample` to
     /// assets has enough precision.
     /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
