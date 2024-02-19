@@ -5,9 +5,9 @@ import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
 import {IMorphoChainlinkOracleV2} from "./interfaces/IMorphoChainlinkOracleV2.sol";
 
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
-import {IERC4626, VaultLib} from "../morpho-chainlink/libraries/VaultLib.sol";
+import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {Math} from "../../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
-import {AggregatorV3Interface, ChainlinkDataFeedLib} from "../morpho-chainlink/libraries/ChainlinkDataFeedLib.sol";
+import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 
 /// @title MorphoChainlinkOracleV2
 /// @author Morpho Labs

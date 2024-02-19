@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
-import {IERC4626} from "../../morpho-chainlink/interfaces/IERC4626.sol";
+import {IERC4626} from "./IERC4626.sol";
 import {IOracle} from "../../../lib/morpho-blue/src/interfaces/IOracle.sol";
-import {AggregatorV3Interface} from "../../morpho-chainlink/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "./AggregatorV3Interface.sol";
 
 /// @title IMorphoChainlinkOracleV2
 /// @author Morpho Labs
