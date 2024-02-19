@@ -23,6 +23,7 @@ contract WstEthEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
         WST_ETH = IWstEth(wstEth);
     }
 
+    /// @dev Silently overflows if `stEthPerToken` is greater than `type(int256).max`.
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
         // It is assumed that `stEthPerToken` returns a price with 18 decimals precision.
         return (0, int256(WST_ETH.stEthPerToken()), 0, 0, 0);
