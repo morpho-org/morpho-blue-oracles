@@ -8,8 +8,6 @@ import {IERC4626} from "./libraries/VaultLib.sol";
 
 import {MorphoChainlinkOracleV2} from "./MorphoChainlinkOracleV2.sol";
 
-import "forge-std/Test.sol";
-
 /// @title MorphoChainlinkOracleV2Factory
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
