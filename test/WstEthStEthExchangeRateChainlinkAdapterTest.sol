@@ -4,17 +4,17 @@ pragma solidity ^0.8.0;
 import "./helpers/Constants.sol";
 import "../lib/forge-std/src/Test.sol";
 import {ChainlinkOracle} from "../src/morpho-chainlink-v1/ChainlinkOracle.sol";
-import "../src/wsteth-exchange-rate-adapter/WstEthEthExchangeRateChainlinkAdapter.sol";
+import "../src/wsteth-exchange-rate-adapter/WstEthStEthExchangeRateChainlinkAdapter.sol";
 
-contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
+contract WstEthStEthExchangeRateChainlinkAdapterTest is Test {
     IStEth internal constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
-    WstEthEthExchangeRateChainlinkAdapter internal oracle;
+    WstEthStEthExchangeRateChainlinkAdapter internal oracle;
     ChainlinkOracle internal chainlinkOracle;
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
-        oracle = new WstEthEthExchangeRateChainlinkAdapter();
+        oracle = new WstEthStEthExchangeRateChainlinkAdapter();
         chainlinkOracle = new ChainlinkOracle(
             vaultZero, AggregatorV3Interface(address(oracle)), feedZero, feedZero, feedZero, 1, 18, 18
         );
@@ -25,7 +25,7 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
     }
 
     function testDescription() public {
-        assertEq(oracle.description(), "wstETH/ETH exchange rate");
+        assertEq(oracle.description(), "wstETH/stETH exchange rate");
     }
 
     function testLatestRoundData() public {
@@ -44,7 +44,7 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
         assertLe(uint256(answer), 1.5e18); // Max bounds of the exchange rate. Should work for a long enough time.
     }
 
-    function testOracleWstEthEthExchangeRate() public {
+    function testOracleWstEthStEthExchangeRate() public {
         (, int256 expectedPrice,,,) = oracle.latestRoundData();
         assertEq(chainlinkOracle.price(), uint256(expectedPrice) * 10 ** (36 + 18 - 18 - 18));
     }
