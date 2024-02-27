@@ -8,12 +8,18 @@ import {MinimalAggregatorV3Interface} from "./interfaces/MinimalAggregatorV3Inte
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice wstETH/stETH exchange rate price feed.
-/// @dev This contract should only be used as price feed for `ChainlinkOracle`.
+/// @dev This contract should only be used as price feed for `MorphoChainlinkOracleV2`.
 contract WstEthStEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
+    /// @inheritdoc MinimalAggregatorV3Interface
     uint8 public constant decimals = 18;
+
+    /// @notice The description of the price feed.
     string public constant description = "wstETH/stETH exchange rate";
+
+    /// @notice The address of stETH on Mainnet.
     IStEth public constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
+    /// @inheritdoc MinimalAggregatorV3Interface
     /// @dev Silently overflows if `getPooledEthByShares`'s return value is greater than `type(int256).max`.
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
         // It is assumed that `getPooledEthByShares` returns a price with 18 decimals precision.
