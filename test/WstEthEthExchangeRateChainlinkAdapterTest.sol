@@ -14,7 +14,7 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
-        oracle = new WstEthEthExchangeRateChainlinkAdapter(address(ST_ETH));
+        oracle = new WstEthEthExchangeRateChainlinkAdapter();
         chainlinkOracle = new ChainlinkOracle(
             vaultZero, AggregatorV3Interface(address(oracle)), feedZero, feedZero, feedZero, 1, 18, 18
         );
@@ -26,11 +26,6 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
 
     function testDescription() public {
         assertEq(oracle.description(), "wstETH/ETH exchange rate");
-    }
-
-    function testDeployZeroAddress() public {
-        vm.expectRevert(bytes(ErrorsLib.ZERO_ADDRESS));
-        new WstEthEthExchangeRateChainlinkAdapter(address(0));
     }
 
     function testLatestRoundData() public {
