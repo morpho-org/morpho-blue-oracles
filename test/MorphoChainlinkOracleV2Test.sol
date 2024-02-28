@@ -157,6 +157,21 @@ contract MorphoChainlinkOracleV2Test is Test {
         assertApproxEqRel(oracle.price(), expectedPrice, deviation);
     }
 
+    function testsfrxEthSDaiOracle() public {
+        MorphoChainlinkOracleV2 oracle = new MorphoChainlinkOracleV2(
+            sfrxEthVault, 1e18, feedZero, feedZero, 18, sDaiVault, 1e18, daiEthFeed, feedZero, 18
+        );
+        (, int256 quoteAnswer,,,) = daiEthFeed.latestRoundData();
+        // 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2) * qCS / bCS
+        uint256 scaleFactor = 10 ** (36 + 18 + 18 + 0 - 18 - 0 - 0) * 1e18 / 1e18;
+        assertEq(
+            oracle.price(),
+            scaleFactor.mulDiv(
+                sfrxEthVault.convertToAssets(1e18), (sDaiVault.convertToAssets(1e18) * uint256(quoteAnswer))
+            )
+        );
+    }
+
     function testConstructorZeroVaultConversionSample() public {
         vm.expectRevert(bytes(ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO));
         new MorphoChainlinkOracleV2(sDaiVault, 0, daiEthFeed, feedZero, 18, vaultZero, 1, usdcEthFeed, feedZero, 6);
