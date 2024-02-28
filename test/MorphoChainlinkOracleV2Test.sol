@@ -157,7 +157,7 @@ contract MorphoChainlinkOracleV2Test is Test {
         assertApproxEqRel(oracle.price(), expectedPrice, deviation);
     }
 
-    function testsfrxEthSDaiOracle() public {
+    function testSfrxEthSDaiOracle() public {
         MorphoChainlinkOracleV2 oracle = new MorphoChainlinkOracleV2(
             sfrxEthVault, 1e18, feedZero, feedZero, 18, sDaiVault, 1e18, daiEthFeed, feedZero, 18
         );
