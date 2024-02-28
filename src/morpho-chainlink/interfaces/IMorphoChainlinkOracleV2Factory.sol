@@ -22,6 +22,7 @@ interface IMorphoChainlinkOracleV2Factory {
     /// - Feeds are either Chainlink-compliant or the address zero.
     /// - Feeds have the same behavioral assumptions as Chainlink's.
     /// - The vaults, if set, are ERC4626-compliant.
+    /// - The feeds, if set, are Chainlink-interface-compliant.
     /// - Decimals passed as argument are correct.
     /// - The base vaults's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
     /// - The quote vault's sample shares quoted as assets and the quote feed prices don't overflow when multiplied.
@@ -40,6 +41,7 @@ interface IMorphoChainlinkOracleV2Factory {
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
     /// @param quoteTokenDecimals Quote token decimals.
     /// @param salt The salt to use for the CREATE2.
+    /// @dev The base asset should be the collateral token and the quote asset the loan token.
     function createMorphoChainlinkOracleV2(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,

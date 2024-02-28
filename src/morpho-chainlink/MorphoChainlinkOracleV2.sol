@@ -70,6 +70,7 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
     /// @param quoteTokenDecimals Quote token decimals.
+    /// @dev The base asset should be the collateral token and the quote asset the loan token.
     constructor(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,
