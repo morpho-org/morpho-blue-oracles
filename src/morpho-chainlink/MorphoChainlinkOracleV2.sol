@@ -52,12 +52,10 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     /// @dev Here is the list of assumptions that guarantees the oracle behaves as expected:
     /// - Feeds are either Chainlink-compliant or the address zero.
     /// - Feeds have the same behavioral assumptions as Chainlink's.
-    /// - Feeds are set in the correct order.
+    /// - The vaults, if set, are ERC4626-compliant.
     /// - Decimals passed as argument are correct.
-    /// - The vaults' sample shares quoted as assets and the base feed prices don't overflow when multiplied.
-    /// - The quote feed prices don't overflow when multiplied.
-    /// - Vaults are either ERC4626-compliant or the address zero.
-    /// @dev The base asset is the collateral token and the quote asset is the loan token.
+    /// - The base vaults's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
+    /// - The quote vault's sample shares quoted as assets and the quote feed prices don't overflow when multiplied.
     /// @param baseVault Base vault. Pass address zero to omit this parameter.
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to underlying.
     /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to
