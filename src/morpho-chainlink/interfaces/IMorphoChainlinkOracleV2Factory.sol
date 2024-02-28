@@ -21,11 +21,10 @@ interface IMorphoChainlinkOracleV2Factory {
     /// @dev Here is the list of assumptions that guarantees the oracle behaves as expected:
     /// - Feeds are either Chainlink-compliant or the address zero.
     /// - Feeds have the same behavioral assumptions as Chainlink's.
-    /// - Feeds are set in the correct order.
+    /// - The vaults, if set, are ERC4626-compliant.
     /// - Decimals passed as argument are correct.
-    /// - The vault's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
-    /// - The quote feed prices don't overflow when multiplied.
-    /// - The vault, if set, is ERC4626-compliant.
+    /// - The base vaults's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
+    /// - The quote vault's sample shares quoted as assets and the quote feed prices don't overflow when multiplied.
     /// @param baseVault Base vault. Pass address zero to omit this parameter.
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to underlying.
     /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to
@@ -40,7 +39,7 @@ interface IMorphoChainlinkOracleV2Factory {
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
     /// @param quoteTokenDecimals Quote token decimals.
-    /// @param salt The salt to use for the MetaMorpho vault's CREATE2 address.
+    /// @param salt The salt to use for the CREATE2.
     function createMorphoChainlinkOracleV2(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,

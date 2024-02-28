@@ -100,7 +100,7 @@ contract MorphoChainlinkOracleV2Test is Test {
 
     function testSDaiEthOracle() public {
         MorphoChainlinkOracleV2 oracle = new MorphoChainlinkOracleV2(
-            sDaiVault, 10 ** 18, daiEthFeed, feedZero, 18, vaultZero, 1, feedZero, feedZero, 18
+            sDaiVault, 1e18, daiEthFeed, feedZero, 18, vaultZero, 1, feedZero, feedZero, 18
         );
         (, int256 expectedPrice,,,) = daiEthFeed.latestRoundData();
         assertEq(
@@ -111,7 +111,7 @@ contract MorphoChainlinkOracleV2Test is Test {
 
     function testSDaiUsdcOracle() public {
         MorphoChainlinkOracleV2 oracle = new MorphoChainlinkOracleV2(
-            sDaiVault, 10 ** 18, daiEthFeed, feedZero, 18, vaultZero, 1, usdcEthFeed, feedZero, 6
+            sDaiVault, 1e18, daiEthFeed, feedZero, 18, vaultZero, 1, usdcEthFeed, feedZero, 6
         );
         (, int256 baseAnswer,,,) = daiEthFeed.latestRoundData();
         (, int256 quoteAnswer,,,) = usdcEthFeed.latestRoundData();

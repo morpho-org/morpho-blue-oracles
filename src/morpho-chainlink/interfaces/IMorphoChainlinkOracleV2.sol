@@ -22,16 +22,16 @@ interface IMorphoChainlinkOracleV2 is IOracle {
     /// @notice Returns the quote vault conversion sample.
     function QUOTE_VAULT_CONVERSION_SAMPLE() external view returns (uint256);
 
-    /// @notice Returns the address of the first Chainlink base feed.
+    /// @notice Returns the address of the first base feed.
     function BASE_FEED_1() external view returns (AggregatorV3Interface);
 
-    /// @notice Returns the address of the second Chainlink base feed.
+    /// @notice Returns the address of the second base feed.
     function BASE_FEED_2() external view returns (AggregatorV3Interface);
 
-    /// @notice Returns the address of the first Chainlink quote feed.
+    /// @notice Returns the address of the first quote feed.
     function QUOTE_FEED_1() external view returns (AggregatorV3Interface);
 
-    /// @notice Returns the address of the second Chainlink quote feed.
+    /// @notice Returns the address of the second quote feed.
     function QUOTE_FEED_2() external view returns (AggregatorV3Interface);
 
     /// @notice Returns the price scale factor, calculated at contract creation.
