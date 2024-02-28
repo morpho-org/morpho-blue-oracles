@@ -99,9 +99,8 @@ contract MorphoChainlinkOracleV2Test is Test {
     }
 
     function testSDaiEthOracle() public {
-        MorphoChainlinkOracleV2 oracle = new MorphoChainlinkOracleV2(
-            sDaiVault, 1e18, daiEthFeed, feedZero, 18, vaultZero, 1, feedZero, feedZero, 18
-        );
+        MorphoChainlinkOracleV2 oracle =
+            new MorphoChainlinkOracleV2(sDaiVault, 1e18, daiEthFeed, feedZero, 18, vaultZero, 1, feedZero, feedZero, 18);
         (, int256 expectedPrice,,,) = daiEthFeed.latestRoundData();
         assertEq(
             oracle.price(),
