@@ -16,10 +16,11 @@ contract WstEthStEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface
     /// @notice The description of the price feed.
     string public constant description = "wstETH/stETH exchange rate";
 
-    /// @notice The address of stETH on Mainnet.
+    /// @notice The address of stETH on Ethereum.
     IStEth public constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
     /// @inheritdoc MinimalAggregatorV3Interface
+    /// @dev Returns zero for roundId, startedAt, updatedAt and answeredInRound.
     /// @dev Silently overflows if `getPooledEthByShares`'s return value is greater than `type(int256).max`.
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
         // It is assumed that `getPooledEthByShares` returns a price with 18 decimals precision.
