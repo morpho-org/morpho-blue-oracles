@@ -19,8 +19,6 @@ interface IMorphoChainlinkOracleV2Factory {
     function isMorphoChainlinkOracleV2(address target) external view returns (bool);
 
     /// @dev Here is the list of assumptions that guarantees the oracle behaves as expected:
-    /// - Feeds are either Chainlink-compliant or the address zero.
-    /// - Feeds have the same behavioral assumptions as Chainlink's.
     /// - The vaults, if set, are ERC4626-compliant.
     /// - The feeds, if set, are Chainlink-interface-compliant.
     /// - Decimals passed as argument are correct.

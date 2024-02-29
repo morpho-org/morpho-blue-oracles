@@ -50,9 +50,8 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     /* CONSTRUCTOR */
 
     /// @dev Here is the list of assumptions that guarantees the oracle behaves as expected:
-    /// - Feeds are either Chainlink-compliant or the address zero.
-    /// - Feeds have the same behavioral assumptions as Chainlink's.
     /// - The vaults, if set, are ERC4626-compliant.
+    /// - The feeds, if set, are Chainlink-interface-compliant.
     /// - Decimals passed as argument are correct.
     /// - The base vaults's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
     /// - The quote vault's sample shares quoted as assets and the quote feed prices don't overflow when multiplied.
