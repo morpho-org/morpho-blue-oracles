@@ -3,7 +3,7 @@ pragma solidity >=0.5.0;
 
 import {IERC4626} from "./IERC4626.sol";
 import {AggregatorV3Interface} from "./AggregatorV3Interface.sol";
-import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
+import {IOracle} from "../../../lib/morpho-blue/src/interfaces/IOracle.sol";
 
 /// @title IChainlinkOracle
 /// @author Morpho Labs
