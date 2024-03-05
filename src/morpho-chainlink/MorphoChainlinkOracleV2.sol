@@ -1,86 +1,106 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.21;
 
-import {IChainlinkOracle} from "./interfaces/IChainlinkOracle.sol";
 import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
+import {IMorphoChainlinkOracleV2} from "./interfaces/IMorphoChainlinkOracleV2.sol";
 
-import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
-import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
+import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {Math} from "../../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
+import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 
-/// @title ChainlinkOracle
+/// @title MorphoChainlinkOracleV2
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
-contract ChainlinkOracle is IChainlinkOracle {
+contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     using Math for uint256;
     using VaultLib for IERC4626;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     /* IMMUTABLES */
 
-    /// @inheritdoc IChainlinkOracle
-    IERC4626 public immutable VAULT;
+    /// @inheritdoc IMorphoChainlinkOracleV2
+    IERC4626 public immutable BASE_VAULT;
 
-    /// @inheritdoc IChainlinkOracle
-    uint256 public immutable VAULT_CONVERSION_SAMPLE;
+    /// @inheritdoc IMorphoChainlinkOracleV2
+    uint256 public immutable BASE_VAULT_CONVERSION_SAMPLE;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
+    IERC4626 public immutable QUOTE_VAULT;
+
+    /// @inheritdoc IMorphoChainlinkOracleV2
+    uint256 public immutable QUOTE_VAULT_CONVERSION_SAMPLE;
+
+    /// @inheritdoc IMorphoChainlinkOracleV2
     AggregatorV3Interface public immutable BASE_FEED_1;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     AggregatorV3Interface public immutable BASE_FEED_2;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     AggregatorV3Interface public immutable QUOTE_FEED_1;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     AggregatorV3Interface public immutable QUOTE_FEED_2;
 
-    /// @inheritdoc IChainlinkOracle
+    /// @inheritdoc IMorphoChainlinkOracleV2
     uint256 public immutable SCALE_FACTOR;
 
     /* CONSTRUCTOR */
 
     /// @dev Here is the list of assumptions that guarantees the oracle behaves as expected:
-    /// - Feeds are either Chainlink-compliant or the address zero.
-    /// - Feeds have the same behavioral assumptions as Chainlink's.
-    /// - Feeds are set in the correct order.
+    /// - The vaults, if set, are ERC4626-compliant.
+    /// - The feeds, if set, are Chainlink-interface-compliant.
     /// - Decimals passed as argument are correct.
-    /// - The vault's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
-    /// - The quote feed prices don't overflow when multiplied.
-    /// - The vault, if set, is ERC4626-compliant.
-    /// @param vault Vault. Pass address zero to omit this parameter.
+    /// - The base vaults's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
+    /// - The quote vault's sample shares quoted as assets and the quote feed prices don't overflow when multiplied.
+    /// @param baseVault Base vault. Pass address zero to omit this parameter.
+    /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to underlying.
+    /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to
+    /// assets has enough precision.
     /// @param baseFeed1 First base feed. Pass address zero if the price = 1.
     /// @param baseFeed2 Second base feed. Pass address zero if the price = 1.
+    /// @param baseTokenDecimals Base token decimals.
+    /// @param quoteVault Quote vault. Pass address zero to omit this parameter.
+    /// @param quoteVaultConversionSample The sample amount of quote vault shares used to convert to underlying.
+    /// Pass 1 if the quote asset is not a vault. Should be chosen such that converting `quoteVaultConversionSample` to
+    /// assets has enough precision.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
-    /// @param vaultConversionSample The sample amount of vault shares used to convert to the underlying asset.
-    /// Pass 1 if the oracle does not use a vault. Should be chosen such that converting `vaultConversionSample` to
-    /// assets has enough precision.
-    /// @param baseTokenDecimals Base token decimals.
     /// @param quoteTokenDecimals Quote token decimals.
+    /// @dev The base asset should be the collateral token and the quote asset the loan token.
     constructor(
-        IERC4626 vault,
+        IERC4626 baseVault,
+        uint256 baseVaultConversionSample,
         AggregatorV3Interface baseFeed1,
         AggregatorV3Interface baseFeed2,
+        uint256 baseTokenDecimals,
+        IERC4626 quoteVault,
+        uint256 quoteVaultConversionSample,
         AggregatorV3Interface quoteFeed1,
         AggregatorV3Interface quoteFeed2,
-        uint256 vaultConversionSample,
-        uint256 baseTokenDecimals,
         uint256 quoteTokenDecimals
     ) {
-        // The ERC4626 vault parameter is used to price `VAULT_CONVERSION_SAMPLE` of its shares, so it requires dividing
-        // by that number, hence the division by `VAULT_CONVERSION_SAMPLE` in the `SCALE_FACTOR` definition.
-        // Verify that vault = address(0) => vaultConversionSample = 1.
+        // The ERC4626 vault parameters are used to price their respective conversion samples of their respective
+        // shares, so it requires multiplying by `QUOTE_VAULT_CONVERSION_SAMPLE` and dividing
+        // by `BASE_VAULT_CONVERSION_SAMPLE` in the `SCALE_FACTOR` definition.
+        // Verify that vault = address(0) => vaultConversionSample = 1 for each vault.
         require(
-            address(vault) != address(0) || vaultConversionSample == 1, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
+            address(baseVault) != address(0) || baseVaultConversionSample == 1,
+            ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
         );
-        require(vaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO);
+        require(
+            address(quoteVault) != address(0) || quoteVaultConversionSample == 1,
+            ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_NOT_ONE
+        );
+        require(baseVaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO);
+        require(quoteVaultConversionSample != 0, ErrorsLib.VAULT_CONVERSION_SAMPLE_IS_ZERO);
 
-        VAULT = vault;
-        VAULT_CONVERSION_SAMPLE = vaultConversionSample;
+        BASE_VAULT = baseVault;
+        BASE_VAULT_CONVERSION_SAMPLE = baseVaultConversionSample;
+        QUOTE_VAULT = quoteVault;
+        QUOTE_VAULT_CONVERSION_SAMPLE = quoteVaultConversionSample;
         BASE_FEED_1 = baseFeed1;
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
@@ -103,7 +123,7 @@ contract ChainlinkOracle is IChainlinkOracle {
         // = 1e36 * (pB1 * 1e(-dB1) * pB2) / (pQ1 * 1e(-dQ1) * pQ2)
 
         // Let fpB1, fpB2, fpQ1, fpQ2 be the feed precision of the respective prices pB1, pB2, pQ1, pQ2.
-        // Chainlink feeds return pB1 * 1e(fpB1), pB2 * 1e(fpB2), pQ1 * 1e(fpQ1) and pQ2 * 1e(fpQ2).
+        // Feeds return pB1 * 1e(fpB1), pB2 * 1e(fpB2), pQ1 * 1e(fpQ1) and pQ2 * 1e(fpQ2).
 
         // Based on the implementation of `price()` below, the value of `SCALE_FACTOR` should thus satisfy:
         // (pB1 * 1e(fpB1)) * (pB2 * 1e(fpB2)) * SCALE_FACTOR / ((pQ1 * 1e(fpQ1)) * (pQ2 * 1e(fpQ2)))
@@ -115,7 +135,7 @@ contract ChainlinkOracle is IChainlinkOracle {
             ** (
                 36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseTokenDecimals
                     - baseFeed1.getDecimals() - baseFeed2.getDecimals()
-            ) / vaultConversionSample;
+            ) * quoteVaultConversionSample / baseVaultConversionSample;
     }
 
     /* PRICE */
@@ -123,8 +143,8 @@ contract ChainlinkOracle is IChainlinkOracle {
     /// @inheritdoc IOracle
     function price() external view returns (uint256) {
         return SCALE_FACTOR.mulDiv(
-            VAULT.getAssets(VAULT_CONVERSION_SAMPLE) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice(),
-            QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice()
+            BASE_VAULT.getAssets(BASE_VAULT_CONVERSION_SAMPLE) * BASE_FEED_1.getPrice() * BASE_FEED_2.getPrice(),
+            QUOTE_VAULT.getAssets(QUOTE_VAULT_CONVERSION_SAMPLE) * QUOTE_FEED_1.getPrice() * QUOTE_FEED_2.getPrice()
         );
     }
 }

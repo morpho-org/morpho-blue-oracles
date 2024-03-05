@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {IERC4626, AggregatorV3Interface} from "../../src/morpho-chainlink-v1/ChainlinkOracle.sol";
+import {IERC4626} from "../../src/morpho-chainlink/interfaces/IERC4626.sol";
+import {AggregatorV3Interface} from "../../src/morpho-chainlink/interfaces/AggregatorV3Interface.sol";
 
 AggregatorV3Interface constant feedZero = AggregatorV3Interface(address(0));
 // 8 decimals of precision
@@ -23,3 +24,4 @@ AggregatorV3Interface constant daiEthFeed = AggregatorV3Interface(0x773616E4d11A
 
 IERC4626 constant vaultZero = IERC4626(address(0));
 IERC4626 constant sDaiVault = IERC4626(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
+IERC4626 constant sfrxEthVault = IERC4626(0xac3E018457B222d93114458476f3E3416Abbe38F);
