@@ -82,9 +82,9 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
         AggregatorV3Interface quoteFeed2,
         uint256 quoteTokenDecimals
     ) {
-        // The ERC4626 vault parameters are used to price their respective conversion samples of their respective shares,
-        // so it requires multiplying by `QUOTE_VAULT_CONVERSION_SAMPLE` and dividing `BASE_VAULT_CONVERSION_SAMPLE` by
-        // the `SCALE_FACTOR` definition.
+        // The ERC4626 vault parameters are used to price their respective conversion samples of their respective
+        // shares, so it requires multiplying by `QUOTE_VAULT_CONVERSION_SAMPLE` and dividing
+        // `BASE_VAULT_CONVERSION_SAMPLE` by the `SCALE_FACTOR` definition.
         // Verify that vault = address(0) => vaultConversionSample = 1 for each vault.
         require(
             address(baseVault) != address(0) || baseVaultConversionSample == 1,
