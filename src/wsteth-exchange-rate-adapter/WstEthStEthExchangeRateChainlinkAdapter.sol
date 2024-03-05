@@ -11,6 +11,7 @@ import {MinimalAggregatorV3Interface} from "./interfaces/MinimalAggregatorV3Inte
 /// @dev This contract should only be used as price feed for `MorphoChainlinkOracleV2`.
 contract WstEthStEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
     /// @inheritdoc MinimalAggregatorV3Interface
+    // @dev The calculated price has 18 decimals precision, whatever the value of `decimals`.
     uint8 public constant decimals = 18;
 
     /// @notice The description of the price feed.
