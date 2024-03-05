@@ -8,7 +8,7 @@ import {MinimalAggregatorV3Interface} from "./interfaces/MinimalAggregatorV3Inte
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
 /// @notice wstETH/stETH exchange rate price feed.
-/// @dev This contract should only be used as price feed for `MorphoChainlinkOracleV2`.
+/// @dev This contract should only be deployed on Ethereum and used as a price feed for Morpho oracles.
 contract WstEthStEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
     /// @inheritdoc MinimalAggregatorV3Interface
     // @dev The calculated price has 18 decimals precision, whatever the value of `decimals`.
