@@ -7,14 +7,14 @@ import {ChainlinkOracle} from "../src/morpho-chainlink-v1/ChainlinkOracle.sol";
 import "../src/wsteth-exchange-rate-adapter/WstEthEthExchangeRateChainlinkAdapter.sol";
 
 contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
-    IWstEth internal constant WST_ETH = IWstEth(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
+    IStEth internal constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
     WstEthEthExchangeRateChainlinkAdapter internal oracle;
     ChainlinkOracle internal chainlinkOracle;
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
-        oracle = new WstEthEthExchangeRateChainlinkAdapter(address(WST_ETH));
+        oracle = new WstEthEthExchangeRateChainlinkAdapter(address(ST_ETH));
         chainlinkOracle = new ChainlinkOracle(
             vaultZero, AggregatorV3Interface(address(oracle)), feedZero, feedZero, feedZero, 1, 18, 18
         );
@@ -37,7 +37,7 @@ contract WstEthEthExchangeRateChainlinkAdapterTest is Test {
         (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
             oracle.latestRoundData();
         assertEq(roundId, 0);
-        assertEq(uint256(answer), WST_ETH.stEthPerToken());
+        assertEq(uint256(answer), ST_ETH.getPooledEthByShares(1 ether));
         assertEq(startedAt, 0);
         assertEq(updatedAt, 0);
         assertEq(answeredInRound, 0);
