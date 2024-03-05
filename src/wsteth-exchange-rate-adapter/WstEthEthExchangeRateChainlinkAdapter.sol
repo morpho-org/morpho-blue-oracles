@@ -4,8 +4,6 @@ pragma solidity 0.8.21;
 import {IStEth} from "./interfaces/IStEth.sol";
 import {MinimalAggregatorV3Interface} from "./interfaces/MinimalAggregatorV3Interface.sol";
 
-import {ErrorsLib} from "./libraries/ErrorsLib.sol";
-
 /// @title WstEthEthExchangeRateChainlinkAdapter
 /// @author Morpho Labs
 /// @custom:contact security@morpho.org
@@ -15,14 +13,7 @@ contract WstEthEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
     // @dev The calculated price has 18 decimals precision, whatever the value of `decimals`.
     uint8 public constant decimals = 18;
     string public constant description = "wstETH/ETH exchange rate";
-
-    IStEth public immutable ST_ETH;
-
-    constructor(address stEth) {
-        require(stEth != address(0), ErrorsLib.ZERO_ADDRESS);
-
-        ST_ETH = IStEth(stEth);
-    }
+    IStEth public constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
 
     /// @dev Silently overflows if `getPooledEthByShares`'s return value is greater than `type(int256).max`.
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
