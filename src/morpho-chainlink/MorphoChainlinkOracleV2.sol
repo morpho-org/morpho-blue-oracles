@@ -50,14 +50,11 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     /* CONSTRUCTOR */
 
     /// @dev Here is the list of assumptions that guarantees the oracle behaves as expected:
-    /// - Feeds are either Chainlink-compliant or the address zero.
-    /// - Feeds have the same behavioral assumptions as Chainlink's.
-    /// - Feeds are set in the correct order.
+    /// - The vaults, if set, are ERC4626-compliant.
+    /// - The feeds, if set, are Chainlink-interface-compliant.
     /// - Decimals passed as argument are correct.
-    /// - The vaults' sample shares quoted as assets and the base feed prices don't overflow when multiplied.
-    /// - The quote feed prices don't overflow when multiplied.
-    /// - Vaults are either ERC4626-compliant or the address zero.
-    /// @dev The base asset is the collateral token and the quote asset is the loan token.
+    /// - The base vaults's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
+    /// - The quote vault's sample shares quoted as assets and the quote feed prices don't overflow when multiplied.
     /// @param baseVault Base vault. Pass address zero to omit this parameter.
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to underlying.
     /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to
@@ -72,6 +69,7 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
     /// @param quoteTokenDecimals Quote token decimals.
+    /// @dev The base asset should be the collateral token and the quote asset the loan token.
     constructor(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,
@@ -125,7 +123,7 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
         // = 1e36 * (pB1 * 1e(-dB1) * pB2) / (pQ1 * 1e(-dQ1) * pQ2)
 
         // Let fpB1, fpB2, fpQ1, fpQ2 be the feed precision of the respective prices pB1, pB2, pQ1, pQ2.
-        // Chainlink feeds return pB1 * 1e(fpB1), pB2 * 1e(fpB2), pQ1 * 1e(fpQ1) and pQ2 * 1e(fpQ2).
+        // Feeds return pB1 * 1e(fpB1), pB2 * 1e(fpB2), pQ1 * 1e(fpQ1) and pQ2 * 1e(fpQ2).
 
         // Based on the implementation of `price()` below, the value of `SCALE_FACTOR` should thus satisfy:
         // (pB1 * 1e(fpB1)) * (pB2 * 1e(fpB2)) * SCALE_FACTOR / ((pQ1 * 1e(fpQ1)) * (pQ2 * 1e(fpQ2)))
