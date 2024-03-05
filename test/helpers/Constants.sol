@@ -24,3 +24,4 @@ AggregatorV3Interface constant daiEthFeed = AggregatorV3Interface(0x773616E4d11A
 
 IERC4626 constant vaultZero = IERC4626(address(0));
 IERC4626 constant sDaiVault = IERC4626(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
+IERC4626 constant sfrxEthVault = IERC4626(0xac3E018457B222d93114458476f3E3416Abbe38F);
