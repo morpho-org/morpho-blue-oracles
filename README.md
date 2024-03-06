@@ -28,7 +28,7 @@ Deployed on Ethereum Mainnet, this adapter can be found on Ethereum Mainnet at t
 
 The `MorphoChainlinkOracleV2Factory` is a factory that deploys `MorphoChainlinkOracleV2` instances.
 
-The factory facilitates the easy creation and indexing of MorphoChainlinkOracleV2 oracles. Developed by Morpho Labs, this factory contract streamlines the process of deploying new oracles, catering to various market pairs without the need for deploying individual contracts manually for each pair.
+The factory facilitates the easy creation and indexing of `MorphoChainlinkOracleV2` oracles. This factory contract streamlines the process of deploying new oracles, catering to various market pairs without the need for deploying individual contracts manually for each pair.
 
 ### Usage
 
