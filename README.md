@@ -5,7 +5,7 @@ The oracles implement the `IOracle` interface defined in [`IOracle.sol`](https:/
 
 ## MorphoChainlinkOracleV2
 
-The `MorphoChainlinkOracleV2` is an oracle that uses Chainlink-compliant feeds to provide price data.
+The `MorphoChainlinkOracleV2` is an oracle that uses Chainlink-interface-compliant feeds to provide price data.
 
 This oracle handles the following cases among others (let's say that our pair is A/B):
 
