@@ -20,7 +20,7 @@ This oracle handles the following cases among others (let's say that our pair is
 
 ## WstETH/stETH Exchange Rate Adapter
 
-A specific implementation, the WstEthStEthExchangeRateChainlinkAdapter, provides the exchange rate between wstETH and stETH using Chainlink. This adapter is designed for precise, decentralized price feeds on Ethereum, ensuring compatibility with the MorphoChainlinkOracleV2 for markets involving these assets.
+A specific implementation, the `WstEthStEthExchangeRateChainlinkAdapter`, provides the exchange rate between wstETH and stETH.
 
 Deployed on Ethereum Mainnet, this adapter can be found in Ethereum Mainnet at the address [0x905b7dAbCD3Ce6B792D874e303D336424Cdb1421](https://etherscan.io/address/0x905b7dabcd3ce6b792d874e303d336424cdb1421#code). It's recommended for use as a reliable price feed source in Morpho oracles.
 
