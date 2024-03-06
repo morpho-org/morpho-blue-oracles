@@ -46,15 +46,7 @@ To create a new `MorphoChainlinkOracleV2` oracle using the factory, call the `cr
 - `quoteTokenDecimals`: Decimal precision of the quote asset.
 - `salt`: A unique identifier to create deterministic addresses for deployed oracles.
 
-## Getting Started
-
-Install dependencies: `forge install`
-
-In a `.env` file, set `ETH_RPC_URL` to the URL of an Ethereum provider.
-
-Run test: `forge test`
-
-## Deploy an Oracle
+### Deploy an Oracle
 
 To deploy a `MorphoChainlinkOracleV2` on the Ethereum mainnet, use the `MorphoChainlinkOracleV2Factory` to create a new oracle.
 
@@ -99,6 +91,14 @@ and for the wstETH/ETH oracle:
 - `quoteFeed2`:0x0000000000000000000000000000000000000000,
 - `quoteTokenDecimals`:18,
 - `salt`: <user-defined value used to make the address unique>,
+
+## Getting Started
+
+Install dependencies: `forge install`
+
+In a `.env` file, set `ETH_RPC_URL` to the URL of an Ethereum provider.
+
+Run test: `forge test`
 
 ## Audits
 
