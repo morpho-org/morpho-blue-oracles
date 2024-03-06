@@ -34,7 +34,7 @@ The factory facilitates the easy creation and indexing of `MorphoChainlinkOracle
 
 The Ethereum Mainnet address of this factory is [0x3A7bB36Ee3f3eE32A60e9f2b33c1e5f2E83ad766](https://etherscan.io/address/0x3a7bb36ee3f3ee32a60e9f2b33c1e5f2e83ad766#code).
 
-To create a new `MorphoChainlinkOracleV2` oracle using the factory, call the createMorphoChainlinkOracleV2 function with the following parameters:
+To create a new `MorphoChainlinkOracleV2` oracle using the factory, call the `createMorphoChainlinkOracleV2` function with the following parameters:
 
 - `baseVault`: The ERC4626 token vault for the base asset.
 - `baseVaultConversionSample`: A sample size for converting base vault units.
