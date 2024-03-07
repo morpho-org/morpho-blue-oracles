@@ -63,14 +63,14 @@ Below are the arguments to fill for the creation of the WETH/USDT oracle:
 "quoteFeed1": "0xEe9F2375b4bdF6387aa8265dD4FB8F16512A1d46",
 "quoteFeed2": "0x0000000000000000000000000000000000000000",
 "quoteTokenDecimals": 6,
-"salt": <user-defined value used to make the address unique>,
+"salt": "<user-defined value used to make the address unique>",
 ```
 
 and for the sDAI/USDC oracle:
 
 ```json
 "baseVault": "0x83F20F44975D03b1b09e64809B757c47f942BEeA",
-"baseVaultConversionSample": 1000000000000000000, // 1e18
+"baseVaultConversionSample": 1000000000000000000,
 "baseFeed1": "0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9",
 "baseFeed2": "0x0000000000000000000000000000000000000000",
 "baseTokenDecimals": 18,
@@ -79,7 +79,7 @@ and for the sDAI/USDC oracle:
 "quoteFeed1": "0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6",
 "quoteFeed2": "0x0000000000000000000000000000000000000000",
 "quoteTokenDecimals": 6,
-"salt": <user-defined value used to make the address unique>,
+"salt": "<user-defined value used to make the address unique>",
 ```
 
 and for the wstETH/ETH oracle:
@@ -95,7 +95,7 @@ and for the wstETH/ETH oracle:
 "quoteFeed1": "0x0000000000000000000000000000000000000000",
 "quoteFeed2": "0x0000000000000000000000000000000000000000",
 "quoteTokenDecimals": 18,
-"salt": <user-defined value used to make the address unique>,
+"salt": "<user-defined value used to make the address unique>",
 ```
 
 ## Getting Started
