@@ -14,6 +14,7 @@ contract WstEthStEthExchangeRateChainlinkAdapterTest is Test {
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
+        require(block.chainid == 1, "chain isn't Ethereum");
         adapter = new WstEthStEthExchangeRateChainlinkAdapter();
         morphoOracle = new MorphoChainlinkOracleV2(
             vaultZero, 1, AggregatorV3Interface(address(adapter)), feedZero, 18, vaultZero, 1, feedZero, feedZero, 18
