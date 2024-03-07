@@ -36,15 +36,15 @@ The Ethereum Mainnet address of this factory is [0x3A7bB36Ee3f3eE32A60e9f2b33c1e
 
 To create a new `MorphoChainlinkOracleV2` oracle using the factory, call the `createMorphoChainlinkOracleV2` function with the following parameters:
 
-- 'baseVault': The ERC4626 token vault for the base asset.
-- 'baseVaultConversionSample': A sample amount for converting base vault units.
-- 'baseFeed1', 'baseFeed2': Chainlink-interface-compliant data feeds for the base asset.
-- 'baseTokenDecimals': Decimal precision of the base asset.
-- 'quoteVault': The ERC4626 token vault for the quote asset.
-- 'quoteVaultConversionSample': A sample amount for converting quote vault units.
-- 'quoteFeed1', 'quoteFeed2': Chainlink-interface-compliant data feeds for the quote asset.
-- 'quoteTokenDecimals': Decimal precision of the quote asset.
-- 'salt': A unique identifier to create deterministic addresses for deployed oracles.
+- `baseVault`: The ERC4626 token vault for the base asset.
+- `baseVaultConversionSample`: A sample amount for converting base vault units.
+- `baseFeed1`, `baseFeed2`: Chainlink-interface-compliant data feeds for the base asset.
+- `baseTokenDecimals`: Decimal precision of the base asset.
+- `quoteVault`: The ERC4626 token vault for the quote asset.
+- `quoteVaultConversionSample`: A sample amount for converting quote vault units.
+- `quoteFeed1`, `quoteFeed2`: Chainlink-interface-compliant data feeds for the quote asset.
+- `quoteTokenDecimals`: Decimal precision of the quote asset.
+- `salt`: A unique identifier to create deterministic addresses for deployed oracles.
 
 ### Deploy an Oracle
 
