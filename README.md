@@ -41,7 +41,7 @@ To create a new `MorphoChainlinkOracleV2` oracle using the factory, call the `cr
 - `baseFeed1`, `baseFeed2`: Chainlink-interface-compliant data feeds for the base asset.
 - `baseTokenDecimals`: Decimal precision of the base asset.
 - `quoteVault`: The ERC4626 token vault for the quote asset.
-- `quoteVaultConversionSample`: A sample size for converting quote vault units.
+- `quoteVaultConversionSample`: A sample amount for converting quote vault units.
 - `quoteFeed1`, `quoteFeed2`: Chainlink-interface-compliant data feeds for the quote asset.
 - `quoteTokenDecimals`: Decimal precision of the quote asset.
 - `salt`: A unique identifier to create deterministic addresses for deployed oracles.
@@ -69,7 +69,7 @@ Below are the arguments to fill for the creation of the WETH/USDT oracle:
 and for the sDAI/USDC oracle:
 
 ```json
-- `baseVault`: "0x83f20f44975d03b1b09e64809b757c47f942beea",
+- `baseVault`: "0x83F20F44975D03b1b09e64809B757c47f942BEeA",
 - `baseVaultConversionSample`: 1000000000000000000, // 1e18
 - `baseFeed1`: "0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9",
 - `baseFeed2`: "0x0000000000000000000000000000000000000000",
