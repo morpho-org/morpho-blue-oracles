@@ -11,6 +11,7 @@ contract MorphoChainlinkOracleV2Test is Test {
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ETH_RPC_URL"));
+        require(block.chainid == 1, "chain isn't Ethereum");
     }
 
     function testOracleWbtcUsdc() public {
