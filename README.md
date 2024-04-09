@@ -18,23 +18,15 @@ This oracle handles the following cases among others (let's say that our pair is
 - A/C and C/B are feeds (typically, WBTC/BTC and BTC/ETH).
 - A'/C and B/C are feeds, and there is an exchange rate between A and A'. (typically A=sDAI and A'=DAI).
 
-## WstETH/stETH Exchange Rate Adapter
-
-A specific implementation, the `WstEthStEthExchangeRateChainlinkAdapter`, provides the exchange rate between wstETH and stETH as a Chainlink-interface-compliant feed.
-
-This adapter is deployed on Ethereum Mainnet at the address [0x905b7dAbCD3Ce6B792D874e303D336424Cdb1421](https://etherscan.io/address/0x905b7dabcd3ce6b792d874e303d336424cdb1421#code).
-
-## MorphoChainlinkOracleV2Factory
+### MorphoChainlinkOracleV2Factory
 
 The `MorphoChainlinkOracleV2Factory` is a factory that deploys `MorphoChainlinkOracleV2` instances.
 
 The factory facilitates the creation and indexing of `MorphoChainlinkOracleV2` oracles. This factory contract streamlines the process of deploying new oracles, catering to various market pairs without the need to deploy individual contracts manually for each pair.
 
-### Usage
+#### Deploy an Oracle
 
-The Ethereum Mainnet address of this factory is [0x3A7bB36Ee3f3eE32A60e9f2b33c1e5f2E83ad766](https://etherscan.io/address/0x3a7bb36ee3f3ee32a60e9f2b33c1e5f2e83ad766#code).
-
-To create a new `MorphoChainlinkOracleV2` oracle using the factory, call the `createMorphoChainlinkOracleV2` function with the following parameters:
+To deploy a `MorphoChainlinkOracleV2` on the Ethereum mainnet, use the `MorphoChainlinkOracleV2Factory` to create a new oracle. Call the `createMorphoChainlinkOracleV2` function with the following parameters:
 
 - `baseVault`: The ERC4626 token vault for the base asset.
 - `baseVaultConversionSample`: A sample amount for converting base vault units.
@@ -46,9 +38,11 @@ To create a new `MorphoChainlinkOracleV2` oracle using the factory, call the `cr
 - `quoteTokenDecimals`: Decimal precision of the quote asset.
 - `salt`: A unique identifier to create deterministic addresses for deployed oracles.
 
-### Deploy an Oracle
+#### Addresses
 
-To deploy a `MorphoChainlinkOracleV2` on the Ethereum mainnet, use the `MorphoChainlinkOracleV2Factory` to create a new oracle.
+The Ethereum Mainnet address of this factory is [0x3A7bB36Ee3f3eE32A60e9f2b33c1e5f2E83ad766](https://etherscan.io/address/0x3a7bb36ee3f3ee32a60e9f2b33c1e5f2e83ad766#code).
+
+#### Examples
 
 Below are the arguments to fill for the creation of the WETH/USDT oracle:
 
@@ -97,6 +91,12 @@ and for the wstETH/ETH oracle:
 "quoteTokenDecimals": 18,
 "salt": "<user-defined value used to make the address unique>",
 ```
+
+## WstETH/stETH Exchange Rate Adapter
+
+A specific implementation, the `WstEthStEthExchangeRateChainlinkAdapter`, provides the exchange rate between wstETH and stETH as a Chainlink-interface-compliant feed.
+
+This adapter is deployed on Ethereum Mainnet at the address [0x905b7dAbCD3Ce6B792D874e303D336424Cdb1421](https://etherscan.io/address/0x905b7dabcd3ce6b792d874e303d336424cdb1421#code).
 
 ## Getting Started
 
