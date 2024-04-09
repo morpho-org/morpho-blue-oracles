@@ -92,7 +92,7 @@ contract MorphoChainlinkOracleV2Test is Test {
         price = bound(price, type(int256).min, -1);
         ChainlinkAggregatorMock aggregator = new ChainlinkAggregatorMock();
         MorphoChainlinkOracleV2 oracle = new MorphoChainlinkOracleV2(
-            vaultZero, 1, AggregatorV3Interface(address(aggregator)), feedZero, 18, vaultZero, 1, feedZero, feedZero, 0
+            vaultZero, 1, MinimalAggregatorV3Interface(address(aggregator)), feedZero, 18, vaultZero, 1, feedZero, feedZero, 0
         );
         aggregator.setAnwser(price);
         vm.expectRevert(bytes(ErrorsLib.NEGATIVE_ANSWER));
