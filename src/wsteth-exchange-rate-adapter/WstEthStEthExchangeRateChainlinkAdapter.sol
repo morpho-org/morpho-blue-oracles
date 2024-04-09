@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.21;
 
-import {IStEth} from "./interfaces/IStEth.sol";
-import {MinimalAggregatorV3Interface} from "./interfaces/MinimalAggregatorV3Interface.sol";
+import {IStEth} from "../interfaces/IStEth.sol";
+import {MinimalAggregatorV3Interface} from "../interfaces/MinimalAggregatorV3Interface.sol";
 
 /// @title WstEthStEthExchangeRateChainlinkAdapter
 /// @author Morpho Labs
