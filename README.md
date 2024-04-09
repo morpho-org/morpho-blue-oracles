@@ -20,10 +20,6 @@ This oracle handles the following cases among others (let's say that our pair is
 
 ### MorphoChainlinkOracleV2Factory
 
-The `MorphoChainlinkOracleV2Factory` is a factory that deploys `MorphoChainlinkOracleV2` instances.
-
-The factory facilitates the creation and indexing of `MorphoChainlinkOracleV2` oracles. This factory contract streamlines the process of deploying new oracles, catering to various market pairs without the need to deploy individual contracts manually for each pair.
-
 #### Deploy an Oracle
 
 To deploy a `MorphoChainlinkOracleV2` on the Ethereum mainnet, use the `MorphoChainlinkOracleV2Factory` to create a new oracle. Call the `createMorphoChainlinkOracleV2` function with the following parameters:
