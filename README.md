@@ -18,11 +18,10 @@ This oracle handles the following cases among others (let's say that our pair is
 - A/C and C/B are feeds (typically, WBTC/BTC and BTC/ETH).
 - A'/C and B/C are feeds, and there is an exchange rate between A and A'. (typically A=sDAI and A'=DAI).
 
-### MorphoChainlinkOracleV2Factory
+## Deploy an Oracle
 
-#### Deploy an Oracle
-
-To deploy a `MorphoChainlinkOracleV2` on the Ethereum mainnet, use the `MorphoChainlinkOracleV2Factory` to create a new oracle. Call the `createMorphoChainlinkOracleV2` function with the following parameters:
+To deploy a `MorphoChainlinkOracleV2` on the Ethereum mainnet, use the `MorphoChainlinkOracleV2Factory` to create a new oracle.
+Call the `createMorphoChainlinkOracleV2` function with the following parameters:
 
 - `baseVault`: The ERC4626 token vault for the base asset.
 - `baseVaultConversionSample`: A sample amount for converting base vault units.
@@ -37,11 +36,11 @@ To deploy a `MorphoChainlinkOracleV2` on the Ethereum mainnet, use the `MorphoCh
 **Warning:** If there is an ERC4626-compliant vault for `baseVault` or `quoteVault`, the `baseTokenDecimals` or `quoteTokenDecimals` are still the decimals of the asset in the vault, and not the decimals of the Vault asset.
 E.g: for a MetaMorpho WETH vault, as `baseVault`, the `baseTokenDecimals` is 18 as WETH has 18 decimals.
 
-#### Addresses
+### Addresses
 
 The Ethereum Mainnet address of this factory is [0x3A7bB36Ee3f3eE32A60e9f2b33c1e5f2E83ad766](https://etherscan.io/address/0x3a7bb36ee3f3ee32a60e9f2b33c1e5f2e83ad766#code).
 
-#### Examples
+### Examples
 
 Below are the arguments to fill for the creation of the WETH/USDT oracle:
 
@@ -95,7 +94,7 @@ and for the wstETH/ETH oracle:
 
 A specific implementation, the `WstEthStEthExchangeRateChainlinkAdapter`, provides the exchange rate between wstETH and stETH as a Chainlink-interface-compliant feed.
 
-This adapter is deployed on Ethereum Mainnet at the address [0x905b7dAbCD3Ce6B792D874e303D336424Cdb1421](https://etherscan.io/address/0x905b7dabcd3ce6b792d874e303d336424cdb1421#code).
+This adapter is deployed on the Ethereum Mainnet at the address [0x905b7dAbCD3Ce6B792D874e303D336424Cdb1421](https://etherscan.io/address/0x905b7dabcd3ce6b792d874e303d336424cdb1421#code).
 
 ## Getting Started
 
