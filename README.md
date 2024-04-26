@@ -20,8 +20,8 @@ This oracle handles the following cases among others (let's say that our pair is
 
 ## Deploy an Oracle
 
-To deploy a `MorphoChainlinkOracleV2` on the Ethereum mainnet, use the `MorphoChainlinkOracleV2Factory` to create a new oracle.
-Call the `createMorphoChainlinkOracleV2` function with the following parameters:
+To deploy a `MorphoChainlinkOracleV2` on Ethereum, it is highly recommended to use the factory `MorphoChainlinkOracleV2Factory`.
+To do so, call the `createMorphoChainlinkOracleV2` function with the following parameters:
 
 - `baseVault`: The ERC4626 token vault for the base asset.
 - `baseVaultConversionSample`: A sample amount for converting base vault units.
@@ -33,12 +33,12 @@ Call the `createMorphoChainlinkOracleV2` function with the following parameters:
 - `quoteTokenDecimals`: Decimal precision of the quote asset.
 - `salt`: A unique identifier to create deterministic addresses for deployed oracles.
 
-**Warning:** If there is an ERC4626-compliant vault for `baseVault` or `quoteVault`, the `baseTokenDecimals` or `quoteTokenDecimals` are still the decimals of the asset in the vault, and not the decimals of the Vault asset.
+**Warning:** If there is an ERC4626-compliant vault for `baseVault` or `quoteVault`, the `baseTokenDecimals` or `quoteTokenDecimals` are still the decimals of the underlying asset of the vault, and not the decimals of the Vault itself.
 E.g: for a MetaMorpho WETH vault, as `baseVault`, the `baseTokenDecimals` is 18 as WETH has 18 decimals.
 
 ### Addresses
 
-The Ethereum Mainnet address of this factory is [0x3A7bB36Ee3f3eE32A60e9f2b33c1e5f2E83ad766](https://etherscan.io/address/0x3a7bb36ee3f3ee32a60e9f2b33c1e5f2e83ad766#code).
+The address on Ethereum of this factory is [0x3A7bB36Ee3f3eE32A60e9f2b33c1e5f2E83ad766](https://etherscan.io/address/0x3a7bb36ee3f3ee32a60e9f2b33c1e5f2e83ad766#code).
 
 ### Examples
 
