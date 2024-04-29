@@ -3,7 +3,7 @@ pragma solidity 0.8.21;
 
 import {IMorphoChainlinkOracleV2} from "./interfaces/IMorphoChainlinkOracleV2.sol";
 import {IMorphoChainlinkOracleV2Factory} from "./interfaces/IMorphoChainlinkOracleV2Factory.sol";
-import {AggregatorV3Interface} from "./libraries/ChainlinkDataFeedLib.sol";
+import {MinimalAggregatorV3Interface} from "./libraries/ChainlinkDataFeedLib.sol";
 import {IERC4626} from "./libraries/VaultLib.sol";
 
 import {MorphoChainlinkOracleV2} from "./MorphoChainlinkOracleV2.sol";
@@ -24,13 +24,13 @@ contract MorphoChainlinkOracleV2Factory is IMorphoChainlinkOracleV2Factory {
     function createMorphoChainlinkOracleV2(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,
-        AggregatorV3Interface baseFeed1,
-        AggregatorV3Interface baseFeed2,
+        MinimalAggregatorV3Interface baseFeed1,
+        MinimalAggregatorV3Interface baseFeed2,
         uint256 baseTokenDecimals,
         IERC4626 quoteVault,
         uint256 quoteVaultConversionSample,
-        AggregatorV3Interface quoteFeed1,
-        AggregatorV3Interface quoteFeed2,
+        MinimalAggregatorV3Interface quoteFeed1,
+        MinimalAggregatorV3Interface quoteFeed2,
         uint256 quoteTokenDecimals,
         bytes32 salt
     ) external returns (MorphoChainlinkOracleV2 oracle) {

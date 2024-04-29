@@ -7,7 +7,7 @@ import "../src/morpho-chainlink/MorphoChainlinkOracleV2Factory.sol";
 import {ChainlinkDataFeedLib} from "../src/morpho-chainlink/libraries/ChainlinkDataFeedLib.sol";
 
 contract ChainlinkOracleFactoryTest is Test {
-    using ChainlinkDataFeedLib for AggregatorV3Interface;
+    using ChainlinkDataFeedLib for MinimalAggregatorV3Interface;
 
     MorphoChainlinkOracleV2Factory factory;
 

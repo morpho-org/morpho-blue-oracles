@@ -7,7 +7,7 @@ import {IMorphoChainlinkOracleV2} from "./interfaces/IMorphoChainlinkOracleV2.so
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {Math} from "../../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
-import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
+import {MinimalAggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 
 /// @title MorphoChainlinkOracleV2
 /// @author Morpho Labs
@@ -16,7 +16,7 @@ import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/Chainlink
 contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     using Math for uint256;
     using VaultLib for IERC4626;
-    using ChainlinkDataFeedLib for AggregatorV3Interface;
+    using ChainlinkDataFeedLib for MinimalAggregatorV3Interface;
 
     /* IMMUTABLES */
 
@@ -33,16 +33,16 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     uint256 public immutable QUOTE_VAULT_CONVERSION_SAMPLE;
 
     /// @inheritdoc IMorphoChainlinkOracleV2
-    AggregatorV3Interface public immutable BASE_FEED_1;
+    MinimalAggregatorV3Interface public immutable BASE_FEED_1;
 
     /// @inheritdoc IMorphoChainlinkOracleV2
-    AggregatorV3Interface public immutable BASE_FEED_2;
+    MinimalAggregatorV3Interface public immutable BASE_FEED_2;
 
     /// @inheritdoc IMorphoChainlinkOracleV2
-    AggregatorV3Interface public immutable QUOTE_FEED_1;
+    MinimalAggregatorV3Interface public immutable QUOTE_FEED_1;
 
     /// @inheritdoc IMorphoChainlinkOracleV2
-    AggregatorV3Interface public immutable QUOTE_FEED_2;
+    MinimalAggregatorV3Interface public immutable QUOTE_FEED_2;
 
     /// @inheritdoc IMorphoChainlinkOracleV2
     uint256 public immutable SCALE_FACTOR;
@@ -73,13 +73,13 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     constructor(
         IERC4626 baseVault,
         uint256 baseVaultConversionSample,
-        AggregatorV3Interface baseFeed1,
-        AggregatorV3Interface baseFeed2,
+        MinimalAggregatorV3Interface baseFeed1,
+        MinimalAggregatorV3Interface baseFeed2,
         uint256 baseTokenDecimals,
         IERC4626 quoteVault,
         uint256 quoteVaultConversionSample,
-        AggregatorV3Interface quoteFeed1,
-        AggregatorV3Interface quoteFeed2,
+        MinimalAggregatorV3Interface quoteFeed1,
+        MinimalAggregatorV3Interface quoteFeed2,
         uint256 quoteTokenDecimals
     ) {
         // The ERC4626 vault parameters are used to price their respective conversion samples of their respective
