@@ -1,0 +1,16 @@
+{
+  "name": "@morpho-org/morpho-blue-oracles",
+  "description": "Morpho Blue Oracles",
+  "license": "BUSL-1.1",
+  "version": "1.0.0",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "lint:forge": "forge fmt --check",
+    "lint:fix": "yarn lint:forge:fix && yarn lint:hardhat:fix",
+    "lint:forge:fix": "forge fmt"
+  }
+}
