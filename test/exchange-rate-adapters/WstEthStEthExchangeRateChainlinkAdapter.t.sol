@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import "./helpers/Constants.sol";
-import "../lib/forge-std/src/Test.sol";
-import {MorphoChainlinkOracleV2} from "../src/morpho-chainlink/MorphoChainlinkOracleV2.sol";
-import "../src/wsteth-exchange-rate-adapter/WstEthStEthExchangeRateChainlinkAdapter.sol";
+import {vaultZero, feedZero} from "../helpers/Constants.sol";
+import {Test} from "../../lib/forge-std/src/Test.sol";
+import {MorphoChainlinkOracleV2} from "../../src/morpho-chainlink/MorphoChainlinkOracleV2.sol";
+import {WstEthStEthExchangeRateChainlinkAdapter} from "../../src/exchange-rate-adapters/WstEthStEthExchangeRateChainlinkAdapter.sol";
+import {IStEth} from "../../src/interfaces/lido/IStEth.sol";
+import {AggregatorV3Interface} from "../../src/morpho-chainlink/interfaces/AggregatorV3Interface.sol";
 
 contract WstEthStEthExchangeRateChainlinkAdapterTest is Test {
     IStEth internal constant ST_ETH = IStEth(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
@@ -13,7 +15,7 @@ contract WstEthStEthExchangeRateChainlinkAdapterTest is Test {
     MorphoChainlinkOracleV2 internal morphoOracle;
 
     function setUp() public {
-        vm.createSelectFork(vm.envString("ETH_RPC_URL"));
+        vm.createSelectFork(vm.envString("ETH_RPC_URL"), 20066000);
         require(block.chainid == 1, "chain isn't Ethereum");
         adapter = new WstEthStEthExchangeRateChainlinkAdapter();
         morphoOracle = new MorphoChainlinkOracleV2(
@@ -41,7 +43,7 @@ contract WstEthStEthExchangeRateChainlinkAdapterTest is Test {
 
     function testLatestRoundDataBounds() public {
         (, int256 answer,,,) = adapter.latestRoundData();
-        assertGe(uint256(answer), 1154690031824824994); // Exchange rate queried at block 19070943
+        assertGe(uint256(answer), 1154690031824824994); // Exchange rate queried at block 20066000
         assertLe(uint256(answer), 1.5e18); // Max bounds of the exchange rate. Should work for a long enough time.
     }
 
