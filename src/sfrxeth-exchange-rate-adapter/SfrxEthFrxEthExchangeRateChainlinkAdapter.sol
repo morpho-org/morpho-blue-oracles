@@ -23,7 +23,7 @@ contract SfrxEthFrxEthExchangeRateChainlinkAdapter is
 
     /// @inheritdoc MinimalAggregatorV3Interface
     /// @dev Returns zero for roundId, startedAt, updatedAt and answeredInRound.
-    /// @dev Silently overflows if `getPooledEthByShares`'s return value is greater than `type(int256).max`.
+    /// @dev Silently overflows if `pricePerShare`'s return value is greater than `type(int256).max`.
     function latestRoundData()
         external
         view
