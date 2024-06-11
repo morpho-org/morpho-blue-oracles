@@ -4,7 +4,8 @@ pragma solidity ^0.8.19;
 import {vaultZero, feedZero} from "../helpers/Constants.sol";
 import {Test} from "../../lib/forge-std/src/Test.sol";
 import {MorphoChainlinkOracleV2} from "../../src/morpho-chainlink/MorphoChainlinkOracleV2.sol";
-import {RsEthToEthExchangeRateChainlinkAdapter} from "../../src/exchange-rate-adapters/RsEthToEthExchangeRateChainlinkAdapter.sol";
+import {RsEthToEthExchangeRateChainlinkAdapter} from
+    "../../src/exchange-rate-adapters/RsEthToEthExchangeRateChainlinkAdapter.sol";
 import {AggregatorV3Interface} from "../../src/morpho-chainlink/interfaces/AggregatorV3Interface.sol";
 import {IKelpLRTConfig} from "../../src/interfaces/kelp/IKelpLRTConfig.sol";
 import {IKelpLRTOracle} from "../../src/interfaces/kelp/IKelpLRTOracle.sol";
@@ -32,7 +33,7 @@ contract RsEthToEthExchangeRateChainlinkAdapterTest is Test {
     function test_description() public {
         assertEq(adapter.description(), "rsETH/ETH exchange rate");
     }
-    
+
     function test_latestRoundData() public {
         IKelpLRTOracle lrtOracle = IKelpLRTOracle(KELP_LRT_CONFIG.getContract(LRT_ORACLE));
         uint256 expectedRate = lrtOracle.rsETHPrice();
@@ -41,7 +42,7 @@ contract RsEthToEthExchangeRateChainlinkAdapterTest is Test {
             adapter.latestRoundData();
         assertEq(roundId, 0);
         assertEq(uint256(answer), expectedRate);
-        assertEq(uint256(answer), 1.014115456823606415e18);  // Exchange rate queried at block 20066000
+        assertEq(uint256(answer), 1.014115456823606415e18); // Exchange rate queried at block 20066000
         assertEq(startedAt, 0);
         assertEq(updatedAt, 0);
         assertEq(answeredInRound, 0);

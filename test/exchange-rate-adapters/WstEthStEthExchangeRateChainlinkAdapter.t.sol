@@ -4,7 +4,8 @@ pragma solidity ^0.8.0;
 import {vaultZero, feedZero} from "../helpers/Constants.sol";
 import {Test} from "../../lib/forge-std/src/Test.sol";
 import {MorphoChainlinkOracleV2} from "../../src/morpho-chainlink/MorphoChainlinkOracleV2.sol";
-import {WstEthStEthExchangeRateChainlinkAdapter} from "../../src/exchange-rate-adapters/WstEthStEthExchangeRateChainlinkAdapter.sol";
+import {WstEthStEthExchangeRateChainlinkAdapter} from
+    "../../src/exchange-rate-adapters/WstEthStEthExchangeRateChainlinkAdapter.sol";
 import {IStEth} from "../../src/interfaces/lido/IStEth.sol";
 import {AggregatorV3Interface} from "../../src/morpho-chainlink/interfaces/AggregatorV3Interface.sol";
 

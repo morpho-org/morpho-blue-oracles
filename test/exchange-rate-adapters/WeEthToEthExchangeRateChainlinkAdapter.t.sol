@@ -4,7 +4,8 @@ pragma solidity ^0.8.19;
 import {vaultZero, feedZero} from "../helpers/Constants.sol";
 import {Test} from "../../lib/forge-std/src/Test.sol";
 import {MorphoChainlinkOracleV2} from "../../src/morpho-chainlink/MorphoChainlinkOracleV2.sol";
-import {WeEthToEthExchangeRateChainlinkAdapter} from "../../src/exchange-rate-adapters/WeEthToEthExchangeRateChainlinkAdapter.sol";
+import {WeEthToEthExchangeRateChainlinkAdapter} from
+    "../../src/exchange-rate-adapters/WeEthToEthExchangeRateChainlinkAdapter.sol";
 import {AggregatorV3Interface} from "../../src/morpho-chainlink/interfaces/AggregatorV3Interface.sol";
 import {IWeEth} from "../../src/interfaces/etherfi/IWeEth.sol";
 
@@ -36,7 +37,7 @@ contract WeEthToEthExchangeRateChainlinkAdapterTest is Test {
             adapter.latestRoundData();
         assertEq(roundId, 0);
         assertEq(uint256(answer), WEETH.getRate());
-        assertEq(uint256(answer), 1.040393022914859755e18);  // Exchange rate queried at block 20066000
+        assertEq(uint256(answer), 1.040393022914859755e18); // Exchange rate queried at block 20066000
         assertEq(startedAt, 0);
         assertEq(updatedAt, 0);
         assertEq(answeredInRound, 0);

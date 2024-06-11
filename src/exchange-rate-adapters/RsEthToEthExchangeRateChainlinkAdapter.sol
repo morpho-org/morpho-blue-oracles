@@ -13,7 +13,7 @@ import {IMinimalAggregatorV3Interface} from "../interfaces/IMinimalAggregatorV3I
 contract RsEthToEthExchangeRateChainlinkAdapter is IMinimalAggregatorV3Interface {
     /// @inheritdoc IMinimalAggregatorV3Interface
     // @dev The calculated price has 18 decimals precision, whatever the value of `decimals`.
-    uint8 public override constant decimals = 18;
+    uint8 public constant override decimals = 18;
 
     /// @notice The description of the price feed.
     string public constant description = "rsETH/ETH exchange rate";
@@ -26,7 +26,7 @@ contract RsEthToEthExchangeRateChainlinkAdapter is IMinimalAggregatorV3Interface
     /// @inheritdoc IMinimalAggregatorV3Interface
     /// @dev Returns zero for roundId, startedAt, updatedAt and answeredInRound.
     /// @dev Silently overflows if `rsETHPrice`'s return value is greater than `type(int256).max`.
-    function latestRoundData() external override view returns (uint80, int256, uint256, uint256, uint80) {
+    function latestRoundData() external view override returns (uint80, int256, uint256, uint256, uint80) {
         IKelpLRTOracle lrtOracle = IKelpLRTOracle(KELP_LRT_CONFIG.getContract(LRT_ORACLE));
         uint256 rate = lrtOracle.rsETHPrice();
         return (0, int256(rate), 0, 0, 0);

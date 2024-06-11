@@ -2,5 +2,5 @@
 pragma solidity >=0.5.0;
 
 interface IRswETH {
-  function rswETHToETHRate() external view returns (uint256);
+    function rswETHToETHRate() external view returns (uint256);
 }
