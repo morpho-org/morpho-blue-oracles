@@ -1,7 +1,7 @@
 {
   "name": "@morpho-org/morpho-blue-oracles",
   "description": "Morpho Blue Oracles",
-  "license": "BUSL-1.1",
+  "license": "GPL-2.0-or-later",
   "version": "1.0.0",
   "files": [
     "src",

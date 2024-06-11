@@ -5,8 +5,8 @@ import {IRswETH} from "../interfaces/swell/IRswETH.sol";
 import {IMinimalAggregatorV3Interface} from "../interfaces/IMinimalAggregatorV3Interface.sol";
 
 /// @title RswEthToEthExchangeRateChainlinkAdapter
-/// @author Morpho Labs
-/// @custom:contact security@morpho.org
+/// @author Origami Finance
+/// @custom:contact team@origami.finance
 /// @notice rswETH/ETH exchange rate price feed.
 /// @dev This contract should only be deployed on Ethereum and used as a price feed for Morpho oracles.
 contract RswEthToEthExchangeRateChainlinkAdapter is IMinimalAggregatorV3Interface {

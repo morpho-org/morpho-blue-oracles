@@ -7,8 +7,8 @@ import {IERC20} from "../interfaces/IERC20.sol";
 import {IMinimalAggregatorV3Interface} from "../interfaces/IMinimalAggregatorV3Interface.sol";
 
 /// @title EzEthToEthExchangeRateChainlinkAdapter
-/// @author Morpho Labs
-/// @custom:contact security@morpho.org
+/// @author Origami Finance
+/// @custom:contact team@origami.finance
 /// @notice ezETH/ETH exchange rate price feed.
 /// @dev This contract should only be deployed on Ethereum and used as a price feed for Morpho oracles.
 contract EzEthToEthExchangeRateChainlinkAdapter is IMinimalAggregatorV3Interface {

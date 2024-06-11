@@ -6,8 +6,8 @@ import {IKelpLRTOracle} from "../interfaces/kelp/IKelpLRTOracle.sol";
 import {IMinimalAggregatorV3Interface} from "../interfaces/IMinimalAggregatorV3Interface.sol";
 
 /// @title RsEthToEthExchangeRateChainlinkAdapter
-/// @author Morpho Labs
-/// @custom:contact security@morpho.org
+/// @author Origami Finance
+/// @custom:contact team@origami.finance
 /// @notice rsETH/ETH exchange rate price feed.
 /// @dev This contract should only be deployed on Ethereum and used as a price feed for Morpho oracles.
 contract RsEthToEthExchangeRateChainlinkAdapter is IMinimalAggregatorV3Interface {

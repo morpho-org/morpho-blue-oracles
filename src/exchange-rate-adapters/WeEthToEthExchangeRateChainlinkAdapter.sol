@@ -5,8 +5,8 @@ import {IWeEth} from "../interfaces/etherfi/IWeEth.sol";
 import {IMinimalAggregatorV3Interface} from "../interfaces/IMinimalAggregatorV3Interface.sol";
 
 /// @title WeEthToEthExchangeRateChainlinkAdapter
-/// @author Morpho Labs
-/// @custom:contact security@morpho.org
+/// @author Origami Finance
+/// @custom:contact team@origami.finance
 /// @notice weETH/ETH exchange rate price feed.
 /// @dev This contract should only be deployed on Ethereum and used as a price feed for Morpho oracles.
 contract WeEthToEthExchangeRateChainlinkAdapter is IMinimalAggregatorV3Interface {
