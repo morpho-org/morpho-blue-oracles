@@ -11,7 +11,7 @@ import {MinimalAggregatorV3Interface} from "./interfaces/MinimalAggregatorV3Inte
 /// @dev This contract should only be deployed on Ethereum and used as a price feed for Morpho oracles.
 contract WstEthStEthExchangeRateChainlinkAdapter is MinimalAggregatorV3Interface {
     /// @inheritdoc MinimalAggregatorV3Interface
-    // @dev The calculated price has 18 decimals precision, whatever the value of `decimals`.
+    /// @dev The calculated price has 18 decimals precision, whatever the value of `decimals`.
     uint8 public constant decimals = 18;
 
     /// @notice The description of the price feed.
