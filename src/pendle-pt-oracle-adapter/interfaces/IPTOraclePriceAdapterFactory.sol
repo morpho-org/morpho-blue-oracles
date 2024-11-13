@@ -11,7 +11,10 @@ interface IPTOraclePriceAdapterFactory {
     /// @notice Emitted when a new PT oracle is created
     /// @param caller The caller of the function
     /// @param oracle The address of the PT oracle
-    event CreatePTOracle(address indexed caller, address indexed oracle);
+    event CreatePTOraclePriceAdapter(
+        address indexed caller,
+        address indexed oracle
+    );
 
     /// @notice Whether a PT oracle was created with this factory
     function isPTOracle(address target) external view returns (bool);
@@ -24,7 +27,7 @@ interface IPTOraclePriceAdapterFactory {
     /// @param _market The Pendle market address to fetch prices for
     /// @param _duration The twap duration parameter for calculating the price
     /// @param salt The salt to use for CREATE2 deployment
-    function createPTOracle(
+    function createPTOraclePriceAdapter(
         IPTOracle _ptOracle,
         address _market,
         uint32 _duration,

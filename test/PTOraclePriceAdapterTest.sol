@@ -9,7 +9,7 @@ import "./helpers/PendleConstants.sol";
 contract PTOraclePriceAdapterTest is Test {
     function setUp() public {
         uint256 forkBlock = 21173376;
-        vm.createSelectFork(vm.envString("ERPC"), forkBlock);
+        vm.createSelectFork(vm.envString("ETH_RPC_URL"), forkBlock);
         require(block.chainid == 1, "Chain isn't Ethereum");
         console2.log("PT Oracle address:", address(PT_ORACLE));
         console2.log("Current block number:", block.number);

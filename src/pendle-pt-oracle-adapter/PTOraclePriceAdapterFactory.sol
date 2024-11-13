@@ -14,7 +14,7 @@ contract PTOraclePriceAdapterFactory is IPTOraclePriceAdapterFactory {
 
     /* EXTERNAL */
     /// @inheritdoc IPTOraclePriceAdapterFactory
-    function createPTOracle(
+    function createPTOraclePriceAdapter(
         IPTOracle _ptOracle,
         address _market,
         uint32 _duration,
@@ -27,6 +27,6 @@ contract PTOraclePriceAdapterFactory is IPTOraclePriceAdapterFactory {
         );
 
         isPTOracle[address(oracle)] = true;
-        emit CreatePTOracle(msg.sender, address(oracle));
+        emit CreatePTOraclePriceAdapter(msg.sender, address(oracle));
     }
 }
