@@ -46,13 +46,7 @@ contract PTOraclePriceAdapterFactoryTest is Test {
         );
         assertEq(adapter.duration(), 900, "Duration");
 
-        (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        ) = adapter.latestRoundData();
+        (, int256 answer, , , ) = adapter.latestRoundData();
 
         // Basic sanity check on the price
         assertTrue(answer > 0, "price should be positive");
