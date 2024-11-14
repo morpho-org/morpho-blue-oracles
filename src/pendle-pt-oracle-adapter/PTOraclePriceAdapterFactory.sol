@@ -5,8 +5,8 @@ import {PTOraclePriceAdapter} from "./PTOraclePriceAdapter.sol";
 import {IPTOracle} from "./interfaces/IPTOracle.sol";
 import {IPTOraclePriceAdapterFactory} from "./interfaces/IPTOraclePriceAdapterFactory.sol";
 
-/// @title PTOracleFactory
-/// @notice This contract allows creation of PT Oracles and indexes them for verification
+/// @title PTOraclePriceAdapterFactory
+/// @notice This contract allows creation of PTOraclePriceAdapter oracles and indexes them for verification
 contract PTOraclePriceAdapterFactory is IPTOraclePriceAdapterFactory {
     /* STORAGE */
     /// @inheritdoc IPTOraclePriceAdapterFactory
