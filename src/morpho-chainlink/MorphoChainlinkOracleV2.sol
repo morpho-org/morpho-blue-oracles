@@ -115,7 +115,7 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
         // - pB1 is the quantity of 1e(dB2) assets B2 that can be exchanged for 1e(dB1) assets B1.
         // - pB2 is the quantity of 1e(dC) assets C that can be exchanged for 1e(dB2) assets B2.
         // - pQ1 is the quantity of 1e(dQ2) assets Q2 that can be exchanged for 1e(dQ1) assets Q1.
-        // - pQ2 is the quantity of 1e(dC) assets C that can be exchanged for 1e(dQ2) assets B2.
+        // - pQ2 is the quantity of 1e(dC) assets C that can be exchanged for 1e(dQ2) assets Q2.
 
         // Morpho Blue expects `price()` to be the quantity of 1 asset Q1 that can be exchanged for 1 asset B1,
         // scaled by 1e36:
