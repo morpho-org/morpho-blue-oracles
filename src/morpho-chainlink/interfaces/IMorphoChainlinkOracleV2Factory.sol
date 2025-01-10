@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
-import {MorphoChainlinkOracleV2} from "../MorphoChainlinkOracleV2.sol";
 import {IERC4626} from "../libraries/VaultLib.sol";
 import {AggregatorV3Interface} from "../libraries/ChainlinkDataFeedLib.sol";
+import {IMorphoChainlinkOracleV2} from "./IMorphoChainlinkOracleV2.sol";
 
 /// @title IMorphoChainlinkOracleV2Factory
 /// @author Morpho Labs
@@ -52,5 +52,5 @@ interface IMorphoChainlinkOracleV2Factory {
         AggregatorV3Interface quoteFeed2,
         uint256 quoteTokenDecimals,
         bytes32 salt
-    ) external returns (MorphoChainlinkOracleV2 oracle);
+    ) external returns (IMorphoChainlinkOracleV2 oracle);
 }

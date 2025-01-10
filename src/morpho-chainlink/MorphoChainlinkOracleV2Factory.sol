@@ -33,7 +33,7 @@ contract MorphoChainlinkOracleV2Factory is IMorphoChainlinkOracleV2Factory {
         AggregatorV3Interface quoteFeed2,
         uint256 quoteTokenDecimals,
         bytes32 salt
-    ) external returns (MorphoChainlinkOracleV2 oracle) {
+    ) external returns (IMorphoChainlinkOracleV2 oracle) {
         oracle = new MorphoChainlinkOracleV2{salt: salt}(
             baseVault,
             baseVaultConversionSample,
