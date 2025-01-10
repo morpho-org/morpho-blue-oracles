@@ -5,6 +5,7 @@ libs = ["lib"]
 optimizer_runs = 999999 # Etherscan does not support verifying contracts with more optimizer runs.
 via_ir = true
 evm_version = "paris"
+bytecode_hash = "none"
 
 [profile.default.fmt]
 wrap_comments = true
