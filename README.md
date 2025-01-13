@@ -96,7 +96,10 @@ A specific implementation, the `WstEthStEthExchangeRateChainlinkAdapter`, provid
 
 This adapter is deployed on the Ethereum Mainnet at the address [0x905b7dAbCD3Ce6B792D874e303D336424Cdb1421](https://etherscan.io/address/0x905b7dabcd3ce6b792d874e303d336424cdb1421#code).
 
-## Getting Started
+## Developers
+
+> [!NOTE]
+> `MorphoChainlinkOracleV2Factory` has been deployed on Ethereum and Base with the [metadata hash](https://docs.soliditylang.org/en/latest/metadata.html) included, which appear at two places in the bytecode as it is a factory.
 
 Install dependencies: `forge install`
 
