@@ -5,8 +5,8 @@ libs = ["lib"]
 optimizer = true
 optimizer_runs = 999999
 via_ir = true
-evm_version = "paris"
 bytecode_hash = "none"
+evm_version = "paris"
 
 [profile.default.fmt]
 wrap_comments = true
