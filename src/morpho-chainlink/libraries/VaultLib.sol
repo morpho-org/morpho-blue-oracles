@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {IERC4626} from "../interfaces/IERC4626.sol";
+import {IERC4626} from "../../interfaces/IERC4626.sol";
 
 /// @title VaultLib
 /// @author Morpho Labs

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.21;
+pragma solidity ^0.8.0;
 
 import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
 import {Math} from "../../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {PythErrorsLib} from "./libraries/PythErrorsLib.sol";
+import {PythFeedLib} from "./libraries/PythFeedLib.sol";
 
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
-import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
 
 contract MorphoPythOracle is IOracle {
     using Math for uint256;
@@ -70,30 +70,17 @@ contract MorphoPythOracle is IOracle {
         BASE_FEED_2 = baseFeed2;
         QUOTE_FEED_1 = quoteFeed1;
         QUOTE_FEED_2 = quoteFeed2;
+        
         pyth = IPyth(pyth_);
-
-        PythStructs.Price memory baseFeed1Price = pyth.getPriceUnsafe(
-            BASE_FEED_1
-        );
-        PythStructs.Price memory baseFeed2Price = pyth.getPriceUnsafe(
-            BASE_FEED_2
-        );
-        PythStructs.Price memory quoteFeed1Price = pyth.getPriceUnsafe(
-            QUOTE_FEED_1
-        );
-        PythStructs.Price memory quoteFeed2Price = pyth.getPriceUnsafe(
-            QUOTE_FEED_2
-        );
-
         SCALE_FACTOR =
             (10 **
                 (36 +
                     quoteTokenDecimals +
-                    uint256(-1 * int256(quoteFeed1Price.expo)) +
-                    uint256(-1 * int256(quoteFeed2Price.expo)) -
+                    PythFeedLib.getDecimals(pyth, QUOTE_FEED_1) +
+                    PythFeedLib.getDecimals(pyth, QUOTE_FEED_2) -
                     baseTokenDecimals -
-                    uint256(-1 * int256(baseFeed1Price.expo)) -
-                    uint256(-1 * int256(baseFeed2Price.expo))) *
+                    PythFeedLib.getDecimals(pyth, BASE_FEED_1) -
+                    PythFeedLib.getDecimals(pyth, BASE_FEED_2)) *
                 quoteVaultConversionSample) /
             baseVaultConversionSample;
 
@@ -101,60 +88,14 @@ contract MorphoPythOracle is IOracle {
     }
 
     function price() external view returns (uint256) {
-        uint256 baseFeed1Price;
-        uint256 baseFeed2Price;
-        uint256 quoteFeed1Price;
-        uint256 quoteFeed2Price;
-        PythStructs.Price memory latestPrice;
-
-        if (BASE_FEED_1 == bytes32(0)) {
-            baseFeed1Price = 1;
-        } else {
-            latestPrice = pyth.getPriceNoOlderThan(
-                BASE_FEED_1,
-                PRICE_FEED_MAX_AGE
-            );
-            baseFeed1Price = uint256(int256(latestPrice.price));
-        }
-
-        if (BASE_FEED_2 == bytes32(0)) {
-            baseFeed2Price = 1;
-        } else {
-            latestPrice = pyth.getPriceNoOlderThan(
-                BASE_FEED_2,
-                PRICE_FEED_MAX_AGE
-            );
-            baseFeed2Price = uint256(int256(latestPrice.price));
-        }
-
-        if (QUOTE_FEED_1 == bytes32(0)) {
-            quoteFeed1Price = 1;
-        } else {
-            latestPrice = pyth.getPriceNoOlderThan(
-                QUOTE_FEED_1,
-                PRICE_FEED_MAX_AGE
-            );
-
-            quoteFeed1Price = uint256(int256(latestPrice.price));
-        }
-
-        if (QUOTE_FEED_2 == bytes32(0)) {
-            quoteFeed2Price = 1;
-        } else {
-            latestPrice = pyth.getPriceNoOlderThan(
-                QUOTE_FEED_2,
-                PRICE_FEED_MAX_AGE
-            );
-            quoteFeed2Price = uint256(int256(latestPrice.price));
-        }
         return
             SCALE_FACTOR.mulDiv(
                 BASE_VAULT.getAssets(BASE_VAULT_CONVERSION_SAMPLE) *
-                    baseFeed1Price *
-                    baseFeed2Price,
+                    PythFeedLib.getPrice(pyth, BASE_FEED_1, PRICE_FEED_MAX_AGE) *
+                    PythFeedLib.getPrice(pyth, BASE_FEED_2, PRICE_FEED_MAX_AGE),
                 QUOTE_VAULT.getAssets(QUOTE_VAULT_CONVERSION_SAMPLE) *
-                    quoteFeed1Price *
-                    quoteFeed2Price
+                    PythFeedLib.getPrice(pyth, QUOTE_FEED_1, PRICE_FEED_MAX_AGE) *
+                    PythFeedLib.getPrice(pyth, QUOTE_FEED_2, PRICE_FEED_MAX_AGE)
             );
     }
 }
