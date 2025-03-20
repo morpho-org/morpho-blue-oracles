@@ -61,6 +61,20 @@ contract MorphoPythOracleTest is Test {
     }
 
     function testPythOracleWbtcUsdt() public {
+        oracle = new MorphoPythOracle(
+            address(mockPyth),
+            vaultZero,
+            1,
+            pythWbtcUsdFeed,
+            pythFeedZero,
+            pythWbtcUsdTokenDecimals,
+            vaultZero,
+            1,
+            pythUsdtUsdFeed,
+            pythFeedZero,
+            pythUsdtUsdTokenDecimals,
+            oneHour
+        );
         assertEq(
             oracle.price(),
             ((uint256(int256(mockPyth.getPriceUnsafe(pythWbtcUsdFeed).price))) *

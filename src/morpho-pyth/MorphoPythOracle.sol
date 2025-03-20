@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
+import {IMorphoPythOracle} from "./interfaces/IMorphoPythOracle.sol";
 import {Math} from "../../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
 import {PythErrorsLib} from "./libraries/PythErrorsLib.sol";
@@ -9,7 +9,7 @@ import {PythFeedLib} from "./libraries/PythFeedLib.sol";
 
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 
-contract MorphoPythOracle is IOracle {
+contract MorphoPythOracle is IMorphoPythOracle {
     using Math for uint256;
     IPyth public immutable pyth;
     using VaultLib for IERC4626;
