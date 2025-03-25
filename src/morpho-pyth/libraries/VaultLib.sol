@@ -4,8 +4,7 @@ pragma solidity ^0.8.0;
 import {IERC4626} from "../../interfaces/IERC4626.sol";
 
 /// @title VaultLib
-/// @author Morpho Labs
-/// @custom:contact security@morpho.org
+/// @author Pyth Data Association
 /// @notice Library exposing functions to price shares of an ERC4626 vault.
 library VaultLib {
     /// @dev Converts `shares` into the corresponding assets on the `vault`.

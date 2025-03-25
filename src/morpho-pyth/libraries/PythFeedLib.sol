@@ -7,13 +7,12 @@ import {PythStructs} from "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
 import {PythErrorsLib} from "./PythErrorsLib.sol";
 
 /// @title PythFeedLib
-/// @author Morpho Labs
-/// @custom:contact security@morpho.org
+/// @author Pyth Data Association
 /// @notice Library exposing functions to interact with a Pyth feed.
 library PythFeedLib {
-
     /// @dev Returns the price of a `priceId`.
     /// @dev When `priceId` is the address zero, returns 1.
+    /// @dev If the price is older than `maxAge`, throws `0x19abf40e` StalePrice Error.
     function getPrice(IPyth pyth, bytes32 priceId, uint256 maxAge) internal view returns (uint256) {
         if (priceId == bytes32(0)) return 1;
 

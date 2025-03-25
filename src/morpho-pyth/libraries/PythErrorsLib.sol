@@ -2,9 +2,8 @@
 pragma solidity ^0.8.0;
 
 /// @title ErrorsLib
-/// @author Morpho Labs
-/// @custom:contact security@morpho.org
-/// @notice Library exposing error messages.
+/// @author Pyth Data Association
+/// @notice Library exposing error messages emitted by MorphoPythOracle.
 library PythErrorsLib {
     /// @notice Thrown when the answer returned by a Pyth feed is negative.
     string constant NEGATIVE_ANSWER = "PythPriceFeedLib: Negative answer";

@@ -8,7 +8,7 @@ import {IERC4626} from "./libraries/VaultLib.sol";
 import {MorphoPythOracle} from "./MorphoPythOracle.sol";
 
 /// @title MorphoPythOracleFactory
-/// @author Morpho Labs
+/// @author Pyth Data Association
 /// @notice This contract allows to create MorphoPythOracle oracles, and to index them easily.
 contract MorphoPythOracleFactory is IMorphoPythOracleFactory {
     /* STORAGE */
