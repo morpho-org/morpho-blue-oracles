@@ -66,8 +66,9 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     /// @param quoteVaultConversionSample The sample amount of quote vault shares used to convert to underlying.
     /// Pass 1 if the quote asset is not a vault. Should be chosen such that converting `quoteVaultConversionSample` to
     /// assets has enough precision.
-    /// @dev Morpho Blue markets have an issue when the price of the oracle can go down instantly by a multiplier of
-    /// less than LLTV*LIF. So in particular, vaults that can receive donations as loan/quote assets are problematic.
+    /// @dev Morpho Blue markets have an issue when the price of the oracle can change instantly such that the new price
+    /// is less than the old price multiplied by LLTV*LIF. So in particular, vaults that can receive donations as
+    /// loan/quote assets are problematic.
     /// @param quoteFeed1 First quote feed. Pass address zero if the price = 1.
     /// @param quoteFeed2 Second quote feed. Pass address zero if the price = 1.
     /// @param quoteTokenDecimals Quote token decimals.
