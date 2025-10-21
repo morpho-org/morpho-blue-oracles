@@ -132,10 +132,13 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
         // So SCALE_FACTOR = 1e36 * 1e(-dB1) * 1e(dQ1) * 1e(-fpB1) * 1e(-fpB2) * 1e(fpQ1) * 1e(fpQ2)
         //                 = 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2)
         SCALE_FACTOR = 10
-            ** (
-                36 + quoteTokenDecimals + quoteFeed1.getDecimals() + quoteFeed2.getDecimals() - baseTokenDecimals
-                    - baseFeed1.getDecimals() - baseFeed2.getDecimals()
-            ) * quoteVaultConversionSample / baseVaultConversionSample;
+            ** (36
+                + quoteTokenDecimals
+                + quoteFeed1.getDecimals()
+                + quoteFeed2.getDecimals()
+                - baseTokenDecimals
+                - baseFeed1.getDecimals()
+                - baseFeed2.getDecimals()) * quoteVaultConversionSample / baseVaultConversionSample;
     }
 
     /* PRICE */
