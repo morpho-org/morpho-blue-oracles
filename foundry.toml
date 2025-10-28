@@ -11,4 +11,7 @@ evm_version = "paris"
 [profile.default.fmt]
 wrap_comments = true
 
+[lint]
+exclude_lints = ["unsafe-typecast", "unaliased-plain-import", "screaming-snake-case-const"]
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
