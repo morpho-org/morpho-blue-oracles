@@ -103,8 +103,6 @@ This adapter is deployed on the Ethereum Mainnet at the address [0x905b7dAbCD3Ce
 
 Install dependencies: `forge install`
 
-In a `.env` file, set `ETH_RPC_URL` to the URL of an Ethereum provider.
-
 Run test: `forge test`
 
 ## Audits
