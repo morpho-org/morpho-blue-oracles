@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
@@ -35,4 +35,4 @@ jobs:
           forge test -vvv
         id: test
         env:
-          ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+          ETH_RPC_URL: "https://eth-mainnet.g.alchemy.com/v2/${{ secrets.PROTOCOL_ALCHEMY_KEY }}"
