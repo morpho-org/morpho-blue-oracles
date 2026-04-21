@@ -6,9 +6,6 @@ on:
       - main
   pull_request:
 
-env:
-  FOUNDRY_PROFILE: ci
-
 jobs:
   check:
     name: forge-test
