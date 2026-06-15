@@ -134,17 +134,37 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
 
         // So SCALE_FACTOR = 1e36 * 1e(-dB1) * 1e(dQ1) * 1e(-fpB1) * 1e(-fpB2) * 1e(fpQ1) * 1e(fpQ2)
         //                 = 1e(36 + dQ1 + fpQ1 + fpQ2 - dB1 - fpB1 - fpB2)
-        uint256 scaleFactor = 10
+        SCALE_FACTOR = _scaleFactor(
+            quoteTokenDecimals,
+            quoteFeed1.getDecimals(),
+            quoteFeed2.getDecimals(),
+            baseTokenDecimals,
+            baseFeed1.getDecimals(),
+            baseFeed2.getDecimals(),
+            quoteVaultConversionSample,
+            baseVaultConversionSample
+        );
+    }
+
+    function _scaleFactor(
+        uint256 quoteTokenDecimals,
+        uint256 quoteFeed1Decimals,
+        uint256 quoteFeed2Decimals,
+        uint256 baseTokenDecimals,
+        uint256 baseFeed1Decimals,
+        uint256 baseFeed2Decimals,
+        uint256 quoteVaultConversionSample,
+        uint256 baseVaultConversionSample
+    ) internal pure returns (uint256 scaleFactor) {
+        scaleFactor = 10
             ** (36
                 + quoteTokenDecimals
-                + quoteFeed1.getDecimals()
-                + quoteFeed2.getDecimals()
+                + quoteFeed1Decimals
+                + quoteFeed2Decimals
                 - baseTokenDecimals
-                - baseFeed1.getDecimals()
-                - baseFeed2.getDecimals()) * quoteVaultConversionSample / baseVaultConversionSample;
+                - baseFeed1Decimals
+                - baseFeed2Decimals) * quoteVaultConversionSample / baseVaultConversionSample;
         require(scaleFactor != 0, ErrorsLib.SCALE_FACTOR_IS_ZERO);
-
-        SCALE_FACTOR = scaleFactor;
     }
 
     /* PRICE */
