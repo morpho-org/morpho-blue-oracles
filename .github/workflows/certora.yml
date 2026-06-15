@@ -1,0 +1,44 @@
+name: Certora
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+        with:
+          python-version: ">=3.11"
+
+      - name: Install certora
+        run: pip install certora-cli
+
+      - name: Install solc (0.8.21)
+        env:
+          EXPECTED_SOLC_SHA256: f2857a898be15c69e8de5598dcd3f3e169e94964a0ce9a0bbb1b111f145a81df
+        run: |
+          wget https://github.com/ethereum/solidity/releases/download/v0.8.21/solc-static-linux
+          actual="$(sha256sum solc-static-linux | awk '{print $1}')"
+          [ "$actual" = "$EXPECTED_SOLC_SHA256" ] || { echo "solc hash mismatch"; exit 1; }
+          chmod +x solc-static-linux
+          sudo mv solc-static-linux /usr/local/bin/solc-0.8.21
+
+      - name: Verify MorphoChainlinkOracleV2 specification
+        run: certoraRun certora/confs/MorphoChainlinkOracleV2.conf
+        env:
+          CERTORAKEY: ${{ secrets.CERTORAKEY }}
