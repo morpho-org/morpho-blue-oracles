@@ -11,8 +11,8 @@ import {IMorphoChainlinkOracleV2} from "./IMorphoChainlinkOracleV2.sol";
 /// @notice Interface for MorphoChainlinkOracleV2Factory
 interface IMorphoChainlinkOracleV2Factory {
     /// @notice Emitted when a new Chainlink oracle is created.
-    /// @param oracle The address of the Chainlink oracle.
     /// @param caller The caller of the function.
+    /// @param oracle The address of the Chainlink oracle.
     event CreateMorphoChainlinkOracleV2(address caller, address oracle);
 
     /// @notice Whether a Chainlink oracle vault was created with the factory.
