@@ -32,4 +32,4 @@ jobs:
           forge test -vvv
         id: test
         env:
-          ETH_RPC_URL: "https://eth-mainnet.g.alchemy.com/v2/${{ secrets.PROTOCOL_ALCHEMY_KEY }}"
+          ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}

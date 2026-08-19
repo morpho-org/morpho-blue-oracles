@@ -12,6 +12,11 @@ evm_version = "paris"
 wrap_comments = true
 
 [lint]
-exclude_lints = ["unsafe-typecast", "unaliased-plain-import", "screaming-snake-case-const"]
+exclude_lints = [
+    "unsafe-typecast",
+    "unaliased-plain-import",
+    "screaming-snake-case-const",
+]
 
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+[rpc_endpoints]
+ethereum = "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"

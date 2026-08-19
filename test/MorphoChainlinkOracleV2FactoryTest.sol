@@ -12,8 +12,7 @@ contract ChainlinkOracleFactoryTest is Test {
     MorphoChainlinkOracleV2Factory factory;
 
     function setUp() public {
-        vm.createSelectFork(vm.envString("ETH_RPC_URL"));
-        require(block.chainid == 1, "chain isn't Ethereum");
+        vm.createSelectFork("ethereum");
         factory = new MorphoChainlinkOracleV2Factory();
     }
 

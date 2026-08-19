@@ -55,6 +55,7 @@ contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
     /// - Decimals passed as argument are correct.
     /// - The base vaults's sample shares quoted as assets and the base feed prices don't overflow when multiplied.
     /// - The quote vault's sample shares quoted as assets and the quote feed prices don't overflow when multiplied.
+    /// - The scale factor is not zero.
     /// @param baseVault Base vault. Pass address zero to omit this parameter.
     /// @param baseVaultConversionSample The sample amount of base vault shares used to convert to underlying.
     /// Pass 1 if the base asset is not a vault. Should be chosen such that converting `baseVaultConversionSample` to
