@@ -6,7 +6,7 @@ import "../lib/forge-std/src/Test.sol";
 import "../src/morpho-chainlink/MorphoChainlinkOracleV2Factory.sol";
 import {ChainlinkDataFeedLib} from "../src/morpho-chainlink/libraries/ChainlinkDataFeedLib.sol";
 
-contract ChainlinkOracleFactoryTest is Test {
+contract MorphoChainlinkOracleV2FactoryTest is Test {
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
     MorphoChainlinkOracleV2Factory factory;
