@@ -1,48 +1,21 @@
 // SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v5.0.0) (utils/math/Math.sol)
 
-/*
-The MIT License (MIT)
-
-Copyright (c) 2016-2023 zOS Global Limited and contributors
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
 // This file intentionally sits at src/ root: under via_ir, moving it changes source order
 // and therefore MorphoChainlinkOracleV2/Factory bytecode.
 
 pragma solidity ^0.8.20;
 
 library Math {
-    /**
-     * @dev Muldiv operation overflow.
-     */
+    /// @dev Muldiv operation overflow.
     error MathOverflowedMulDiv();
 
-    /**
-     * @notice Calculates floor(x * y / denominator) with full precision. Throws if result overflows a uint256 or
-     * denominator == 0.
-     * @dev Original credit to Remco Bloemen under MIT license (https://xn--2-umb.com/21/muldiv) with further edits by
-     * Uniswap Labs also under MIT license.
-     */
+    /// @notice Calculates floor(x * y / denominator) with full precision. Throws if result overflows a uint256 or
+    /// denominator == 0.
+    /// @dev Original credit to Remco Bloemen under MIT license (https://xn--2-umb.com/21/muldiv) with further edits by
+    /// Uniswap Labs also under MIT license.
+    /// @dev Copied verbatim from
+    /// https://github.com/OpenZeppelin/openzeppelin-contracts/blob/932fddf69a699a9a80fd2396fd1a2ab91cdda123/contracts/utils/math/Math.sol#L123-L202.
     function mulDiv(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 result) {
         unchecked {
             // 512-bit multiply [prod1 prod0] = x * y. Compute the product mod 2^256 and mod 2^256 - 1, then use
