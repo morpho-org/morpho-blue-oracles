@@ -3,12 +3,12 @@
 // Copyright (c) 2016-2023 zOS Global Limited and contributors. Licensed under the MIT License:
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/932fddf69a699a9a80fd2396fd1a2ab91cdda123/LICENSE
 
-// This file intentionally sits at src/ root: under via_ir, moving it changes source order
-// and therefore MorphoChainlinkOracleV2/Factory bytecode.
+// Under via_ir, this filename must sort before ChainlinkDataFeedLib.sol to keep
+// MorphoChainlinkOracleV2/Factory bytecode unchanged.
 
 pragma solidity ^0.8.0;
 
-library UtilsLib {
+library ArithmeticLib {
     /// @dev Muldiv operation overflow.
     error MathOverflowedMulDiv();
 

@@ -6,7 +6,7 @@ import {IMorphoChainlinkOracleV2} from "./interfaces/IMorphoChainlinkOracleV2.so
 
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
-import {UtilsLib} from "../UtilsLib.sol";
+import {ArithmeticLib} from "./libraries/ArithmeticLib.sol";
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 
 /// @title MorphoChainlinkOracleV2
@@ -14,7 +14,7 @@ import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/Chainlink
 /// @custom:contact security@morpho.org
 /// @notice Morpho Blue oracle using Chainlink-compliant feeds.
 contract MorphoChainlinkOracleV2 is IMorphoChainlinkOracleV2 {
-    using UtilsLib for uint256;
+    using ArithmeticLib for uint256;
     using VaultLib for IERC4626;
     using ChainlinkDataFeedLib for AggregatorV3Interface;
 
