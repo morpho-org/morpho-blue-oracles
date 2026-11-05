@@ -4,9 +4,9 @@
 // This file intentionally sits at src/ root: under via_ir, moving it changes source order
 // and therefore MorphoChainlinkOracleV2/Factory bytecode.
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.0;
 
-library Math {
+library UtilsLib {
     /// @dev Muldiv operation overflow.
     error MathOverflowedMulDiv();
 
