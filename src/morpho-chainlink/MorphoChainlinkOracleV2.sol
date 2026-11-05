@@ -6,7 +6,7 @@ import {IMorphoChainlinkOracleV2} from "./interfaces/IMorphoChainlinkOracleV2.so
 
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 import {IERC4626, VaultLib} from "./libraries/VaultLib.sol";
-import {Math} from "../../lib/openzeppelin-contracts/contracts/utils/math/Math.sol";
+import {Math} from "../Math.sol";
 import {AggregatorV3Interface, ChainlinkDataFeedLib} from "./libraries/ChainlinkDataFeedLib.sol";
 
 /// @title MorphoChainlinkOracleV2
