@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v5.0.0) (utils/math/Math.sol)
+// Copyright (c) 2016-2023 zOS Global Limited and contributors. Licensed under the MIT License:
+// https://github.com/OpenZeppelin/openzeppelin-contracts/blob/932fddf69a699a9a80fd2396fd1a2ab91cdda123/LICENSE
 
 // This file intentionally sits at src/ root: under via_ir, moving it changes source order
 // and therefore MorphoChainlinkOracleV2/Factory bytecode.
