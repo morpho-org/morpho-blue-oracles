@@ -7,7 +7,7 @@ import "./mocks/ChainlinkAggregatorMock.sol";
 import "./helpers/Constants.sol";
 
 contract MorphoChainlinkOracleV2Test is Test {
-    using Math for uint256;
+    using ArithmeticLib for uint256;
 
     function setUp() public {
         vm.createSelectFork("ethereum");
