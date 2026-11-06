@@ -23,18 +23,6 @@ function euclideanDivision(mathint n, mathint d) {
     assert n >= 0 && d > 0 => n - n % d == d * (n / d), "hint";
 }
 
-function divideProduct(mathint a, mathint b, mathint t) {
-    assert a >= 0 && b >= 0 && t > 0 && a % t == 0 => (a * b) / t == (a / t) * b, "hint";
-}
-
-function shiftArithmetic(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
-    require wordShiftPre(t, flipped) => lo / t + (hi * flipped) % B() == ((hi * B() + lo) / t) % B(), "MulDivSummary.shiftArithmetic";
-}
-
-function cancelModularInverse(mathint d, mathint q, mathint inv, mathint m) {
-    require d >= 0 && q >= 0 && inv >= 0 && m == B() && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m, "MulDivSummary.cancel_modular_inverse";
-}
-
 // Non-reverting: MulDivSummary.productNeverReverts.
 function productSummary(uint256 x, uint256 y) returns (uint256, uint256) {
     uint256 hi;
@@ -67,8 +55,8 @@ function shiftSummary(uint256 hi, uint256 lo, uint256 t, uint256 flipped) return
     uint256 result;
     uint256 high = finalProduct(hi, flipped);
     require wordShiftPre(t, flipped) && (flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0) => result == lo / t + high, "MulDivSummary.shiftWord";
-    shiftArithmetic(hi, lo, t, flipped);
-    divideProduct(originalD, quotient, t);
+    require wordShiftPre(t, flipped) => lo / t + (hi * flipped) % B() == ((hi * B() + lo) / t) % B(), "MulDivSummary.shiftArithmetic";
+    assert originalD >= 0 && quotient >= 0 && t > 0 && originalD % t == 0 => (originalD * quotient) / t == (originalD / t) * quotient, "hint";
     assert hi * B() + lo == originalD * quotient, "hint";
     assert result == ((hi * B() + lo) / t) % B(), "hint";
     assert result == (oddPart * quotient) % B(), "hint";
@@ -87,7 +75,7 @@ function seedSummary(uint256 d) returns uint256 {
 function finalSummary(uint256 lo, uint256 inv) returns uint256 {
     uint256 result;
     require result == (lo * inv) % B(), "MulDivSummary.finalProductCorrect";
-    cancelModularInverse(oddPart, quotient, inv, B());
+    require oddPart >= 0 && quotient >= 0 && inv >= 0 && B() == B() && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivSummary.cancelModularInverse";
     return result;
 }
 
@@ -113,7 +101,7 @@ rule stepsReverts(uint256 x, uint256 y, uint256 d) {
     assert lastReverted <=> d == 0 || x * y / d >= B();
 }
 
-// Check tail_correct: the summarized blocks compose to the exact bounded floor quotient.
+// Check that the summarized blocks return the exact bounded floor quotient.
 rule stepsValue(uint256 x, uint256 y, uint256 d) {
     originalD = d;
     quotient = d == 0 ? 0 : x * y / d;
