@@ -25,10 +25,6 @@ Modular normalization and inverse cancellation are specialized to the word modul
 Divisibility of products is proved for every positive modulus.
 The final revert and value properties are unchanged.
 
-[`MulDivArithmetic.lean`](helpers/MulDivArithmetic.lean) is retained as independent documentation of these number-theory facts and the shift arithmetic and OR identities, not as a justification for unproved CVL assumptions.
-The Lean file has no `sorry` or additional axioms.
-Check it using Mathlib v4.28.0: `lake env lean <path>/certora/helpers/MulDivArithmetic.lean`.
-
 ## Running checks
 
 From the repository root, with Java 21, `certora-cli`, and `solc-0.8.28` installed:
