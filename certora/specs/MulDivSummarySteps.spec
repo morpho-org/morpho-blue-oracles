@@ -3,6 +3,16 @@
 
 import "../helpers/MulDiv.spec";
 
+methods {
+    function MulDivHarness._product(uint256 x, uint256 y) internal returns (uint256, uint256) => productSummary(x, y);
+    function MulDivHarness._subtract(uint256 hi, uint256 lo, uint256 r) internal returns (uint256, uint256) => subtractSummary(hi, lo, r);
+    function MulDivHarness._twos(uint256 d) internal returns (uint256, uint256, uint256) => twosSummary(d);
+    function MulDivHarness._shift(uint256 hi, uint256 lo, uint256 t, uint256 flipped) internal returns (uint256) => shiftSummary(hi, lo, t, flipped);
+    function MulDivHarness._seed(uint256 d) internal returns (uint256) => seedSummary(d);
+    function MulDivHarness._newton(uint256 d, uint256 inv) internal returns (uint256) => newtonSummary(d, inv);
+    function MulDivHarness._final(uint256 lo, uint256 inv) internal returns (uint256) => finalSummary(lo, inv);
+}
+
 persistent ghost mathint originalD;
 
 persistent ghost mathint quotient;
@@ -23,16 +33,6 @@ function shiftArithmetic(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
 
 function cancelModularInverse(mathint d, mathint q, mathint inv, mathint m) {
     require d >= 0 && q >= 0 && inv >= 0 && m == B() && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m, "MulDivSummary.cancel_modular_inverse";
-}
-
-methods {
-    function MulDivHarness._product(uint256 x, uint256 y) internal returns (uint256, uint256) => productSummary(x, y);
-    function MulDivHarness._subtract(uint256 hi, uint256 lo, uint256 r) internal returns (uint256, uint256) => subtractSummary(hi, lo, r);
-    function MulDivHarness._twos(uint256 d) internal returns (uint256, uint256, uint256) => twosSummary(d);
-    function MulDivHarness._shift(uint256 hi, uint256 lo, uint256 t, uint256 flipped) internal returns (uint256) => shiftSummary(hi, lo, t, flipped);
-    function MulDivHarness._seed(uint256 d) internal returns (uint256) => seedSummary(d);
-    function MulDivHarness._newton(uint256 d, uint256 inv) internal returns (uint256) => newtonSummary(d, inv);
-    function MulDivHarness._final(uint256 lo, uint256 inv) internal returns (uint256) => finalSummary(lo, inv);
 }
 
 function productSummary(uint256 x, uint256 y) returns (uint256, uint256) {
