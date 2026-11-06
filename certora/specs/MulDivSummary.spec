@@ -203,6 +203,10 @@ rule newton128(uint256 d, uint256 inv) {
     modularPolynomialSummary(inv, 2, d * inv);
     assert next == expression % B(), "hint";
     assert error % (2 ^ 128) == 0, "hint";
+    mathint errorQ = error / (2 ^ 128);
+    assert error == (2 ^ 128) * errorQ, "hint";
+    assert error * error == B() * errorQ * errorQ, "hint";
+    assert (error * error) % B() == 0, "hint";
     assert d * expression == 1 - error * error, "hint";
     assert (d * expression) % B() == 1, "hint";
     modularPolynomialSummary(d, expression, 0);
