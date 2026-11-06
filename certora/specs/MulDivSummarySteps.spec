@@ -22,7 +22,7 @@ function shiftArithmetic(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
 }
 
 function cancelModularInverse(mathint d, mathint q, mathint inv, mathint m) {
-    require d >= 0 && q >= 0 && inv >= 0 && m > 1 && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m, "axiom: modular inverse cancellation; MulDivArithmetic.lean: MulDiv.cancel_modular_inverse";
+    require d >= 0 && q >= 0 && inv >= 0 && m == B() && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m, "MulDivSummary.cancel_modular_inverse";
 }
 
 methods {

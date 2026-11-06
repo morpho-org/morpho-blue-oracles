@@ -15,7 +15,9 @@ same `MathOverflowedMulDiv()` error as the library.
 
 - [`MulDivSummary.spec`](specs/MulDivSummary.spec) checks the unsummarized
   `stepsEquivalent` rule and the product, subtraction, six fixed-precision
-  Newton updates, shift block, shift arithmetic, and final-product rules.
+  Newton updates, shift block, shift arithmetic, and final-product rules. It
+  also proves modular normalization, divisibility of products, and modular
+  inverse cancellation using explicit integer division witnesses.
 - [`MulDivSummaryBits.spec`](specs/MulDivSummaryBits.spec) checks the twos,
   flipped-twos power-of-two fact, inverse seed, and disjoint-digit OR identity
   using precise bitwise operations.
@@ -23,23 +25,24 @@ same `MathOverflowedMulDiv()` error as the library.
   separately checked blocks in `stepsReverts` and `stepsValue`.
 
 The final result is `stepsEquivalent` + `stepsReverts` + `stepsValue`, with
-every supporting rule cited by a summary. All 18 rules must pass; a composition
+every supporting rule cited by a summary. All 21 rules must pass; a composition
 result alone does not establish soundness of its supporting summaries.
 
-## Arithmetic assumptions
+## Arithmetic lemmas
 
-Three pure number-theory facts remain explicit CVL axioms. Their exact
-statements are the `require` clauses labelled `axiom:`:
+No arithmetic axioms remain. The `modularPolynomial`, `divisibleProducts`, and
+`cancelModularInverse` helpers cite the standalone `modular_polynomial`,
+`divisible_products`, and `cancel_modular_inverse` rules in
+`MulDivSummary.spec`. The main conf runs each rule as a separate job in CI.
+Modular normalization and inverse cancellation are specialized to the word
+modulus `B = 2^256` used by every call site. Divisibility of products is proved
+for every positive modulus. The final revert and value properties are unchanged.
 
-1. Modular multiplication/subtraction normalization (`modularPolynomial`).
-2. Divisibility of products (`divisibleProducts`).
-3. Modular inverse cancellation (`cancelModularInverse`).
-
-Each is independently proved in [`MulDivArithmetic.lean`](helpers/MulDivArithmetic.lean),
-along with the shift arithmetic and OR identities. Certora verification is
-conditional on these arithmetic facts; the retained CVL rules do not prove
-them. The Lean file has no `sorry` or additional axioms. Check it using Mathlib
-v4.28.0: `lake env lean <path>/certora/helpers/MulDivArithmetic.lean`.
+[`MulDivArithmetic.lean`](helpers/MulDivArithmetic.lean) is retained as independent
+documentation of these number-theory facts and the shift arithmetic and OR
+identities, not as a justification for unproved CVL assumptions. The Lean file
+has no `sorry` or additional axioms. Check it using Mathlib v4.28.0:
+`lake env lean <path>/certora/helpers/MulDivArithmetic.lean`.
 
 ## Running checks
 

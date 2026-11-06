@@ -3,12 +3,12 @@
 
 import "../helpers/MulDiv.spec";
 
-function modularPolynomial(mathint a, mathint b, mathint c, mathint m) {
-    require m > 0 => (a * (b - c)) % m == ((a % m) * ((b - (c % m)) % m)) % m, "axiom: modular ring normalization; MulDivArithmetic.lean: MulDiv.modular_polynomial";
+function modularPolynomial(mathint a, mathint b, mathint c) {
+    require (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B(), "MulDivSummary.modular_polynomial";
 }
 
 function divisibleProducts(mathint a, mathint b, mathint m) {
-    require m > 0 && a % m == 0 && b % m == 0 => (a * b) % (m * m) == 0, "axiom: products of multiples; MulDivArithmetic.lean: MulDiv.divisible_products";
+    require m > 0 && a % m == 0 && b % m == 0 => (a * b) % (m * m) == 0, "MulDivSummary.divisible_products";
 }
 
 function orSummary(uint256 a, uint256 b, uint256 p) {
@@ -83,7 +83,7 @@ rule newton4(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1, "The preceding iteration supplies the current inverse precision";
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomial(inv, 2, d * inv, B());
+    modularPolynomial(inv, 2, d * inv);
     assert (expression - next) % B() == 0;
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B();
@@ -98,13 +98,16 @@ rule newton8(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 8) == 1, "The preceding iteration supplies the current inverse precision";
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomial(inv, 2, d * inv, B());
+    modularPolynomial(inv, 2, d * inv);
     assert (expression - next) % B() == 0;
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B();
     mathint error = (d * inv - 1) / (2 ^ 8);
     assert d * inv == 1 + (2 ^ 8) * error;
+    assert d * expression == (d * inv) * (2 - d * inv);
     assert d * expression == 1 - (2 ^ 16) * error * error;
+    mathint productQ = -error * error - d * wrap * (2 ^ 240);
+    assert d * next == 1 + (2 ^ 16) * productQ;
     assert (d * next) % (2 ^ 16) == 1;
 }
 
@@ -113,7 +116,7 @@ rule newton16(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1, "The preceding iteration supplies the current inverse precision";
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomial(inv, 2, d * inv, B());
+    modularPolynomial(inv, 2, d * inv);
     assert (expression - next) % B() == 0;
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B();
@@ -128,7 +131,7 @@ rule newton32(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1, "The preceding iteration supplies the current inverse precision";
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomial(inv, 2, d * inv, B());
+    modularPolynomial(inv, 2, d * inv);
     assert (expression - next) % B() == 0;
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B();
@@ -143,7 +146,7 @@ rule newton64(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1, "The preceding iteration supplies the current inverse precision";
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomial(inv, 2, d * inv, B());
+    modularPolynomial(inv, 2, d * inv);
     assert (expression - next) % B() == 0;
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B();
@@ -158,14 +161,14 @@ rule newton128(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1, "The preceding iteration supplies the current inverse precision";
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomial(inv, 2, d * inv, B());
+    modularPolynomial(inv, 2, d * inv);
     assert next == expression % B();
     mathint error = d * inv - 1;
     assert error % (2 ^ 128) == 0;
     divisibleProducts(error, error, 2 ^ 128);
     assert d * expression == 1 - error * error;
     assert (d * expression) % B() == 1;
-    modularPolynomial(d, expression, 0, B());
+    modularPolynomial(d, expression, 0);
     assert (d * next) % B() == 1;
 }
 
@@ -201,4 +204,65 @@ rule subtractProduct(uint256 hi, uint256 lo, uint256 r) {
 rule finalProductCorrect(uint256 lo, uint256 inv) {
     uint256 result = finalProduct(lo, inv);
     assert result == (lo * inv) % B();
+}
+
+// Check modular normalization for the word modulus using integer division witnesses.
+rule modular_polynomial(mathint a, mathint b, mathint c) {
+    mathint ar = a % B();
+    mathint aq = (a - ar) / B();
+    assert a == aq * B() + ar;
+    mathint cr = c % B();
+    mathint cq = (c - cr) / B();
+    assert c == cq * B() + cr;
+    mathint u = b - cr;
+    mathint ur = u % B();
+    mathint uq = (u - ur) / B();
+    assert u == uq * B() + ur;
+    assert b - c == ur + (uq - cq) * B();
+    mathint p = ar * ur;
+    mathint pr = p % B();
+    mathint pq = (p - pr) / B();
+    assert p == pq * B() + pr;
+    mathint k = pq + aq * (b - c) + ar * (uq - cq);
+    assert a * (b - c) == pr + B() * k;
+    assert 0 <= pr && pr < B();
+    assert (a * (b - c)) % B() == pr;
+    assert (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B();
+}
+
+// Check that multiplying two multiples of m produces a multiple of m squared.
+rule divisible_products(mathint a, mathint b, mathint m) {
+    if (m > 0 && a % m == 0 && b % m == 0) {
+        mathint aq = a / m;
+        mathint bq = b / m;
+        assert a == m * aq;
+        assert b == m * bq;
+        assert a * b == (m * m) * (aq * bq);
+        assert (a * b) % (m * m) == 0;
+    }
+    assert m > 0 && a % m == 0 && b % m == 0 => (a * b) % (m * m) == 0;
+}
+
+// Check inverse cancellation for the word modulus using integer division witnesses.
+rule cancel_modular_inverse(mathint d, mathint q, mathint inv, mathint m) {
+    if (
+        d >= 0
+            && q >= 0
+            && inv >= 0
+            && m == B()
+            && (d * inv) % m == 1
+    ) {
+        mathint k = (d * inv - 1) / m;
+        assert d * inv == 1 + k * m;
+        mathint p = (d * q) % m;
+        mathint w = (d * q - p) / m;
+        assert d * q == p + w * m;
+        mathint qr = q % m;
+        mathint qw = (q - qr) / m;
+        assert q == qr + qw * m;
+        assert p * inv == q + m * (q * k - w * inv);
+        assert p * inv == qr + m * (qw + q * k - w * inv);
+        assert (p * inv) % m == qr;
+    }
+    assert d >= 0 && q >= 0 && inv >= 0 && m == B() && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m;
 }
