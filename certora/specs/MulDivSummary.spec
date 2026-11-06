@@ -194,14 +194,14 @@ rule newton64(uint256 d, uint256 inv) {
 
 // Check Newton precision doubling from 128 to 256 bits by squaring the divisible error.
 rule newton128(uint256 d, uint256 inv) {
+    mathint error = d * inv - 1;
     require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1, "The preceding iteration supplies the current inverse precision";
-    require 2 ^ 128 > 0 && (d * inv - 1) % (2 ^ 128) == 0 && (d * inv - 1) % (2 ^ 128) == 0 => ((d * inv - 1) * (d * inv - 1)) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivSummary.divisibleProducts";
+    require 2 ^ 128 > 0 && error % (2 ^ 128) == 0 && error % (2 ^ 128) == 0 => (error * error) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivSummary.divisibleProducts";
 
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
     modularPolynomialSummary(inv, 2, d * inv);
     assert next == expression % B(), "hint";
-    mathint error = d * inv - 1;
     assert error % (2 ^ 128) == 0, "hint";
     assert d * expression == 1 - error * error, "hint";
     assert (d * expression) % B() == 1, "hint";
