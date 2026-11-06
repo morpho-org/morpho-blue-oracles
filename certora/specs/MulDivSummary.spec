@@ -3,6 +3,48 @@
 
 import "../helpers/MulDiv.spec";
 
+rule productNeverReverts(env e, uint256 x, uint256 y) {
+    require e.msg.value == 0;
+    product@withrevert(e, x, y);
+    assert !lastReverted;
+}
+
+rule subtractNeverReverts(env e, uint256 hi, uint256 lo, uint256 r) {
+    require e.msg.value == 0;
+    subtract@withrevert(e, hi, lo, r);
+    assert !lastReverted;
+}
+
+rule twosNeverReverts(env e, uint256 d) {
+    require e.msg.value == 0;
+    twos@withrevert(e, d);
+    assert !lastReverted;
+}
+
+rule shiftNeverReverts(env e, uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
+    require e.msg.value == 0;
+    shift@withrevert(e, hi, lo, t, flipped);
+    assert !lastReverted;
+}
+
+rule seedNeverReverts(env e, uint256 d) {
+    require e.msg.value == 0;
+    seed@withrevert(e, d);
+    assert !lastReverted;
+}
+
+rule newtonNeverReverts(env e, uint256 d, uint256 inv) {
+    require e.msg.value == 0;
+    newton@withrevert(e, d, inv);
+    assert !lastReverted;
+}
+
+rule finalProductNeverReverts(env e, uint256 lo, uint256 inv) {
+    require e.msg.value == 0;
+    finalProduct@withrevert(e, lo, inv);
+    assert !lastReverted;
+}
+
 function modularPolynomial(mathint a, mathint b, mathint c) {
     require (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B(), "MulDivSummary.modular_polynomial";
 }

@@ -35,6 +35,7 @@ function cancelModularInverse(mathint d, mathint q, mathint inv, mathint m) {
     require d >= 0 && q >= 0 && inv >= 0 && m == B() && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m, "MulDivSummary.cancel_modular_inverse";
 }
 
+// Non-reverting: MulDivSummary.productNeverReverts.
 function productSummary(uint256 x, uint256 y) returns (uint256, uint256) {
     uint256 hi;
     uint256 lo;
@@ -42,6 +43,7 @@ function productSummary(uint256 x, uint256 y) returns (uint256, uint256) {
     return (hi, lo);
 }
 
+// Non-reverting: MulDivSummary.subtractNeverReverts.
 function subtractSummary(uint256 hi, uint256 lo, uint256 r) returns (uint256, uint256) {
     uint256 newHi;
     uint256 newLo;
@@ -49,6 +51,7 @@ function subtractSummary(uint256 hi, uint256 lo, uint256 r) returns (uint256, ui
     return (newHi, newLo);
 }
 
+// Non-reverting: MulDivSummary.twosNeverReverts.
 function twosSummary(uint256 d) returns (uint256, uint256, uint256) {
     uint256 odd;
     uint256 t;
@@ -59,6 +62,7 @@ function twosSummary(uint256 d) returns (uint256, uint256, uint256) {
     return (odd, t, flipped);
 }
 
+// Non-reverting: MulDivSummary.shiftNeverReverts.
 function shiftSummary(uint256 hi, uint256 lo, uint256 t, uint256 flipped) returns uint256 {
     uint256 result;
     uint256 high = finalProduct(hi, flipped);
@@ -71,6 +75,7 @@ function shiftSummary(uint256 hi, uint256 lo, uint256 t, uint256 flipped) return
     return result;
 }
 
+// Non-reverting: MulDivSummary.seedNeverReverts.
 function seedSummary(uint256 d) returns uint256 {
     uint256 inv;
     uint256 residue = seedProduct(d, inv);
@@ -78,6 +83,7 @@ function seedSummary(uint256 d) returns uint256 {
     return inv;
 }
 
+// Non-reverting: MulDivSummary.finalProductNeverReverts.
 function finalSummary(uint256 lo, uint256 inv) returns uint256 {
     uint256 result;
     require result == (lo * inv) % B(), "MulDivSummary.finalProductCorrect";
@@ -85,6 +91,7 @@ function finalSummary(uint256 lo, uint256 inv) returns uint256 {
     return result;
 }
 
+// Non-reverting: MulDivSummary.newtonNeverReverts.
 function newtonSummary(uint256 d, uint256 inv) returns uint256 {
     uint256 next;
     require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1 => (d * next) % (2 ^ 8) == 1, "MulDivSummary.newton4";

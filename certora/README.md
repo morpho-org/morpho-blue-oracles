@@ -10,11 +10,16 @@ The split implementation uses the same `MathOverflowedMulDiv()` error as the lib
 
 - [`MulDivSummary.spec`](specs/MulDivSummary.spec) checks the unsummarized `stepsEquivalent` rule and the product, subtraction, six fixed-precision Newton updates, shift block, shift arithmetic, and final-product rules.
   It also proves modular normalization, divisibility of products, and modular inverse cancellation using explicit integer division witnesses.
+  Seven additional rules prove that each summarized block never reverts, using unsummarized harness wrappers and `@withrevert`.
 - [`MulDivSummaryBits.spec`](specs/MulDivSummaryBits.spec) checks the twos, flipped-twos power-of-two fact, inverse seed, and disjoint-digit OR identity using precise bitwise operations.
 - [`MulDivSummarySteps.spec`](specs/MulDivSummarySteps.spec) composes the separately checked blocks in `stepsReverts` and `stepsValue`.
 
 The final result is `stepsEquivalent` + `stepsReverts` + `stepsValue`, with every supporting rule cited by a summary.
-All 21 rules must pass; a composition result alone does not establish soundness of its supporting summaries.
+All 28 rules must pass; a composition result alone does not establish soundness of its supporting summaries.
+
+The external wrappers are pure and nonpayable.
+The non-reversion rules explicitly require `e.msg.value == 0` to exclude the external nonpayable guard.
+The existing equivalence and composition rules use `envfree` calls, which also supply zero message value.
 
 ## Arithmetic lemmas
 
