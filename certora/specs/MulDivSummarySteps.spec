@@ -20,11 +20,11 @@ persistent ghost mathint quotient;
 persistent ghost mathint oddPart;
 
 function euclideanDivision(mathint n, mathint d) {
-    assert n >= 0 && d > 0 => n - n % d == d * (n / d);
+    assert n >= 0 && d > 0 => n - n % d == d * (n / d), "hint";
 }
 
 function divideProduct(mathint a, mathint b, mathint t) {
-    assert a >= 0 && b >= 0 && t > 0 && a % t == 0 => (a * b) / t == (a / t) * b;
+    assert a >= 0 && b >= 0 && t > 0 && a % t == 0 => (a * b) / t == (a / t) * b, "hint";
 }
 
 function shiftArithmetic(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
@@ -69,9 +69,9 @@ function shiftSummary(uint256 hi, uint256 lo, uint256 t, uint256 flipped) return
     require wordShiftPre(t, flipped) && (flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0) => result == lo / t + high, "MulDivSummary.shiftWord";
     shiftArithmetic(hi, lo, t, flipped);
     divideProduct(originalD, quotient, t);
-    assert hi * B() + lo == originalD * quotient;
-    assert result == ((hi * B() + lo) / t) % B();
-    assert result == (oddPart * quotient) % B();
+    assert hi * B() + lo == originalD * quotient, "hint";
+    assert result == ((hi * B() + lo) / t) % B(), "hint";
+    assert result == (oddPart * quotient) % B(), "hint";
     return result;
 }
 
@@ -109,6 +109,7 @@ rule stepsReverts(uint256 x, uint256 y, uint256 d) {
     quotient = d == 0 ? 0 : x * y / d;
     euclideanDivision(x * y, d);
     mulDivSteps@withrevert(x, y, d);
+
     assert lastReverted <=> d == 0 || x * y / d >= B();
 }
 
@@ -118,5 +119,6 @@ rule stepsValue(uint256 x, uint256 y, uint256 d) {
     quotient = d == 0 ? 0 : x * y / d;
     euclideanDivision(x * y, d);
     uint256 result = mulDivSteps@withrevert(x, y, d);
+
     assert !lastReverted => d != 0 && result == x * y / d;
 }

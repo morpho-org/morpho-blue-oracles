@@ -10,6 +10,7 @@ rule twosWord(uint256 d) {
     uint256 t;
     uint256 flipped;
     odd, t, flipped = twos(d);
+
     assert wordTwosPost(d, odd, t, flipped);
 }
 
@@ -18,6 +19,7 @@ rule seedWord(uint256 d) {
     require d % 2 == 1, "The inverse seed is used only for odd denominators";
     uint256 inv = seed(d);
     uint256 residue = seedProduct(d, inv);
+
     assert residue == 1;
 }
 
@@ -28,6 +30,7 @@ rule twosPower(uint256 d) {
     uint256 t;
     uint256 flipped;
     odd, t, flipped = twos(d);
+
     assert flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0;
 }
 
@@ -35,5 +38,6 @@ rule twosPower(uint256 d) {
 rule powerOr(uint256 a, uint256 b, uint256 p) {
     require p > 0 && (p & assert_uint256(p - 1)) == 0;
     require a < p && b % p == 0;
+
     assert (a | b) == a + b;
 }

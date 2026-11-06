@@ -6,42 +6,49 @@ import "../helpers/MulDiv.spec";
 rule productNeverReverts(env e, uint256 x, uint256 y) {
     require e.msg.value == 0;
     product@withrevert(e, x, y);
+
     assert !lastReverted;
 }
 
 rule subtractNeverReverts(env e, uint256 hi, uint256 lo, uint256 r) {
     require e.msg.value == 0;
     subtract@withrevert(e, hi, lo, r);
+
     assert !lastReverted;
 }
 
 rule twosNeverReverts(env e, uint256 d) {
     require e.msg.value == 0;
     twos@withrevert(e, d);
+
     assert !lastReverted;
 }
 
 rule shiftNeverReverts(env e, uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
     require e.msg.value == 0;
     shift@withrevert(e, hi, lo, t, flipped);
+
     assert !lastReverted;
 }
 
 rule seedNeverReverts(env e, uint256 d) {
     require e.msg.value == 0;
     seed@withrevert(e, d);
+
     assert !lastReverted;
 }
 
 rule newtonNeverReverts(env e, uint256 d, uint256 inv) {
     require e.msg.value == 0;
     newton@withrevert(e, d, inv);
+
     assert !lastReverted;
 }
 
 rule finalProductNeverReverts(env e, uint256 lo, uint256 inv) {
     require e.msg.value == 0;
     finalProduct@withrevert(e, lo, inv);
+
     assert !lastReverted;
 }
 
@@ -63,28 +70,29 @@ rule shiftWord(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
     require flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0, "MulDivSummaryBits.twosPower";
     uint256 high = finalProduct(hi, flipped);
     uint256 result = shift(hi, lo, t, flipped);
-    assert high == (hi * flipped) % B();
-    assert result == (assert_uint256(lo / t) | high);
+    assert high == (hi * flipped) % B(), "hint";
+    assert result == (assert_uint256(lo / t) | high), "hint";
     mathint u = max_uint256 / t + 1;
-    assert B() == u * t;
-    assert lo / t < u;
+    assert B() == u * t, "hint";
+    assert lo / t < u, "hint";
     mathint q = hi / t;
     mathint r = hi % t;
-    assert hi == q * t + r;
-    assert hi * u == q * B() + r * u;
-    assert r * u < B();
-    assert (hi * u) % B() == r * u;
+    assert hi == q * t + r, "hint";
+    assert hi * u == q * B() + r * u, "hint";
+    assert r * u < B(), "hint";
+    assert (hi * u) % B() == r * u, "hint";
     if (t == 1) {
-        assert flipped == 0;
-        assert high == 0;
-        assert result == lo;
+        assert flipped == 0, "hint";
+        assert high == 0, "hint";
+        assert result == lo, "hint";
     } else {
-        assert flipped == u;
-        assert high == r * u;
-        assert high % flipped == 0;
+        assert flipped == u, "hint";
+        assert high == r * u, "hint";
+        assert high % flipped == 0, "hint";
         orSummary(assert_uint256(lo / t), high, flipped);
     }
-    assert lo / t + high < B();
+    assert lo / t + high < B(), "hint";
+
     assert result == lo / t + high;
 }
 
@@ -92,31 +100,32 @@ rule shiftWord(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
 rule shiftArithmetic(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
     require wordShiftPre(t, flipped);
     mathint u = max_uint256 / t + 1;
-    assert B() == u * t;
-    assert u == B() / t;
-    assert lo / t < u;
+    assert B() == u * t, "hint";
+    assert u == B() / t, "hint";
+    assert lo / t < u, "hint";
     mathint q = hi / t;
     mathint r = hi % t;
-    assert hi == q * t + r;
-    assert hi * u == q * B() + r * u;
-    assert r * u < B();
-    assert (hi * u) % B() == r * u;
+    assert hi == q * t + r, "hint";
+    assert hi * u == q * B() + r * u, "hint";
+    assert r * u < B(), "hint";
+    assert (hi * u) % B() == r * u, "hint";
     if (t == 1) {
-        assert flipped == 0;
-        assert (hi * flipped) % B() == r * u;
+        assert flipped == 0, "hint";
+        assert (hi * flipped) % B() == r * u, "hint";
     } else {
-        assert flipped == u;
-        assert max_uint256 % flipped == flipped - 1;
-        assert (hi * flipped) % B() == r * u;
+        assert flipped == u, "hint";
+        assert max_uint256 % flipped == flipped - 1, "hint";
+        assert (hi * flipped) % B() == r * u, "hint";
     }
-    assert ((hi * flipped) % B()) % u == 0;
-    assert lo / t + (hi * flipped) % B() < B();
+    assert ((hi * flipped) % B()) % u == 0, "hint";
+    assert lo / t + (hi * flipped) % B() < B(), "hint";
     mathint lowQ = lo / t;
     mathint lowR = lo % t;
-    assert lo == lowQ * t + lowR;
-    assert hi * B() + lo == (hi * u + lowQ) * t + lowR;
-    assert (hi * B() + lo) / t == hi * u + lowQ;
-    assert (hi * u + lowQ) % B() == r * u + lowQ;
+    assert lo == lowQ * t + lowR, "hint";
+    assert hi * B() + lo == (hi * u + lowQ) * t + lowR, "hint";
+    assert (hi * B() + lo) / t == hi * u + lowQ, "hint";
+    assert (hi * u + lowQ) % B() == r * u + lowQ, "hint";
+
     assert lo / t + (hi * flipped) % B() == ((hi * B() + lo) / t) % B();
 }
 
@@ -126,12 +135,13 @@ rule newton4(uint256 d, uint256 inv) {
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
     modularPolynomial(inv, 2, d * inv);
-    assert (expression - next) % B() == 0;
+    assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B();
+    assert expression == next + wrap * B(), "hint";
     mathint error = (d * inv - 1) / (2 ^ 4);
-    assert d * inv == 1 + (2 ^ 4) * error;
-    assert d * expression == 1 - (2 ^ 8) * error * error;
+    assert d * inv == 1 + (2 ^ 4) * error, "hint";
+    assert d * expression == 1 - (2 ^ 8) * error * error, "hint";
+
     assert (d * next) % (2 ^ 8) == 1;
 }
 
@@ -141,15 +151,16 @@ rule newton8(uint256 d, uint256 inv) {
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
     modularPolynomial(inv, 2, d * inv);
-    assert (expression - next) % B() == 0;
+    assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B();
+    assert expression == next + wrap * B(), "hint";
     mathint error = (d * inv - 1) / (2 ^ 8);
-    assert d * inv == 1 + (2 ^ 8) * error;
-    assert d * expression == (d * inv) * (2 - d * inv);
-    assert d * expression == 1 - (2 ^ 16) * error * error;
+    assert d * inv == 1 + (2 ^ 8) * error, "hint";
+    assert d * expression == (d * inv) * (2 - d * inv), "hint";
+    assert d * expression == 1 - (2 ^ 16) * error * error, "hint";
     mathint productQ = -error * error - d * wrap * (2 ^ 240);
-    assert d * next == 1 + (2 ^ 16) * productQ;
+    assert d * next == 1 + (2 ^ 16) * productQ, "hint";
+
     assert (d * next) % (2 ^ 16) == 1;
 }
 
@@ -159,12 +170,13 @@ rule newton16(uint256 d, uint256 inv) {
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
     modularPolynomial(inv, 2, d * inv);
-    assert (expression - next) % B() == 0;
+    assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B();
+    assert expression == next + wrap * B(), "hint";
     mathint error = (d * inv - 1) / (2 ^ 16);
-    assert d * inv == 1 + (2 ^ 16) * error;
-    assert d * expression == 1 - (2 ^ 32) * error * error;
+    assert d * inv == 1 + (2 ^ 16) * error, "hint";
+    assert d * expression == 1 - (2 ^ 32) * error * error, "hint";
+
     assert (d * next) % (2 ^ 32) == 1;
 }
 
@@ -174,12 +186,13 @@ rule newton32(uint256 d, uint256 inv) {
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
     modularPolynomial(inv, 2, d * inv);
-    assert (expression - next) % B() == 0;
+    assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B();
+    assert expression == next + wrap * B(), "hint";
     mathint error = (d * inv - 1) / (2 ^ 32);
-    assert d * inv == 1 + (2 ^ 32) * error;
-    assert d * expression == 1 - (2 ^ 64) * error * error;
+    assert d * inv == 1 + (2 ^ 32) * error, "hint";
+    assert d * expression == 1 - (2 ^ 64) * error * error, "hint";
+
     assert (d * next) % (2 ^ 64) == 1;
 }
 
@@ -189,12 +202,13 @@ rule newton64(uint256 d, uint256 inv) {
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
     modularPolynomial(inv, 2, d * inv);
-    assert (expression - next) % B() == 0;
+    assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B();
+    assert expression == next + wrap * B(), "hint";
     mathint error = (d * inv - 1) / (2 ^ 64);
-    assert d * inv == 1 + (2 ^ 64) * error;
-    assert d * expression == 1 - (2 ^ 128) * error * error;
+    assert d * inv == 1 + (2 ^ 64) * error, "hint";
+    assert d * expression == 1 - (2 ^ 128) * error * error, "hint";
+
     assert (d * next) % (2 ^ 128) == 1;
 }
 
@@ -204,13 +218,14 @@ rule newton128(uint256 d, uint256 inv) {
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
     modularPolynomial(inv, 2, d * inv);
-    assert next == expression % B();
+    assert next == expression % B(), "hint";
     mathint error = d * inv - 1;
-    assert error % (2 ^ 128) == 0;
+    assert error % (2 ^ 128) == 0, "hint";
     divisibleProducts(error, error, 2 ^ 128);
-    assert d * expression == 1 - error * error;
-    assert (d * expression) % B() == 1;
+    assert d * expression == 1 - error * error, "hint";
+    assert (d * expression) % B() == 1, "hint";
     modularPolynomial(d, expression, 0);
+
     assert (d * next) % B() == 1;
 }
 
@@ -220,6 +235,7 @@ rule stepsEquivalent(uint256 x, uint256 y, uint256 d) {
     bool actualReverted = lastReverted;
     uint256 split = mulDivSteps@withrevert(x, y, d);
     bool splitReverted = lastReverted;
+
     assert actualReverted == splitReverted;
     assert !actualReverted && !splitReverted => actual == split;
 }
@@ -229,6 +245,7 @@ rule highProduct(uint256 x, uint256 y) {
     uint256 hi;
     uint256 lo;
     hi, lo = product(x, y);
+
     assert hi == x * y / B();
     assert lo == x * y % B();
 }
@@ -239,12 +256,14 @@ rule subtractProduct(uint256 hi, uint256 lo, uint256 r) {
     uint256 newHi;
     uint256 newLo;
     newHi, newLo = subtract(hi, lo, r);
+
     assert newHi * B() + newLo == hi * B() + lo - r;
 }
 
 // Check the final unchecked multiplication returns the low word of the exact product.
 rule finalProductCorrect(uint256 lo, uint256 inv) {
     uint256 result = finalProduct(lo, inv);
+
     assert result == (lo * inv) % B();
 }
 
@@ -252,23 +271,24 @@ rule finalProductCorrect(uint256 lo, uint256 inv) {
 rule modular_polynomial(mathint a, mathint b, mathint c) {
     mathint ar = a % B();
     mathint aq = (a - ar) / B();
-    assert a == aq * B() + ar;
+    assert a == aq * B() + ar, "hint";
     mathint cr = c % B();
     mathint cq = (c - cr) / B();
-    assert c == cq * B() + cr;
+    assert c == cq * B() + cr, "hint";
     mathint u = b - cr;
     mathint ur = u % B();
     mathint uq = (u - ur) / B();
-    assert u == uq * B() + ur;
-    assert b - c == ur + (uq - cq) * B();
+    assert u == uq * B() + ur, "hint";
+    assert b - c == ur + (uq - cq) * B(), "hint";
     mathint p = ar * ur;
     mathint pr = p % B();
     mathint pq = (p - pr) / B();
-    assert p == pq * B() + pr;
+    assert p == pq * B() + pr, "hint";
     mathint k = pq + aq * (b - c) + ar * (uq - cq);
-    assert a * (b - c) == pr + B() * k;
-    assert 0 <= pr && pr < B();
-    assert (a * (b - c)) % B() == pr;
+    assert a * (b - c) == pr + B() * k, "hint";
+    assert 0 <= pr && pr < B(), "hint";
+    assert (a * (b - c)) % B() == pr, "hint";
+
     assert (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B();
 }
 
@@ -277,11 +297,12 @@ rule divisible_products(mathint a, mathint b, mathint m) {
     if (m > 0 && a % m == 0 && b % m == 0) {
         mathint aq = a / m;
         mathint bq = b / m;
-        assert a == m * aq;
-        assert b == m * bq;
-        assert a * b == (m * m) * (aq * bq);
-        assert (a * b) % (m * m) == 0;
+        assert a == m * aq, "hint";
+        assert b == m * bq, "hint";
+        assert a * b == (m * m) * (aq * bq), "hint";
+        assert (a * b) % (m * m) == 0, "hint";
     }
+
     assert m > 0 && a % m == 0 && b % m == 0 => (a * b) % (m * m) == 0;
 }
 
@@ -295,16 +316,17 @@ rule cancel_modular_inverse(mathint d, mathint q, mathint inv, mathint m) {
             && (d * inv) % m == 1
     ) {
         mathint k = (d * inv - 1) / m;
-        assert d * inv == 1 + k * m;
+        assert d * inv == 1 + k * m, "hint";
         mathint p = (d * q) % m;
         mathint w = (d * q - p) / m;
-        assert d * q == p + w * m;
+        assert d * q == p + w * m, "hint";
         mathint qr = q % m;
         mathint qw = (q - qr) / m;
-        assert q == qr + qw * m;
-        assert p * inv == q + m * (q * k - w * inv);
-        assert p * inv == qr + m * (qw + q * k - w * inv);
-        assert (p * inv) % m == qr;
+        assert q == qr + qw * m, "hint";
+        assert p * inv == q + m * (q * k - w * inv), "hint";
+        assert p * inv == qr + m * (qw + q * k - w * inv), "hint";
+        assert (p * inv) % m == qr, "hint";
     }
+
     assert d >= 0 && q >= 0 && inv >= 0 && m == B() && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m;
 }
