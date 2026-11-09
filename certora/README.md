@@ -4,10 +4,10 @@ The proof checks [`ArithmeticLib.mulDiv`](../src/morpho-chainlink/libraries/Arit
 
 ## Proof structure
 
-- [`MulDivSummary.spec`](specs/MulDivSummary.spec) checks block correctness, non-reversion, and supporting arithmetic lemmas.
-- [`MulDivSummaryBits.spec`](specs/MulDivSummaryBits.spec) checks powers of two, the inverse seed, and disjoint-digit OR with precise bitwise operations.
-- [`MulDivSummaryEquivalence.spec`](specs/MulDivSummaryEquivalence.spec) checks that the split implementation matches the real library.
-- [`MulDivSummarySteps.spec`](specs/MulDivSummarySteps.spec) composes the checked blocks into the exact revert and value properties.
+- [`MulDivLemmas.spec`](specs/MulDivLemmas.spec) checks block correctness, non-reversion, and supporting arithmetic lemmas.
+- [`BitsLemmas.spec`](specs/BitsLemmas.spec) checks powers of two, the inverse seed, and disjoint-digit OR with precise bitwise operations.
+- [`MulDivEquivSteps.spec`](specs/MulDivEquivSteps.spec) checks that the split implementation matches the real library.
+- [`MulDivSteps.spec`](specs/MulDivSteps.spec) composes the checked blocks into the exact revert and value properties.
 
 All 28 rules must pass, including every supporting lemma and non-reversion rule; no arithmetic axioms remain.
 
@@ -20,5 +20,5 @@ Additional arguments can select a specific rule.
 For example, from the repository root:
 
 ```sh
-certoraRun certora/confs/MulDivSummaryEquivalence.conf --rule stepsEquivalent
+certoraRun certora/confs/MulDivEquivSteps.conf --rule stepsEquivalent
 ```

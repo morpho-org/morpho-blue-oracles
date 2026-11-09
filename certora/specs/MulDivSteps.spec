@@ -23,39 +23,39 @@ function euclideanDivision(mathint n, mathint d) {
     assert n >= 0 && d > 0 => n - n % d == d * (n / d), "hint";
 }
 
-// Non-reverting: MulDivSummary.productNeverReverts.
+// Non-reverting: MulDivLemmas.productNeverReverts.
 function productSummary(uint256 x, uint256 y) returns (uint256, uint256) {
     uint256 hi;
     uint256 lo;
-    require hi == x * y / B() && lo == x * y % B(), "MulDivSummary.highProduct";
+    require hi == x * y / B() && lo == x * y % B(), "MulDivLemmas.highProduct";
     return (hi, lo);
 }
 
-// Non-reverting: MulDivSummary.subtractNeverReverts.
+// Non-reverting: MulDivLemmas.subtractNeverReverts.
 function subtractSummary(uint256 hi, uint256 lo, uint256 r) returns (uint256, uint256) {
     uint256 newHi;
     uint256 newLo;
-    require r <= hi * B() + lo => newHi * B() + newLo == hi * B() + lo - r, "MulDivSummary.subtractProduct";
+    require r <= hi * B() + lo => newHi * B() + newLo == hi * B() + lo - r, "MulDivLemmas.subtractProduct";
     return (newHi, newLo);
 }
 
-// Non-reverting: MulDivSummary.twosNeverReverts.
+// Non-reverting: MulDivLemmas.twosNeverReverts.
 function twosSummary(uint256 d) returns (uint256, uint256, uint256) {
     uint256 odd;
     uint256 t;
     uint256 flipped;
-    require d > 0 => wordTwosPost(d, odd, t, flipped), "MulDivSummaryBits.twosWord";
-    require d > 0 => flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0, "MulDivSummaryBits.twosPower";
+    require d > 0 => wordTwosPost(d, odd, t, flipped), "BitsLemmas.twosWord";
+    require d > 0 => flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0, "BitsLemmas.twosPower";
     oddPart = odd;
     return (odd, t, flipped);
 }
 
-// Non-reverting: MulDivSummary.shiftNeverReverts.
+// Non-reverting: MulDivLemmas.shiftNeverReverts.
 function shiftSummary(uint256 hi, uint256 lo, uint256 t, uint256 flipped) returns uint256 {
     uint256 result;
     uint256 high = finalProduct(hi, flipped);
-    require wordShiftPre(t, flipped) && (flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0) => result == lo / t + high, "MulDivSummary.shiftWord";
-    require wordShiftPre(t, flipped) => lo / t + (hi * flipped) % B() == ((hi * B() + lo) / t) % B(), "MulDivSummary.shiftArithmetic";
+    require wordShiftPre(t, flipped) && (flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0) => result == lo / t + high, "MulDivLemmas.shiftWord";
+    require wordShiftPre(t, flipped) => lo / t + (hi * flipped) % B() == ((hi * B() + lo) / t) % B(), "MulDivLemmas.shiftArithmetic";
     assert originalD >= 0 && quotient >= 0 && t > 0 && originalD % t == 0 => (originalD * quotient) / t == (originalD / t) * quotient, "hint";
     assert hi * B() + lo == originalD * quotient, "hint";
     assert result == ((hi * B() + lo) / t) % B(), "hint";
@@ -63,31 +63,31 @@ function shiftSummary(uint256 hi, uint256 lo, uint256 t, uint256 flipped) return
     return result;
 }
 
-// Non-reverting: MulDivSummary.seedNeverReverts.
+// Non-reverting: MulDivLemmas.seedNeverReverts.
 function seedSummary(uint256 d) returns uint256 {
     uint256 inv;
     uint256 residue = seedProduct(d, inv);
-    require d % 2 == 1 => residue == 1, "MulDivSummaryBits.seedWord";
+    require d % 2 == 1 => residue == 1, "BitsLemmas.seedWord";
     return inv;
 }
 
-// Non-reverting: MulDivSummary.finalProductNeverReverts.
+// Non-reverting: MulDivLemmas.finalProductNeverReverts.
 function finalSummary(uint256 lo, uint256 inv) returns uint256 {
     uint256 result;
-    require result == (lo * inv) % B(), "MulDivSummary.finalProductCorrect";
-    require oddPart >= 0 && quotient >= 0 && inv >= 0 && B() == B() && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivSummary.cancelModularInverse";
+    require result == (lo * inv) % B(), "MulDivLemmas.finalProductCorrect";
+    require oddPart >= 0 && quotient >= 0 && inv >= 0 && B() == B() && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivLemmas.cancelModularInverse";
     return result;
 }
 
-// Non-reverting: MulDivSummary.newtonNeverReverts.
+// Non-reverting: MulDivLemmas.newtonNeverReverts.
 function newtonSummary(uint256 d, uint256 inv) returns uint256 {
     uint256 next;
-    require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1 => (d * next) % (2 ^ 8) == 1, "MulDivSummary.newton4";
-    require d % 2 == 1 && (d * inv) % (2 ^ 8) == 1 => (d * next) % (2 ^ 16) == 1, "MulDivSummary.newton8";
-    require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1 => (d * next) % (2 ^ 32) == 1, "MulDivSummary.newton16";
-    require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1 => (d * next) % (2 ^ 64) == 1, "MulDivSummary.newton32";
-    require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1 => (d * next) % (2 ^ 128) == 1, "MulDivSummary.newton64";
-    require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1 => (d * next) % (2 ^ 256) == 1, "MulDivSummary.newton128";
+    require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1 => (d * next) % (2 ^ 8) == 1, "MulDivLemmas.newton4";
+    require d % 2 == 1 && (d * inv) % (2 ^ 8) == 1 => (d * next) % (2 ^ 16) == 1, "MulDivLemmas.newton8";
+    require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1 => (d * next) % (2 ^ 32) == 1, "MulDivLemmas.newton16";
+    require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1 => (d * next) % (2 ^ 64) == 1, "MulDivLemmas.newton32";
+    require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1 => (d * next) % (2 ^ 128) == 1, "MulDivLemmas.newton64";
+    require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1 => (d * next) % (2 ^ 256) == 1, "MulDivLemmas.newton128";
     return next;
 }
 

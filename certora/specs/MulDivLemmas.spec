@@ -56,8 +56,8 @@ rule twosNeverReverts(env e, uint256 d) {
 // Check the real shift block using disjoint digits and explicit division witnesses.
 rule shiftWord(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
     require wordShiftPre(t, flipped), "The divisor divides the word modulus and the flip is exact";
-    require flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0, "MulDivSummaryBits.twosPower";
-    require flipped > 0 && (flipped & assert_uint256(flipped - 1)) == 0 && assert_uint256(lo / t) < flipped && assert_uint256((hi * flipped) % B()) % flipped == 0 => (assert_uint256(lo / t) | assert_uint256((hi * flipped) % B())) == assert_uint256(lo / t) + assert_uint256((hi * flipped) % B()), "MulDivSummaryBits.powerOr";
+    require flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0, "BitsLemmas.twosPower";
+    require flipped > 0 && (flipped & assert_uint256(flipped - 1)) == 0 && assert_uint256(lo / t) < flipped && assert_uint256((hi * flipped) % B()) % flipped == 0 => (assert_uint256(lo / t) | assert_uint256((hi * flipped) % B())) == assert_uint256(lo / t) + assert_uint256((hi * flipped) % B()), "BitsLemmas.powerOr";
 
     uint256 high = finalProduct(hi, flipped);
     uint256 result = shift(hi, lo, t, flipped);
@@ -110,7 +110,7 @@ rule newton4(uint256 d, uint256 inv) {
 
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomialSummary(inv, 2, d * inv);
+    modularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B(), "hint";
@@ -127,7 +127,7 @@ rule newton8(uint256 d, uint256 inv) {
 
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomialSummary(inv, 2, d * inv);
+    modularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B(), "hint";
@@ -147,7 +147,7 @@ rule newton16(uint256 d, uint256 inv) {
 
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomialSummary(inv, 2, d * inv);
+    modularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B(), "hint";
@@ -164,7 +164,7 @@ rule newton32(uint256 d, uint256 inv) {
 
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomialSummary(inv, 2, d * inv);
+    modularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B(), "hint";
@@ -181,7 +181,7 @@ rule newton64(uint256 d, uint256 inv) {
 
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomialSummary(inv, 2, d * inv);
+    modularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
     mathint wrap = (expression - next) / B();
     assert expression == next + wrap * B(), "hint";
@@ -196,11 +196,11 @@ rule newton64(uint256 d, uint256 inv) {
 rule newton128(uint256 d, uint256 inv) {
     mathint error = d * inv - 1;
     require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1, "The preceding iteration supplies the current inverse precision";
-    require 2 ^ 128 > 0 && error % (2 ^ 128) == 0 && error % (2 ^ 128) == 0 => (error * error) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivSummary.divisibleProducts";
+    require 2 ^ 128 > 0 && error % (2 ^ 128) == 0 && error % (2 ^ 128) == 0 => (error * error) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivLemmas.divisibleProducts";
 
     uint256 next = newton(d, inv);
     mathint expression = inv * (2 - d * inv);
-    modularPolynomialSummary(inv, 2, d * inv);
+    modularPolynomialLemma(inv, 2, d * inv);
     assert next == expression % B(), "hint";
     assert error % (2 ^ 128) == 0, "hint";
     mathint errorQ = error / (2 ^ 128);
@@ -209,7 +209,7 @@ rule newton128(uint256 d, uint256 inv) {
     assert (error * error) % B() == 0, "hint";
     assert d * expression == 1 - error * error, "hint";
     assert (d * expression) % B() == 1, "hint";
-    modularPolynomialSummary(d, expression, 0);
+    modularPolynomialLemma(d, expression, 0);
 
     assert (d * next) % B() == 1;
 }
@@ -239,8 +239,8 @@ rule finalProductNeverReverts(env e, uint256 lo, uint256 inv) {
 
 /// Lemmas
 
-function modularPolynomialSummary(mathint a, mathint b, mathint c) {
-    require (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B(), "MulDivSummary.modularPolynomial";
+function modularPolynomialLemma(mathint a, mathint b, mathint c) {
+    require (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B(), "MulDivLemmas.modularPolynomial";
 }
 
 // Check modular normalization for the word modulus using integer division witnesses.
