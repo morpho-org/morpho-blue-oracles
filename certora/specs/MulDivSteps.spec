@@ -19,10 +19,6 @@ persistent ghost mathint quotient;
 
 persistent ghost mathint oddPart;
 
-function euclideanDivision(mathint n, mathint d) {
-    assert n >= 0 && d > 0 => n - n % d == d * (n / d), "hint";
-}
-
 // Non-reverting: MulDivLemmas.productNeverReverts.
 function productSummary(uint256 x, uint256 y) returns (uint256, uint256) {
     uint256 hi;
@@ -95,7 +91,7 @@ function newtonSummary(uint256 d, uint256 inv) returns uint256 {
 rule stepsReverts(uint256 x, uint256 y, uint256 d) {
     originalD = d;
     quotient = d == 0 ? 0 : x * y / d;
-    euclideanDivision(x * y, d);
+    assert x * y >= 0 && d > 0 => x * y - (x * y) % d == d * (x * y / d), "hint";
     mulDivSteps@withrevert(x, y, d);
 
     assert lastReverted <=> d == 0 || x * y / d >= B();
@@ -105,7 +101,7 @@ rule stepsReverts(uint256 x, uint256 y, uint256 d) {
 rule stepsValue(uint256 x, uint256 y, uint256 d) {
     originalD = d;
     quotient = d == 0 ? 0 : x * y / d;
-    euclideanDivision(x * y, d);
+    assert x * y >= 0 && d > 0 => x * y - (x * y) % d == d * (x * y / d), "hint";
     uint256 result = mulDivSteps@withrevert(x, y, d);
 
     assert !lastReverted => d != 0 && result == x * y / d;
