@@ -20,5 +20,5 @@ Additional arguments can select a specific rule.
 For example, from the repository root:
 
 ```sh
-certoraRun certora/confs/MulDivEquivSteps.conf --rule stepsEquivalent
+certoraRun certora/confs/MulDivEquivSteps.conf --rule mulDivStepsEquivalent
 ```

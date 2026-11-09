@@ -3,7 +3,7 @@
 
 import "../helpers/MulDiv.spec";
 
-/// Powers of two
+/// twos
 
 // Check extraction and flip with word-sized predicates and exact bitwise operations.
 rule twosWord(uint256 d) {
@@ -29,7 +29,7 @@ rule twosPower(uint256 d) {
     assert flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0;
 }
 
-/// Seed
+/// seed
 
 // Check the XOR seed at four-bit precision using exact bitwise operations.
 rule seedWord(uint256 d) {
@@ -41,10 +41,10 @@ rule seedWord(uint256 d) {
     assert residue == 1;
 }
 
-/// Lemmas
+/// shift
 
 // Check the generic OR identity for disjoint binary digits.
-rule powerOr(uint256 a, uint256 b, uint256 p) {
+rule shiftDisjointOr(uint256 a, uint256 b, uint256 p) {
     require p > 0 && (p & assert_uint256(p - 1)) == 0;
     require a < p && b % p == 0;
 

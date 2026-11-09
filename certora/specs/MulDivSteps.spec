@@ -4,13 +4,13 @@
 import "../helpers/MulDiv.spec";
 
 methods {
-    function MulDivHarness._product(uint256 x, uint256 y) internal returns (uint256, uint256) => productSummary(x, y);
-    function MulDivHarness._subtract(uint256 hi, uint256 lo, uint256 r) internal returns (uint256, uint256) => subtractSummary(hi, lo, r);
-    function MulDivHarness._twos(uint256 d) internal returns (uint256, uint256, uint256) => twosSummary(d);
-    function MulDivHarness._shift(uint256 hi, uint256 lo, uint256 t, uint256 flipped) internal returns (uint256) => shiftSummary(hi, lo, t, flipped);
-    function MulDivHarness._seed(uint256 d) internal returns (uint256) => seedSummary(d);
-    function MulDivHarness._newton(uint256 d, uint256 inv) internal returns (uint256) => newtonSummary(d, inv);
-    function MulDivHarness._final(uint256 lo, uint256 inv) internal returns (uint256) => finalSummary(lo, inv);
+    function MulDivHarness.product(uint256 x, uint256 y) internal returns (uint256, uint256) => productSummary(x, y);
+    function MulDivHarness.subtract(uint256 hi, uint256 lo, uint256 r) internal returns (uint256, uint256) => subtractSummary(hi, lo, r);
+    function MulDivHarness.twos(uint256 d) internal returns (uint256, uint256, uint256) => twosSummary(d);
+    function MulDivHarness.shift(uint256 hi, uint256 lo, uint256 t, uint256 flipped) internal returns (uint256) => shiftSummary(hi, lo, t, flipped);
+    function MulDivHarness.seed(uint256 d) internal returns (uint256) => seedSummary(d);
+    function MulDivHarness.newton(uint256 d, uint256 inv) internal returns (uint256) => newtonSummary(d, inv);
+    function MulDivHarness.finalProduct(uint256 lo, uint256 inv) internal returns (uint256) => finalSummary(lo, inv);
 }
 
 persistent ghost mathint originalD;
@@ -23,7 +23,7 @@ persistent ghost mathint oddPart;
 function productSummary(uint256 x, uint256 y) returns (uint256, uint256) {
     uint256 hi;
     uint256 lo;
-    require hi == x * y / B() && lo == x * y % B(), "MulDivLemmas.highProduct";
+    require hi == x * y / B() && lo == x * y % B(), "MulDivLemmas.productCorrect";
     return (hi, lo);
 }
 
@@ -31,7 +31,7 @@ function productSummary(uint256 x, uint256 y) returns (uint256, uint256) {
 function subtractSummary(uint256 hi, uint256 lo, uint256 r) returns (uint256, uint256) {
     uint256 newHi;
     uint256 newLo;
-    require r <= hi * B() + lo => newHi * B() + newLo == hi * B() + lo - r, "MulDivLemmas.subtractProduct";
+    require r <= hi * B() + lo => newHi * B() + newLo == hi * B() + lo - r, "MulDivLemmas.subtractCorrect";
     return (newHi, newLo);
 }
 
@@ -71,7 +71,7 @@ function seedSummary(uint256 d) returns uint256 {
 function finalSummary(uint256 lo, uint256 inv) returns uint256 {
     uint256 result;
     require result == (lo * inv) % B(), "MulDivLemmas.finalProductCorrect";
-    require oddPart >= 0 && quotient >= 0 && inv >= 0 && B() == B() && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivLemmas.cancelModularInverse";
+    require oddPart >= 0 && quotient >= 0 && inv >= 0 && B() == B() && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivLemmas.finalProductCancelInverse";
     return result;
 }
 
@@ -87,8 +87,10 @@ function newtonSummary(uint256 d, uint256 inv) returns uint256 {
     return next;
 }
 
+/// mulDivSteps
+
 // Check the split implementation's exact revert condition using the separately checked block lemmas.
-rule stepsReverts(uint256 x, uint256 y, uint256 d) {
+rule mulDivStepsReverts(uint256 x, uint256 y, uint256 d) {
     originalD = d;
     quotient = d == 0 ? 0 : x * y / d;
     assert x * y >= 0 && d > 0 => x * y - (x * y) % d == d * (x * y / d), "hint";
@@ -98,7 +100,7 @@ rule stepsReverts(uint256 x, uint256 y, uint256 d) {
 }
 
 // Check that the summarized blocks return the exact bounded floor quotient.
-rule stepsValue(uint256 x, uint256 y, uint256 d) {
+rule mulDivStepsValue(uint256 x, uint256 y, uint256 d) {
     originalD = d;
     quotient = d == 0 ? 0 : x * y / d;
     assert x * y >= 0 && d > 0 => x * y - (x * y) % d == d * (x * y / d), "hint";
