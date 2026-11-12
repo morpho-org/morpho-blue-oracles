@@ -316,28 +316,22 @@ rule finalProductCorrect(uint256 lo, uint256 inv) {
 }
 
 // Check inverse cancellation for the word modulus using integer division witnesses.
-rule finalProductCancelInverse(mathint d, mathint q, mathint inv, mathint m) {
-    if (
-        d >= 0
-            && q >= 0
-            && inv >= 0
-            && m == B()
-            && (d * inv) % m == 1
-    ) {
-        mathint k = (d * inv - 1) / m;
-        assert d * inv == 1 + k * m, "hint";
-        mathint p = (d * q) % m;
-        mathint w = (d * q - p) / m;
-        assert d * q == p + w * m, "hint";
-        mathint qr = q % m;
-        mathint qw = (q - qr) / m;
-        assert q == qr + qw * m, "hint";
-        assert p * inv == q + m * (q * k - w * inv), "hint";
-        assert p * inv == qr + m * (qw + q * k - w * inv), "hint";
-        assert (p * inv) % m == qr, "hint";
-    }
+rule finalProductCancelInverse(mathint d, mathint q, mathint inv) {
+    require d >= 0 && q >= 0 && inv >= 0, "assumption";
+    require (d * inv) % B() == 1, "assumption";
 
-    assert d >= 0 && q >= 0 && inv >= 0 && m == B() && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m;
+    mathint k = (d * inv - 1) / B();
+    assert d * inv == 1 + k * B(), "hint";
+    mathint p = (d * q) % B();
+    mathint w = (d * q - p) / B();
+    assert d * q == p + w * B(), "hint";
+    mathint qr = q % B();
+    mathint qw = (q - qr) / B();
+    assert q == qr + qw * B(), "hint";
+    assert p * inv == q + B() * (q * k - w * inv), "hint";
+    assert p * inv == qr + B() * (qw + q * k - w * inv), "hint";
+
+    assert (p * inv) % B() == qr;
 }
 
 // Check the final product never reverts with zero message value.

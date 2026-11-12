@@ -83,7 +83,7 @@ function newtonSummary(uint256 d, uint256 inv) returns uint256 {
 function finalSummary(uint256 lo, uint256 inv) returns uint256 {
     uint256 result;
     require result == (lo * inv) % B(), "MulDivLemmas.finalProductCorrect";
-    require oddPart >= 0 && quotient >= 0 && inv >= 0 && B() == B() && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivLemmas.finalProductCancelInverse";
+    require oddPart >= 0 && quotient >= 0 && inv >= 0 && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivLemmas.finalProductCancelInverse";
     return result;
 }
 
