@@ -62,7 +62,7 @@ function shiftSummary(uint256 hi, uint256 lo, uint256 t, uint256 flipped) return
 // Non-reverting: MulDivLemmas.seedNeverReverts.
 function seedSummary(uint256 d) returns uint256 {
     uint256 inv;
-    uint256 residue = seedProduct(d, inv);
+    mathint residue = mulmod(d, inv, 16);
     require d % 2 == 1 => residue == 1, "BitsLemmas.seedWord";
     return inv;
 }

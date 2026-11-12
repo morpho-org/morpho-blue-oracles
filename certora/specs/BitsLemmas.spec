@@ -36,7 +36,7 @@ rule seedWord(uint256 d) {
     require d % 2 == 1, "The inverse seed is used only for odd denominators";
 
     uint256 inv = seed(d);
-    uint256 residue = seedProduct(d, inv);
+    mathint residue = mulmod(d, inv, 16);
 
     assert residue == 1;
 }

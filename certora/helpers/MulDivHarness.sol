@@ -30,10 +30,6 @@ contract MulDivHarness {
         }
     }
 
-    function seedProduct(uint256 denominator, uint256 inverse_) external pure returns (uint256) {
-        return mulmod(denominator, inverse_, 16);
-    }
-
     function product(uint256 x, uint256 y) public pure returns (uint256 prod1, uint256 prod0) {
         unchecked {
             prod0 = x * y;
