@@ -139,7 +139,7 @@ rule seedNeverReverts(env e, uint256 d) {
 
 // Check Newton precision doubling from 4 to 8 bits with explicit error and wrap witnesses.
 rule newton4(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1, "The preceding iteration supplies the current inverse precision";
+    require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1, "assumption";
 
     uint256 next = newton(d, inv);
 
@@ -157,7 +157,7 @@ rule newton4(uint256 d, uint256 inv) {
 
 // Check Newton precision doubling from 8 to 16 bits with explicit error and wrap witnesses.
 rule newton8(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 8) == 1, "The preceding iteration supplies the current inverse precision";
+    require d % 2 == 1 && (d * inv) % (2 ^ 8) == 1, "assumption";
 
     uint256 next = newton(d, inv);
 
@@ -178,7 +178,7 @@ rule newton8(uint256 d, uint256 inv) {
 
 // Check Newton precision doubling from 16 to 32 bits with explicit error and wrap witnesses.
 rule newton16(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1, "The preceding iteration supplies the current inverse precision";
+    require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1, "assumption";
 
     uint256 next = newton(d, inv);
 
@@ -196,7 +196,7 @@ rule newton16(uint256 d, uint256 inv) {
 
 // Check Newton precision doubling from 32 to 64 bits with explicit error and wrap witnesses.
 rule newton32(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1, "The preceding iteration supplies the current inverse precision";
+    require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1, "assumption";
 
     uint256 next = newton(d, inv);
 
@@ -214,7 +214,7 @@ rule newton32(uint256 d, uint256 inv) {
 
 // Check Newton precision doubling from 64 to 128 bits with explicit error and wrap witnesses.
 rule newton64(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1, "The preceding iteration supplies the current inverse precision";
+    require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1, "assumption";
 
     uint256 next = newton(d, inv);
 
@@ -232,8 +232,9 @@ rule newton64(uint256 d, uint256 inv) {
 
 // Check Newton precision doubling from 128 to 256 bits by squaring the divisible error.
 rule newton128(uint256 d, uint256 inv) {
+    require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1, "assumption";
+
     mathint error = d * inv - 1;
-    require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1, "The preceding iteration supplies the current inverse precision";
     require 2 ^ 128 > 0 && error % (2 ^ 128) == 0 && error % (2 ^ 128) == 0 => (error * error) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivLemmas.newtonDivisibility(error, error, 2^128)";
 
     uint256 next = newton(d, inv);
@@ -251,6 +252,20 @@ rule newton128(uint256 d, uint256 inv) {
     newtonModularPolynomialLemma(d, expression, 0);
 
     assert (d * next) % B() == 1;
+}
+
+// Check that multiplying two multiples of m produces a multiple of m squared.
+rule newtonDivisibility(mathint a, mathint b, mathint m) {
+    if (m > 0 && a % m == 0 && b % m == 0) {
+        mathint aq = a / m;
+        mathint bq = b / m;
+        assert a == m * aq, "hint";
+        assert b == m * bq, "hint";
+        assert a * b == (m * m) * (aq * bq), "hint";
+        assert (a * b) % (m * m) == 0, "hint";
+    }
+
+    assert m > 0 && a % m == 0 && b % m == 0 => (a * b) % (m * m) == 0;
 }
 
 function newtonModularPolynomialLemma(mathint a, mathint b, mathint c) {
@@ -280,20 +295,6 @@ rule newtonModularPolynomial(mathint a, mathint b, mathint c) {
     assert (a * (b - c)) % B() == pr, "hint";
 
     assert (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B();
-}
-
-// Check that multiplying two multiples of m produces a multiple of m squared.
-rule newtonDivisibility(mathint a, mathint b, mathint m) {
-    if (m > 0 && a % m == 0 && b % m == 0) {
-        mathint aq = a / m;
-        mathint bq = b / m;
-        assert a == m * aq, "hint";
-        assert b == m * bq, "hint";
-        assert a * b == (m * m) * (aq * bq), "hint";
-        assert (a * b) % (m * m) == 0, "hint";
-    }
-
-    assert m > 0 && a % m == 0 && b % m == 0 => (a * b) % (m * m) == 0;
 }
 
 // Check the Newton update never reverts with zero message value.
