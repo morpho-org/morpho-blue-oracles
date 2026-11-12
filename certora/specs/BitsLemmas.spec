@@ -33,7 +33,7 @@ rule twosPower(uint256 d) {
 
 // Check the XOR seed at four-bit precision using exact bitwise operations.
 rule seedWord(uint256 d) {
-    require d % 2 == 1, "The inverse seed is used only for odd denominators";
+    require d % 2 == 1, "assumption";
 
     uint256 inv = seed(d);
     mathint residue = mulmod(d, inv, 16);
@@ -45,8 +45,8 @@ rule seedWord(uint256 d) {
 
 // Check the generic OR identity for disjoint binary digits.
 rule shiftDisjointOr(uint256 a, uint256 b, uint256 p) {
-    require p > 0 && (p & assert_uint256(p - 1)) == 0;
-    require a < p && b % p == 0;
+    require p > 0 && (p & assert_uint256(p - 1)) == 0, "assumption";
+    require a < p && b % p == 0, "assumption";
 
     assert (a | b) == a + b;
 }

@@ -11,8 +11,7 @@ rule productCorrect(uint256 x, uint256 y) {
     uint256 lo;
     hi, lo = product(x, y);
 
-    assert hi == x * y / B();
-    assert lo == x * y % B();
+    assert hi == x * y / B() && lo == x * y % B();
 }
 
 // Check the product block never reverts with zero message value.
@@ -26,13 +25,11 @@ rule productNeverReverts(env e, uint256 x, uint256 y) {
 
 // Check subtractCorrect: borrowing subtracts the remainder from the two-limb number exactly.
 rule subtractCorrect(uint256 hi, uint256 lo, uint256 r) {
-    require r <= hi * B() + lo, "assumption";
-
     uint256 newHi;
     uint256 newLo;
     newHi, newLo = subtract(hi, lo, r);
 
-    assert newHi * B() + newLo == hi * B() + lo - r;
+    assert r <= hi * B() + lo => newHi * B() + newLo == hi * B() + lo - r;
 }
 
 // Check the subtraction block never reverts with zero message value.
@@ -55,8 +52,8 @@ rule twosNeverReverts(env e, uint256 d) {
 
 // Check the real shift block using disjoint digits and explicit division witnesses.
 rule shiftWord(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
-    require wordShiftPre(t, flipped), "The divisor divides the word modulus and the flip is exact";
-    require flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0, "BitsLemmas.twosPower";
+    require wordShiftPre(t, flipped), "assumption";
+    require flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0, "assumption";
 
     require flipped > 0 && (flipped & assert_uint256(flipped - 1)) == 0 && assert_uint256(lo / t) < flipped && assert_uint256((hi * flipped) % B()) % flipped == 0 => (assert_uint256(lo / t) | assert_uint256((hi * flipped) % B())) == assert_uint256(lo / t) + assert_uint256((hi * flipped) % B()), "BitsLemmas.shiftDisjointOr(lo/t, (hi * flipped) % B, flipped)";
 
@@ -90,7 +87,7 @@ rule shiftWord(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
 
 // Check shift reconstruction and no-wrap arithmetic without bitwise operations or axioms.
 rule shiftArithmetic(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
-    require wordShiftPre(t, flipped);
+    require wordShiftPre(t, flipped), "assumption";
 
     mathint u = max_uint256 / t + 1;
     assert B() == u * t, "hint";
@@ -237,7 +234,7 @@ rule newton64(uint256 d, uint256 inv) {
 rule newton128(uint256 d, uint256 inv) {
     mathint error = d * inv - 1;
     require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1, "The preceding iteration supplies the current inverse precision";
-    require 2 ^ 128 > 0 && error % (2 ^ 128) == 0 && error % (2 ^ 128) == 0 => (error * error) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivLemmas.newtonDivisibility";
+    require 2 ^ 128 > 0 && error % (2 ^ 128) == 0 && error % (2 ^ 128) == 0 => (error * error) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivLemmas.newtonDivisibility(error, error, 2^128)";
 
     uint256 next = newton(d, inv);
 
@@ -331,7 +328,7 @@ rule finalProductCancelInverse(mathint d, mathint q, mathint inv) {
     assert p * inv == q + B() * (q * k - w * inv), "hint";
     assert p * inv == qr + B() * (qw + q * k - w * inv), "hint";
 
-    assert (p * inv) % B() == qr;
+    assert ((d * q) % B() * inv) % B() == q % B();
 }
 
 // Check the final product never reverts with zero message value.
