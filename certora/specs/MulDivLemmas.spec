@@ -17,7 +17,7 @@ rule productCorrect(uint256 x, uint256 y) {
 
 // Check the product block never reverts with zero message value.
 rule productNeverReverts(env e, uint256 x, uint256 y) {
-    require e.msg.value == 0;
+    require e.msg.value == 0, "assume no msg.value";
     product@withrevert(e, x, y);
     assert !lastReverted;
 }
@@ -26,7 +26,7 @@ rule productNeverReverts(env e, uint256 x, uint256 y) {
 
 // Check subtractCorrect: borrowing subtracts the remainder from the two-limb number exactly.
 rule subtractCorrect(uint256 hi, uint256 lo, uint256 r) {
-    require r <= hi * B() + lo;
+    require r <= hi * B() + lo, "assumption";
 
     uint256 newHi;
     uint256 newLo;
@@ -37,7 +37,7 @@ rule subtractCorrect(uint256 hi, uint256 lo, uint256 r) {
 
 // Check the subtraction block never reverts with zero message value.
 rule subtractNeverReverts(env e, uint256 hi, uint256 lo, uint256 r) {
-    require e.msg.value == 0;
+    require e.msg.value == 0, "assume no msg.value";
     subtract@withrevert(e, hi, lo, r);
     assert !lastReverted;
 }
@@ -46,7 +46,7 @@ rule subtractNeverReverts(env e, uint256 hi, uint256 lo, uint256 r) {
 
 // Check the powers-of-two block never reverts with zero message value.
 rule twosNeverReverts(env e, uint256 d) {
-    require e.msg.value == 0;
+    require e.msg.value == 0, "assume no msg.value";
     twos@withrevert(e, d);
     assert !lastReverted;
 }
@@ -57,10 +57,12 @@ rule twosNeverReverts(env e, uint256 d) {
 rule shiftWord(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
     require wordShiftPre(t, flipped), "The divisor divides the word modulus and the flip is exact";
     require flipped == 0 || (flipped & assert_uint256(flipped - 1)) == 0, "BitsLemmas.twosPower";
-    require flipped > 0 && (flipped & assert_uint256(flipped - 1)) == 0 && assert_uint256(lo / t) < flipped && assert_uint256((hi * flipped) % B()) % flipped == 0 => (assert_uint256(lo / t) | assert_uint256((hi * flipped) % B())) == assert_uint256(lo / t) + assert_uint256((hi * flipped) % B()), "BitsLemmas.shiftDisjointOr";
+
+    require flipped > 0 && (flipped & assert_uint256(flipped - 1)) == 0 && assert_uint256(lo / t) < flipped && assert_uint256((hi * flipped) % B()) % flipped == 0 => (assert_uint256(lo / t) | assert_uint256((hi * flipped) % B())) == assert_uint256(lo / t) + assert_uint256((hi * flipped) % B()), "BitsLemmas.shiftDisjointOr(lo/t, (hi * flipped) % B, flipped)";
 
     uint256 high = finalProduct(hi, flipped);
     uint256 result = shift(hi, lo, t, flipped);
+
     assert high == (hi * flipped) % B(), "hint";
     assert result == (assert_uint256(lo / t) | high), "hint";
     mathint u = max_uint256 / t + 1;
@@ -84,13 +86,6 @@ rule shiftWord(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
     assert lo / t + high < B(), "hint";
 
     assert result == lo / t + high;
-}
-
-// Check the shift block never reverts with zero message value.
-rule shiftNeverReverts(env e, uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
-    require e.msg.value == 0;
-    shift@withrevert(e, hi, lo, t, flipped);
-    assert !lastReverted;
 }
 
 // Check shift reconstruction and no-wrap arithmetic without bitwise operations or axioms.
@@ -127,11 +122,18 @@ rule shiftArithmetic(uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
     assert lo / t + (hi * flipped) % B() == ((hi * B() + lo) / t) % B();
 }
 
+// Check the shift block never reverts with zero message value.
+rule shiftNeverReverts(env e, uint256 hi, uint256 lo, uint256 t, uint256 flipped) {
+    require e.msg.value == 0, "assume no msg.value";
+    shift@withrevert(e, hi, lo, t, flipped);
+    assert !lastReverted;
+}
+
 /// seed
 
 // Check the inverse seed never reverts with zero message value.
 rule seedNeverReverts(env e, uint256 d) {
-    require e.msg.value == 0;
+    require e.msg.value == 0, "assume no msg.value";
     seed@withrevert(e, d);
     assert !lastReverted;
 }
@@ -143,6 +145,7 @@ rule newton4(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1, "The preceding iteration supplies the current inverse precision";
 
     uint256 next = newton(d, inv);
+
     mathint expression = inv * (2 - d * inv);
     newtonModularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
@@ -160,6 +163,7 @@ rule newton8(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 8) == 1, "The preceding iteration supplies the current inverse precision";
 
     uint256 next = newton(d, inv);
+
     mathint expression = inv * (2 - d * inv);
     newtonModularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
@@ -180,6 +184,7 @@ rule newton16(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1, "The preceding iteration supplies the current inverse precision";
 
     uint256 next = newton(d, inv);
+
     mathint expression = inv * (2 - d * inv);
     newtonModularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
@@ -197,6 +202,7 @@ rule newton32(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1, "The preceding iteration supplies the current inverse precision";
 
     uint256 next = newton(d, inv);
+
     mathint expression = inv * (2 - d * inv);
     newtonModularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
@@ -214,6 +220,7 @@ rule newton64(uint256 d, uint256 inv) {
     require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1, "The preceding iteration supplies the current inverse precision";
 
     uint256 next = newton(d, inv);
+
     mathint expression = inv * (2 - d * inv);
     newtonModularPolynomialLemma(inv, 2, d * inv);
     assert (expression - next) % B() == 0, "hint";
@@ -233,6 +240,7 @@ rule newton128(uint256 d, uint256 inv) {
     require 2 ^ 128 > 0 && error % (2 ^ 128) == 0 && error % (2 ^ 128) == 0 => (error * error) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivLemmas.newtonDivisibility";
 
     uint256 next = newton(d, inv);
+
     mathint expression = inv * (2 - d * inv);
     newtonModularPolynomialLemma(inv, 2, d * inv);
     assert next == expression % B(), "hint";
@@ -246,13 +254,6 @@ rule newton128(uint256 d, uint256 inv) {
     newtonModularPolynomialLemma(d, expression, 0);
 
     assert (d * next) % B() == 1;
-}
-
-// Check the Newton update never reverts with zero message value.
-rule newtonNeverReverts(env e, uint256 d, uint256 inv) {
-    require e.msg.value == 0;
-    newton@withrevert(e, d, inv);
-    assert !lastReverted;
 }
 
 function newtonModularPolynomialLemma(mathint a, mathint b, mathint c) {
@@ -298,6 +299,13 @@ rule newtonDivisibility(mathint a, mathint b, mathint m) {
     assert m > 0 && a % m == 0 && b % m == 0 => (a * b) % (m * m) == 0;
 }
 
+// Check the Newton update never reverts with zero message value.
+rule newtonNeverReverts(env e, uint256 d, uint256 inv) {
+    require e.msg.value == 0, "assume no msg.value";
+    newton@withrevert(e, d, inv);
+    assert !lastReverted;
+}
+
 /// finalProduct
 
 // Check the final unchecked multiplication returns the low word of the exact product.
@@ -305,13 +313,6 @@ rule finalProductCorrect(uint256 lo, uint256 inv) {
     uint256 result = finalProduct(lo, inv);
 
     assert result == (lo * inv) % B();
-}
-
-// Check the final product never reverts with zero message value.
-rule finalProductNeverReverts(env e, uint256 lo, uint256 inv) {
-    require e.msg.value == 0;
-    finalProduct@withrevert(e, lo, inv);
-    assert !lastReverted;
 }
 
 // Check inverse cancellation for the word modulus using integer division witnesses.
@@ -337,4 +338,11 @@ rule finalProductCancelInverse(mathint d, mathint q, mathint inv, mathint m) {
     }
 
     assert d >= 0 && q >= 0 && inv >= 0 && m == B() && (d * inv) % m == 1 => (((d * q) % m) * inv) % m == q % m;
+}
+
+// Check the final product never reverts with zero message value.
+rule finalProductNeverReverts(env e, uint256 lo, uint256 inv) {
+    require e.msg.value == 0, "assume no msg.value";
+    finalProduct@withrevert(e, lo, inv);
+    assert !lastReverted;
 }

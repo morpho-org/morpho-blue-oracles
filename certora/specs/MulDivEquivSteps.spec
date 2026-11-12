@@ -3,8 +3,6 @@
 
 import "../helpers/MulDiv.spec";
 
-/// mulDivSteps
-
 // Check that the split implementation has the same revert and return behavior without summaries.
 rule mulDivStepsEquivalent(uint256 x, uint256 y, uint256 d) {
     uint256 actual = mulDiv@withrevert(x, y, d);

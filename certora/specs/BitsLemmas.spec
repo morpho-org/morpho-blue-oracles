@@ -7,7 +7,7 @@ import "../helpers/MulDiv.spec";
 
 // Check extraction and flip with word-sized predicates and exact bitwise operations.
 rule twosWord(uint256 d) {
-    require d > 0, "The slow path has a positive denominator";
+    require d > 0, "assumption";
 
     uint256 odd;
     uint256 t;
@@ -19,7 +19,7 @@ rule twosWord(uint256 d) {
 
 // Check that the real twos block supplies a zero or power-of-two flipped word.
 rule twosPower(uint256 d) {
-    require d > 0, "The slow path has a positive denominator";
+    require d > 0, "assumption";
 
     uint256 odd;
     uint256 t;

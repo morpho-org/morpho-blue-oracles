@@ -67,14 +67,6 @@ function seedSummary(uint256 d) returns uint256 {
     return inv;
 }
 
-// Non-reverting: MulDivLemmas.finalProductNeverReverts.
-function finalSummary(uint256 lo, uint256 inv) returns uint256 {
-    uint256 result;
-    require result == (lo * inv) % B(), "MulDivLemmas.finalProductCorrect";
-    require oddPart >= 0 && quotient >= 0 && inv >= 0 && B() == B() && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivLemmas.finalProductCancelInverse";
-    return result;
-}
-
 // Non-reverting: MulDivLemmas.newtonNeverReverts.
 function newtonSummary(uint256 d, uint256 inv) returns uint256 {
     uint256 next;
@@ -83,8 +75,16 @@ function newtonSummary(uint256 d, uint256 inv) returns uint256 {
     require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1 => (d * next) % (2 ^ 32) == 1, "MulDivLemmas.newton16";
     require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1 => (d * next) % (2 ^ 64) == 1, "MulDivLemmas.newton32";
     require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1 => (d * next) % (2 ^ 128) == 1, "MulDivLemmas.newton64";
-    require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1 => (d * next) % (2 ^ 256) == 1, "MulDivLemmas.newton128";
+    require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1 => (d * next) % B() == 1, "MulDivLemmas.newton128";
     return next;
+}
+
+// Non-reverting: MulDivLemmas.finalProductNeverReverts.
+function finalSummary(uint256 lo, uint256 inv) returns uint256 {
+    uint256 result;
+    require result == (lo * inv) % B(), "MulDivLemmas.finalProductCorrect";
+    require oddPart >= 0 && quotient >= 0 && inv >= 0 && B() == B() && (oddPart * inv) % B() == 1 => (((oddPart * quotient) % B()) * inv) % B() == quotient % B(), "MulDivLemmas.finalProductCancelInverse";
+    return result;
 }
 
 /// mulDivSteps
@@ -94,6 +94,7 @@ rule mulDivStepsReverts(uint256 x, uint256 y, uint256 d) {
     originalD = d;
     quotient = d == 0 ? 0 : x * y / d;
     assert x * y >= 0 && d > 0 => x * y - (x * y) % d == d * (x * y / d), "hint";
+
     mulDivSteps@withrevert(x, y, d);
 
     assert lastReverted <=> d == 0 || x * y / d >= B();
@@ -104,7 +105,8 @@ rule mulDivStepsValue(uint256 x, uint256 y, uint256 d) {
     originalD = d;
     quotient = d == 0 ? 0 : x * y / d;
     assert x * y >= 0 && d > 0 => x * y - (x * y) % d == d * (x * y / d), "hint";
+
     uint256 result = mulDivSteps@withrevert(x, y, d);
 
-    assert !lastReverted => d != 0 && result == x * y / d;
+    assert !lastReverted => result == x * y / d;
 }
