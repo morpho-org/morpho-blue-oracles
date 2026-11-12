@@ -328,7 +328,7 @@ rule finalProductCancelInverse(mathint d, mathint q, mathint inv) {
     assert p * inv == q + B() * (q * k - w * inv), "hint";
     assert p * inv == qr + B() * (qw + q * k - w * inv), "hint";
 
-    assert ((d * q) % B() * inv) % B() == q % B();
+    assert (((d * q) % B()) * inv) % B() == q % B();
 }
 
 // Check the final product never reverts with zero message value.
