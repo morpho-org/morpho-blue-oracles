@@ -182,7 +182,7 @@ rule newtonCorrect(uint256 d, uint256 inv, uint256 p) {
 
 // Check the Newton update never reverts with zero message value.
 rule newtonNeverReverts(env e, uint256 d, uint256 inv, uint256 p) {
-    require e.msg.value == 0, "assumption";
+    require e.msg.value == 0, "assume no msg.value";
     newton@withrevert(e, d, inv, p);
     assert !lastReverted;
 }

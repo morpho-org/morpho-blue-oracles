@@ -87,6 +87,7 @@ contract MulDivHarness {
         }
     }
 
+    // The last uint256 argument is a ghost variable.
     function newton(uint256 denominator, uint256 inverse_, uint256) public pure returns (uint256) {
         unchecked {
             return inverse_ * (2 - denominator * inverse_);
