@@ -1,0 +1,69 @@
+name: Certora
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      confs: ${{ steps.list.outputs.confs }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+
+      - id: list
+        run: echo "confs=$(ls certora/confs/*.conf | xargs -I{} basename {} .conf | jq -nRc '[inputs]')" >> "$GITHUB_OUTPUT"
+
+  verify:
+    needs: matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        conf: ${{ fromJson(needs.matrix.outputs.confs) }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Run Certora Config Linter
+        run: |
+          file="certora/confs/${{ matrix.conf }}.conf"
+          echo "Fix lint errors by applying the following diff to $file:"
+          diff -u "$file" <(jq < "$file")
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+
+      - name: Install certora
+        run: pip install certora-cli
+
+      - name: Run Certora Specs Linter
+        run: |
+          file="certora/specs/${{ matrix.conf }}.spec"
+          echo "Fix lint errors by applying the following diff to $file:"
+          diff -u "$file" <(certoraCVLFormatter "$file")
+
+      - name: Install solc (0.8.28)
+        run: |
+          wget https://github.com/ethereum/solidity/releases/download/v0.8.28/solc-static-linux
+          echo "9a0fb7e0db2c0641dbae1c5cc645dc686820c83af516226abb1c0a2f76636f25  solc-static-linux" | sha256sum --check
+          chmod +x solc-static-linux
+          sudo mv solc-static-linux /usr/local/bin/solc-0.8.28
+
+      - name: Verify ${{ matrix.conf }}
+        run: certoraRun certora/confs/${{ matrix.conf }}.conf
+        env:
+          CERTORAKEY: ${{ secrets.CERTORAKEY }}
