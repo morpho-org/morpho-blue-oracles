@@ -137,170 +137,53 @@ rule seedNeverReverts(env e, uint256 d) {
 
 /// newton
 
-// Check Newton precision doubling from 4 to 8 bits with explicit error and wrap witnesses.
-rule newton4(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1, "assumption";
+// Check the generic Newton update with explicit word and precision witnesses.
+rule newtonCorrect(uint256 d, uint256 inv, uint256 p) {
+    require p >= 2 && B() % (p * p) == 0 && (d * inv) % p == 1, "assumption";
 
-    uint256 next = newton(d, inv);
+    uint256 next = newton(d, inv, p);
+    mathint a = d * inv;
+    mathint t = a % B();
+    mathint aq = a / B();
+    assert a == t + aq * B(), "hint";
+    mathint s = (2 - t) % B();
+    mathint sq = (2 - t - s) / B();
+    assert 2 - t == s + sq * B(), "hint";
+    assert next == (inv * s) % B(), "hint";
+    mathint nq = (inv * s) / B();
+    assert inv * s == next + nq * B(), "hint";
+    assert 2 - a == s + (sq - aq) * B(), "hint";
+    assert d * next == a * s - d * nq * B(), "hint";
+    assert a * (2 - a) == a * s + a * (sq - aq) * B(), "hint";
+    mathint wrap = d * nq + a * (sq - aq);
+    assert d * next == a * (2 - a) - wrap * B(), "hint";
+    mathint k = a / p;
+    assert a == 1 + k * p, "hint";
+    mathint e = k * p;
+    assert (1 + e) * (1 - e) == 1 - e * e, "hint";
+    assert e * e == k * k * p * p, "hint";
+    assert a * (2 - a) == 1 - k * k * p * p, "hint";
+    mathint m = p * p;
+    mathint bq = B() / m;
+    assert m > 1, "hint";
+    assert B() == bq * m, "hint";
+    mathint q = -k * k - wrap * bq;
+    mathint x = d * next;
+    assert x == 1 + q * m, "hint";
+    mathint r = x % m;
+    mathint rq = (x - r) / m;
+    assert x == rq * m + r, "hint";
+    assert 0 <= r && r < m, "hint";
+    assert (q - rq) * m == r - 1, "hint";
+    assert q - rq == 0, "hint";
 
-    mathint expression = inv * (2 - d * inv);
-    newtonModularPolynomialLemma(inv, 2, d * inv);
-    assert (expression - next) % B() == 0, "hint";
-    mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B(), "hint";
-    mathint error = (d * inv - 1) / (2 ^ 4);
-    assert d * inv == 1 + (2 ^ 4) * error, "hint";
-    assert d * expression == 1 - (2 ^ 8) * error * error, "hint";
-
-    assert (d * next) % (2 ^ 8) == 1;
-}
-
-// Check Newton precision doubling from 8 to 16 bits with explicit error and wrap witnesses.
-rule newton8(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 8) == 1, "assumption";
-
-    uint256 next = newton(d, inv);
-
-    mathint expression = inv * (2 - d * inv);
-    newtonModularPolynomialLemma(inv, 2, d * inv);
-    assert (expression - next) % B() == 0, "hint";
-    mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B(), "hint";
-    mathint error = (d * inv - 1) / (2 ^ 8);
-    assert d * inv == 1 + (2 ^ 8) * error, "hint";
-    assert d * expression == (d * inv) * (2 - d * inv), "hint";
-    assert d * expression == 1 - (2 ^ 16) * error * error, "hint";
-    mathint productQ = -error * error - d * wrap * (2 ^ 240);
-    assert d * next == 1 + (2 ^ 16) * productQ, "hint";
-
-    assert (d * next) % (2 ^ 16) == 1;
-}
-
-// Check Newton precision doubling from 16 to 32 bits with explicit error and wrap witnesses.
-rule newton16(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1, "assumption";
-
-    uint256 next = newton(d, inv);
-
-    mathint expression = inv * (2 - d * inv);
-    newtonModularPolynomialLemma(inv, 2, d * inv);
-    assert (expression - next) % B() == 0, "hint";
-    mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B(), "hint";
-    mathint error = (d * inv - 1) / (2 ^ 16);
-    assert d * inv == 1 + (2 ^ 16) * error, "hint";
-    assert d * expression == 1 - (2 ^ 32) * error * error, "hint";
-
-    assert (d * next) % (2 ^ 32) == 1;
-}
-
-// Check Newton precision doubling from 32 to 64 bits with explicit error and wrap witnesses.
-rule newton32(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1, "assumption";
-
-    uint256 next = newton(d, inv);
-
-    mathint expression = inv * (2 - d * inv);
-    newtonModularPolynomialLemma(inv, 2, d * inv);
-    assert (expression - next) % B() == 0, "hint";
-    mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B(), "hint";
-    mathint error = (d * inv - 1) / (2 ^ 32);
-    assert d * inv == 1 + (2 ^ 32) * error, "hint";
-    assert d * expression == 1 - (2 ^ 64) * error * error, "hint";
-
-    assert (d * next) % (2 ^ 64) == 1;
-}
-
-// Check Newton precision doubling from 64 to 128 bits with explicit error and wrap witnesses.
-rule newton64(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1, "assumption";
-
-    uint256 next = newton(d, inv);
-
-    mathint expression = inv * (2 - d * inv);
-    newtonModularPolynomialLemma(inv, 2, d * inv);
-    assert (expression - next) % B() == 0, "hint";
-    mathint wrap = (expression - next) / B();
-    assert expression == next + wrap * B(), "hint";
-    mathint error = (d * inv - 1) / (2 ^ 64);
-    assert d * inv == 1 + (2 ^ 64) * error, "hint";
-    assert d * expression == 1 - (2 ^ 128) * error * error, "hint";
-
-    assert (d * next) % (2 ^ 128) == 1;
-}
-
-// Check Newton precision doubling from 128 to 256 bits by squaring the divisible error.
-rule newton128(uint256 d, uint256 inv) {
-    require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1, "assumption";
-
-    mathint error = d * inv - 1;
-    require 2 ^ 128 > 0 && error % (2 ^ 128) == 0 && error % (2 ^ 128) == 0 => (error * error) % ((2 ^ 128) * (2 ^ 128)) == 0, "MulDivLemmas.newtonDivisibility(error, error, 2^128)";
-
-    uint256 next = newton(d, inv);
-
-    mathint expression = inv * (2 - d * inv);
-    newtonModularPolynomialLemma(inv, 2, d * inv);
-    assert next == expression % B(), "hint";
-    assert error % (2 ^ 128) == 0, "hint";
-    mathint errorQ = error / (2 ^ 128);
-    assert error == (2 ^ 128) * errorQ, "hint";
-    assert error * error == B() * errorQ * errorQ, "hint";
-    assert (error * error) % B() == 0, "hint";
-    assert d * expression == 1 - error * error, "hint";
-    assert (d * expression) % B() == 1, "hint";
-    newtonModularPolynomialLemma(d, expression, 0);
-
-    assert (d * next) % B() == 1;
-}
-
-// Check that multiplying two multiples of m produces a multiple of m squared.
-rule newtonDivisibility(mathint a, mathint b, mathint m) {
-    if (m > 0 && a % m == 0 && b % m == 0) {
-        mathint aq = a / m;
-        mathint bq = b / m;
-        assert a == m * aq, "hint";
-        assert b == m * bq, "hint";
-        assert a * b == (m * m) * (aq * bq), "hint";
-        assert (a * b) % (m * m) == 0, "hint";
-    }
-
-    assert m > 0 && a % m == 0 && b % m == 0 => (a * b) % (m * m) == 0;
-}
-
-function newtonModularPolynomialLemma(mathint a, mathint b, mathint c) {
-    require (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B(), "MulDivLemmas.newtonModularPolynomial";
-}
-
-// Check modular normalization for the word modulus using integer division witnesses.
-rule newtonModularPolynomial(mathint a, mathint b, mathint c) {
-    mathint ar = a % B();
-    mathint aq = (a - ar) / B();
-    assert a == aq * B() + ar, "hint";
-    mathint cr = c % B();
-    mathint cq = (c - cr) / B();
-    assert c == cq * B() + cr, "hint";
-    mathint u = b - cr;
-    mathint ur = u % B();
-    mathint uq = (u - ur) / B();
-    assert u == uq * B() + ur, "hint";
-    assert b - c == ur + (uq - cq) * B(), "hint";
-    mathint p = ar * ur;
-    mathint pr = p % B();
-    mathint pq = (p - pr) / B();
-    assert p == pq * B() + pr, "hint";
-    mathint k = pq + aq * (b - c) + ar * (uq - cq);
-    assert a * (b - c) == pr + B() * k, "hint";
-    assert 0 <= pr && pr < B(), "hint";
-    assert (a * (b - c)) % B() == pr, "hint";
-
-    assert (a * (b - c)) % B() == ((a % B()) * ((b - (c % B())) % B())) % B();
+    assert (d * next) % (p * p) == 1;
 }
 
 // Check the Newton update never reverts with zero message value.
-rule newtonNeverReverts(env e, uint256 d, uint256 inv) {
-    require e.msg.value == 0, "assume no msg.value";
-    newton@withrevert(e, d, inv);
+rule newtonNeverReverts(env e, uint256 d, uint256 inv, uint256 p) {
+    require e.msg.value == 0, "assumption";
+    newton@withrevert(e, d, inv, p);
     assert !lastReverted;
 }
 

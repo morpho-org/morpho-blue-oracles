@@ -72,12 +72,12 @@ contract MulDivHarness {
 
     function inverse(uint256 denominator) public pure returns (uint256 inverse_) {
         uint256 inverse = seed(denominator);
-        inverse = newton(denominator, inverse);
-        inverse = newton(denominator, inverse);
-        inverse = newton(denominator, inverse);
-        inverse = newton(denominator, inverse);
-        inverse = newton(denominator, inverse);
-        inverse = newton(denominator, inverse);
+        inverse = newton(denominator, inverse, 2 ** 4);
+        inverse = newton(denominator, inverse, 2 ** 8);
+        inverse = newton(denominator, inverse, 2 ** 16);
+        inverse = newton(denominator, inverse, 2 ** 32);
+        inverse = newton(denominator, inverse, 2 ** 64);
+        inverse = newton(denominator, inverse, 2 ** 128);
         return inverse;
     }
 
@@ -87,7 +87,7 @@ contract MulDivHarness {
         }
     }
 
-    function newton(uint256 denominator, uint256 inverse_) public pure returns (uint256) {
+    function newton(uint256 denominator, uint256 inverse_, uint256) public pure returns (uint256) {
         unchecked {
             return inverse_ * (2 - denominator * inverse_);
         }

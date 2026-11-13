@@ -9,7 +9,7 @@ methods {
     function MulDivHarness.twos(uint256 d) internal returns (uint256, uint256, uint256) => twosSummary(d);
     function MulDivHarness.shift(uint256 hi, uint256 lo, uint256 t, uint256 flipped) internal returns (uint256) => shiftSummary(hi, lo, t, flipped);
     function MulDivHarness.seed(uint256 d) internal returns (uint256) => seedSummary(d);
-    function MulDivHarness.newton(uint256 d, uint256 inv) internal returns (uint256) => newtonSummary(d, inv);
+    function MulDivHarness.newton(uint256 d, uint256 inv, uint256 p) internal returns (uint256) => newtonSummary(d, inv, p);
     function MulDivHarness.finalProduct(uint256 lo, uint256 inv) internal returns (uint256) => finalSummary(lo, inv);
 }
 
@@ -68,14 +68,9 @@ function seedSummary(uint256 d) returns uint256 {
 }
 
 // Non-reverting: MulDivLemmas.newtonNeverReverts.
-function newtonSummary(uint256 d, uint256 inv) returns uint256 {
+function newtonSummary(uint256 d, uint256 inv, uint256 p) returns uint256 {
     uint256 next;
-    require d % 2 == 1 && (d * inv) % (2 ^ 4) == 1 => (d * next) % (2 ^ 8) == 1, "MulDivLemmas.newton4";
-    require d % 2 == 1 && (d * inv) % (2 ^ 8) == 1 => (d * next) % (2 ^ 16) == 1, "MulDivLemmas.newton8";
-    require d % 2 == 1 && (d * inv) % (2 ^ 16) == 1 => (d * next) % (2 ^ 32) == 1, "MulDivLemmas.newton16";
-    require d % 2 == 1 && (d * inv) % (2 ^ 32) == 1 => (d * next) % (2 ^ 64) == 1, "MulDivLemmas.newton32";
-    require d % 2 == 1 && (d * inv) % (2 ^ 64) == 1 => (d * next) % (2 ^ 128) == 1, "MulDivLemmas.newton64";
-    require d % 2 == 1 && (d * inv) % (2 ^ 128) == 1 => (d * next) % B() == 1, "MulDivLemmas.newton128";
+    require p >= 2 && B() % (p * p) == 0 && (d * inv) % p == 1 => (d * next) % (p * p) == 1, "MulDivLemmas.newtonCorrect";
     return next;
 }
 
