@@ -34,4 +34,4 @@ jobs:
           forge test -vvv
         id: test
         env:
-          ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}
+          ERPC_SECRET: ${{ secrets.ERPC_SECRET }}
