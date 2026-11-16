@@ -19,4 +19,4 @@ exclude_lints = [
 ]
 
 [rpc_endpoints]
-ethereum = "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+ethereum = "https://rpc.morpho.dev/cache/evm/1?secret=${ERPC_SECRET}"
