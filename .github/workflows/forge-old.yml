@@ -40,5 +40,5 @@ jobs:
       - name: Run Forge tests
         run: forge test --offline -vvv
         env:
-          FOUNDRY_FUZZ_SEED: 0x${{ github.event.pull_request.base.sha || github.sha }}
+          FOUNDRY_FUZZ_SEED: 0x${{ github.sha }}
           ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}
