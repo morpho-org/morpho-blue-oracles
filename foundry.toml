@@ -11,6 +11,10 @@ evm_version = "paris"
 [profile.default.fmt]
 wrap_comments = true
 
+# Lint test/ as ordinary Solidity instead of applying Forge's test-only rule filter.
+[profile.lint-test]
+test = ".forge-lint-unused"
+
 [lint]
 exclude_lints = [
     "unsafe-typecast",
