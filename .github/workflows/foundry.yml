@@ -7,11 +7,12 @@ on:
   pull_request:
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   lint:
+    permissions:
+      contents: read
     name: Solidity lint
     runs-on: ubuntu-latest
     steps:
@@ -28,6 +29,8 @@ jobs:
         run: FOUNDRY_PROFILE=lint-test forge lint test --deny notes
 
   check:
+    permissions:
+      contents: read
     name: forge-test
     runs-on: ubuntu-latest
     steps:
