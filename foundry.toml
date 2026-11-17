@@ -16,6 +16,9 @@ exclude_lints = [
     "unsafe-typecast",
     "unaliased-plain-import",
     "screaming-snake-case-const",
+    # Existing implementation baseline; enabling CI must preserve audited bytecode.
+    "reentrancy-events",
+    "unused-return",
 ]
 
 [rpc_endpoints]
