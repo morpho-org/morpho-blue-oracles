@@ -13,10 +13,6 @@ env:
 permissions:
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
-  cancel-in-progress: true
-
 jobs:
   fmt:
     runs-on: ubuntu-latest
