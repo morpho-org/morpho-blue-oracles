@@ -59,6 +59,7 @@ jobs:
           forge test -vvv
         id: test
         env:
+          FOUNDRY_FUZZ_SEED: 0x${{ github.event.pull_request.base.sha || github.sha }}
           ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}
 
   fmt:
@@ -78,4 +79,4 @@ jobs:
           version: nightly # Catch upstream Foundry changes before the next stable release.
 
       - name: Check format
-        run: forge fmt --check
+        run: forge fmt src test --check

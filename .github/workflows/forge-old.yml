@@ -38,6 +38,7 @@ jobs:
             chmod +x "$solc"
           done
       - name: Run Forge tests
-        run: forge test --offline
+        run: forge test --offline -vvv
         env:
+          FOUNDRY_FUZZ_SEED: 0x${{ github.event.pull_request.base.sha || github.sha }}
           ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}
