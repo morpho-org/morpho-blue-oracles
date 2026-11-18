@@ -1,4 +1,5 @@
 [profile.default]
+ignored_warnings_from = ["lib"]
 src = "src"
 out = "out"
 libs = ["lib"]
