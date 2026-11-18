@@ -46,9 +46,7 @@ jobs:
 
       - name: Run Forge build
         run: |
-          forge --version
           forge build --sizes
-        id: build
 
       - name: Check foundry.lock matches submodule pins
         run: forge build --locked
@@ -73,7 +71,6 @@ jobs:
       - name: Run Forge tests
         run: |
           forge test --deny warnings -vvv
-        id: test
         env:
           FOUNDRY_FUZZ_SEED: 0x${{ github.sha }}
           ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}
