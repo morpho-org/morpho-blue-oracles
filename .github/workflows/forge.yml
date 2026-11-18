@@ -22,7 +22,7 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@dba66c27052e63476d886f22216e119ba7e615bf # v1.9.2
         with:
           version: nightly
-      - name: Lint contracts and verification harnesses
+      - name: Lint contracts
         run: forge lint src --deny notes
       - name: Lint tests
         run: forge lint test --deny notes
