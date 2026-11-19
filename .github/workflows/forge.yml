@@ -51,10 +51,9 @@ jobs:
       - name: Check foundry.lock matches submodule pins
         run: forge build --locked
 
-  check:
+  test:
     permissions:
       contents: read
-    name: forge-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

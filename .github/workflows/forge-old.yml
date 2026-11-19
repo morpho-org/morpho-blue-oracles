@@ -10,7 +10,8 @@ on:
 permissions: {}
 
 jobs:
-  forge-old:
+  test:
+    name: Forge old tests
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -42,3 +43,16 @@ jobs:
         env:
           FOUNDRY_FUZZ_SEED: 0x${{ github.sha }}
           ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}
+
+  # Same check name as in the other repos.
+  forge-old:
+    permissions:
+      contents: read
+    if: ${{ always() }}
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every legacy test combination
+        env:
+          RESULT: ${{ needs.test.result }}
+        run: test "$RESULT" = success

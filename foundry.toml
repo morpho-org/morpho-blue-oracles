@@ -9,6 +9,9 @@ optimizer_runs = 999999
 bytecode_hash = "none"
 evm_version = "paris"
 
+[profile.default.fuzz]
+runs = 2048
+
 [lint]
 exclude_lints = [
     "unsafe-typecast",
