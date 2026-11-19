@@ -1,7 +1,6 @@
 [profile.default]
+ignored_error_codes_from = [["test", ["code-size", "init-code-size"]]]
 ignored_warnings_from = ["lib"]
-src = "src"
-out = "out"
 libs = ["lib"]
 via_ir = true
 optimizer = true
@@ -13,12 +12,36 @@ evm_version = "paris"
 runs = 1024
 
 [lint]
+severity = ["high", "medium", "low", "info"]
 exclude_lints = [
-    "unsafe-typecast",
-    "unaliased-plain-import",
-    "screaming-snake-case-const",
-    "unused-return",
+    "arbitrary-send-erc20",
+    "block-timestamp",
+    "boolean-cst",
+    "calls-loop",
+    "cyclomatic-complexity",
+    "incorrect-shift",
+    "inline-assembly",
+    "internal-function-used-once",
+    "literal-instead-of-constant",
+    "low-level-calls",
+    "missing-events-access-control",
+    "missing-zero-check",
+    "mixed-case-variable",
+    "multi-contract-file",
+    "pragma-inconsistent",
     "reentrancy-events",
+    "require-revert-in-loop",
+    "screaming-snake-case-immutable",
+    "too-many-digits",
+    "uninitialized-local",
+    "unsafe-cheatcode",
+    "unused-return",
+    # Those exclusions are added to not add inline lint suppressors in the following contracts: MorphoChainlinkOracleV2, MorphoChainlinkOracleV2Factory, WstEthStEthExchangeRateChainlinkAdapter.
+    "event-fields",
+    "interface-file-naming",
+    "interface-naming",
+    "screaming-snake-case-const",
+    "unsafe-typecast",
 ]
 
 [rpc_endpoints]
