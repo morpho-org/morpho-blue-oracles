@@ -111,4 +111,4 @@ All audits are stored in the [audits](./audits/)' folder.
 
 ## License
 
-Morpho Blue Oracles are licensed under `GPL-2.0-or-later`, see [`LICENSE`](./LICENSE).
+Morpho Blue Oracles are licensed under `MIT`, see [`LICENSE`](./LICENSE).
