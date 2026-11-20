@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.21;
 
 import {IOracle} from "../../lib/morpho-blue/src/interfaces/IOracle.sol";
