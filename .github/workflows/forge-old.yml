@@ -42,7 +42,7 @@ jobs:
         run: forge test --offline -vvv
         env:
           FOUNDRY_FUZZ_SEED: 0x${{ github.sha }}
-          ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}
+          MORPHO_RPC_KEY: ${{ secrets.MORPHO_RPC_KEY }}
 
   # Same check name as in the other repos.
   forge-old:

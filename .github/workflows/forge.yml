@@ -89,4 +89,4 @@ jobs:
           forge test --deny warnings -vvv
         env:
           FOUNDRY_FUZZ_SEED: 0x${{ github.sha }}
-          ALCHEMY_KEY: ${{ secrets.PROTOCOL_ALCHEMY_KEY }}
+          MORPHO_RPC_KEY: ${{ secrets.MORPHO_RPC_KEY }}
