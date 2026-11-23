@@ -10,8 +10,7 @@ on:
 permissions: {}
 
 jobs:
-  test:
-    name: Forge old tests
+  forge-old:
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -43,16 +42,3 @@ jobs:
         env:
           FOUNDRY_FUZZ_SEED: 0x${{ github.sha }}
           MORPHO_RPC_KEY: ${{ secrets.MORPHO_RPC_KEY }}
-
-  # Same check name as in the other repos.
-  forge-old:
-    permissions:
-      contents: read
-    if: ${{ always() }}
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Require every legacy test combination
-        env:
-          RESULT: ${{ needs.test.result }}
-        run: test "$RESULT" = success
