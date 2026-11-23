@@ -50,8 +50,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           submodules: recursive
@@ -61,7 +60,7 @@ jobs:
         with:
           version: nightly
 
-      - name: Run Forge build
+      - name: Run forge build
         run: |
           forge build --sizes
 
@@ -73,8 +72,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           submodules: recursive
@@ -84,7 +82,7 @@ jobs:
         with:
           version: nightly
 
-      - name: Run Forge tests
+      - name: Run forge test
         run: |
           forge test --deny warnings -vvv
         env:
