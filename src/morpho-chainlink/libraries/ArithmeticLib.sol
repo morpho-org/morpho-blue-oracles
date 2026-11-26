@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2023 zOS Global Limited and contributors. Licensed under the MIT License:
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/932fddf69a699a9a80fd2396fd1a2ab91cdda123/LICENSE
 
-pragma solidity ^0.8.0;
+pragma solidity >=0.8.0;
 
 library ArithmeticLib {
     /// @dev Muldiv operation overflow.
